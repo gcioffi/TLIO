@@ -27,7 +27,7 @@ import progressbar
 from numba import jit
 from scipy.interpolate import interp1d
 from scipy.spatial.transform import Rotation
-from utils.math_utils import mat_exp, unwrap_rpy, wrap_rpy
+from math_utils import mat_exp, unwrap_rpy, wrap_rpy
 
 
 def imu_integrate(gravity, last_state, imu_data, dt):
@@ -59,31 +59,27 @@ def imu_integrate(gravity, last_state, imu_data, dt):
 def save_hdf5(args):
 
     # get list of data to process
-    f = open(args.data_list, "r")
-    name = [line.rstrip() for line in f]
-    f.close()
-    n_data = len(name)
-    print(f"total {n_data} datasets")
+    data_dir = args.data_dir
+    fn = os.path.join(data_dir, "n_sequences.txt")
+    n_seq = int(np.loadtxt(fn))
+
+    print("Loading %d sequences" % n_seq)
+    
+    name = []
+    for i in range(n_seq):
+        seq_name = "seq" + str(i+1)
+        seq_dir = osp.join(data_dir, seq_name)
+        name.append(osp.join(seq_dir))
 
     gravity = np.array([0, 0, -args.gravity])
 
-    for i in progressbar.progressbar(range(n_data), redirect_stdout=True):
-        n = name[i]
-
-        # set flag for which data has been processed
-        datapath = osp.join(args.data_dir, n)
-        flag_file = os.path.join(args.data_dir, n, "hey.txt")
-        if os.path.exists(flag_file):
-            print(f"{i}th data {n} processed, skip")
-            continue
-        else:
-            print(f"processing data {i} - {n}")
-            # f = open(flag_file, 'w'); f.write('hey'); f.close()
+    for i in progressbar.progressbar(range(n_seq), redirect_stdout=True):
+        datapath = name[i]
 
         # start with the 20th image processed, bypass vio initialization
         image_ts = np.loadtxt(osp.join(datapath, "my_timestamps_p.txt"))
-        imu_meas = np.loadtxt(osp.join(datapath, "imu_measurements.txt"), delimiter=",")
-        vio_states = np.loadtxt(osp.join(datapath, "evolving_state.txt"), delimiter=",")
+        imu_meas = np.loadtxt(osp.join(datapath, "imu_measurements.txt"))
+        vio_states = np.loadtxt(osp.join(datapath, "evolving_state.txt"))
 
         # find initial state, start from the 21st output from vio_state
         start_t = image_ts[20]
@@ -137,7 +133,7 @@ def save_hdf5(args):
             state_data[i, :] = new_state
 
             # if this state has vio output, correct with vio
-            has_vio = imu_data[i, 13]
+            has_vio = int(imu_data[i, 13])
             if has_vio == 1:
                 vio_idx = np.searchsorted(vio_states[:, 0], imu_data[i, 0])
                 r_vio = Rotation.from_quat(
@@ -175,15 +171,6 @@ def save_hdf5(args):
             [np.expand_dims(vio_q[:, 3], axis=1), vio_q[:, 0:3]], axis=1
         )
 
-        # calibrate raw IMU with fixed calibration
-        print("calibrate IMU with fixed calibration")
-        accel_calib = (np.dot(accelScaleInv, accel_raw.T) - accelBias).T
-        gyro_calib = (
-            np.dot(gyroScaleInv, gyro_raw.T)
-            - np.dot(gyroGSense, accel_raw.T)
-            - gyroBias
-        ).T
-
         # integrate using fixed calibration data
         print("integrate R using fixed calibrated data")
         N = ts.shape[0]
@@ -194,7 +181,7 @@ def save_hdf5(args):
             dt = ts[i] - ts[i - 1]
             last_rvec = Rotation.from_rotvec(rvec_integration[i - 1, :])
             last_R = last_rvec.as_matrix()
-            omega = gyro_calib[i, :]
+            omega = gyro[i, :]
             dR = mat_exp(omega * dt)
             next_R = last_R.dot(dR)
             next_r = Rotation.from_matrix(next_R)
@@ -207,9 +194,7 @@ def save_hdf5(args):
         )
 
         # output
-        outdir = osp.join(args.output_dir, n)
-        if not osp.isdir(outdir):
-            os.makedirs(outdir)
+        outdir = datapath
 
         # everything under the same timestamp ts
         with h5py.File(osp.join(outdir, "data.hdf5"), "w") as f:
@@ -230,7 +215,11 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--gravity", type=float, default=9.81)
-    parser.add_argument("--output_dir", type=str, default="../../dataset_test_output")
+    parser.add_argument(
+        "--data_dir", type=str, default="/home/rpg/TLIO/data/Dataset"
+    )
+
+    '''parser.add_argument("--output_dir", type=str, default="../../dataset_test_output")
     parser.add_argument(
         "--data_dir", type=str, default="/raid0/docker-raid/wenxin/data/Dataset"
     )
@@ -238,7 +227,8 @@ if __name__ == "__main__":
         "--data_list",
         type=str,
         default="/raid0/docker-raid/wenxin/data/Dataset/golden_test_small.txt",
-    )
+    )'''
+
     args = parser.parse_args()
 
     save_hdf5(args)
