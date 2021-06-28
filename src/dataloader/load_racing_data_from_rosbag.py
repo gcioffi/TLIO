@@ -59,14 +59,15 @@ def PerturbationIMUandBiases(config_fn):
                 topic_odometry = value
             else:
                 if key == 'stdImuNoise_acc':
-                    #std_values['a'] = value 
                     stdImuNoise_acc = value
                 if key == 'stdImuNoise_gyro':
                     stdImuNoise_gyro = value
                 if key == 'stdBias_acc':
-                    stdBias_acc = value
+                    stdBias_acc_min = value[0]
+                    stdBias_acc_max = value[1]
                 if key == 'stdBias_gyro':
-                    stdBias_gyro = value
+                    stdBias_gyro_min = value[0]
+                    stdBias_gyro_max = value[1]
                 if key == 'stdBiasNoise_acc':
                     stdBiasNoise_acc = value
                 if key == 'stdBiasNoise_gyro':
@@ -78,172 +79,179 @@ def PerturbationIMUandBiases(config_fn):
     print('- %s' % topic_imu)
     print('- %s' % topic_odometry)
 
-    #Open BagFile
-    # @ ToDO: add groundtruth odometry
-    ts_imu = [] #IMU timestamp
-    ts_odom = [] #IMU timestamp
-    q_wb = [] # GT orientation x, y, z, w
-    p_wb = [] # GT translation x, y, z, w
-    v_wb = [] #GT velocity
-    angular_velocity_perfect = [] #GT angular_velocity in x, y, z
-    linear_acceleration_perfect = [] #GT linear_acceleration in x, y, z
-    angular_velocity_IMU_noise = [] # GT + IMU noise
-    linear_acceleration_IMU_noise = []
-    #angular_velocity_bias_noise = []  # GT + bias + noise on bias
-    #linear_acceleration_bias_noise = []
-    angular_velocity_raw = [] #GT + bias + noise on bias + noise on IMU
-    linear_acceleration_raw = []
-    bias_acc = np.random.normal(0,stdBias_acc,3) #bias generation using gaussian distribution - Lin. Accel.
-    bias_ang = np.random.normal(0,stdBias_gyro,3) #bias generation using gaussian distribution - Ang. Vel. 
-    
-   
-    first = True
-    with rosbag.Bag(bagfile, 'r') as bag:
-        for (topic, msg, ts) in bag.read_messages():
-            if topic == topic_imu:
-                #IMU Interpolation at 1000 Hz -> IMU_measurements.txt
 
-                # Noise generation on IMU and bias for angular velocity and linear acceleration
-                noise_IMU_ang = np.random.normal(0,stdImuNoise_gyro,3) #mean, std, number elements
-                noise_IMU_acc = np.random.normal(0,stdImuNoise_acc,3) 
-                noise_bias_ang = np.random.normal(0,stdBiasNoise_gyro,3) 
-                noise_bias_acc = np.random.normal(0,stdBiasNoise_acc,3) 
-                # Find delta_time needed to compute the noise on the biases
-                if first:
-                    dt_sqrt = 0
-                    ts_imu.append(msg.header.stamp.to_sec())
+    for i in np.arange(0, stdBias_acc_max, 0.05):
+        for j in np.arange(0, stdBias_gyro_max, 0.05):
+            print("Creating file with stdBias_acc =", i, "and stdBias_gyro =", j)
+            stdBias_acc = i
+            stdBias_gyro = j
 
-                    #Angular velocity and Linear Acceleration PERFECT (from simulation)
-                    angular_velocity_perfect.append(np.array([msg.angular_velocity.x, msg.angular_velocity.y, msg.angular_velocity.z]))
-                    linear_acceleration_perfect.append(np.array([msg.linear_acceleration.x, msg.linear_acceleration.y, msg.linear_acceleration.z]))
-                    #Angular velocity and Linear Acceleration corrupted by the IMU NOISE
-                    angular_velocity_IMU_noise.append(np.array([msg.angular_velocity.x, msg.angular_velocity.y, msg.angular_velocity.z]) + noise_IMU_ang)
-                    linear_acceleration_IMU_noise.append(np.array([msg.linear_acceleration.x, msg.linear_acceleration.y, msg.linear_acceleration.z]) + noise_IMU_acc)
-                    #Angular velocity and Linear Acceleration corrupted by BIASES and BIASES NOISE
-                    '''angular_velocity_bias_noise.append(np.array([msg.angular_velocity.x, msg.angular_velocity.y, msg.angular_velocity.z]) + noise_bias_ang*dt_sqrt + bias_ang)
-                    linear_acceleration_bias_noise.append(np.array([msg.linear_acceleration.x, msg.linear_acceleration.y, msg.linear_acceleration.z]) + noise_bias_acc*dt_sqrt + bias_acc)'''
-                    #Angular velocity and Linear Acceleration with biases, noise on IMU and noise biases -> RAW IMU 
-                    angular_velocity_raw.append(np.array([msg.angular_velocity.x, msg.angular_velocity.y, msg.angular_velocity.z]) + noise_IMU_ang + noise_bias_ang*dt_sqrt + bias_ang)
-                    linear_acceleration_raw.append(np.array([msg.linear_acceleration.x, msg.linear_acceleration.y, msg.linear_acceleration.z]) + noise_IMU_acc + noise_bias_acc*dt_sqrt + bias_acc)
+            #Open BagFile
+            # @ ToDO: add groundtruth odometry
+            ts_imu = [] #IMU timestamp
+            ts_odom = [] #IMU timestamp
+            q_wb = [] # GT orientation x, y, z, w
+            p_wb = [] # GT translation x, y, z, w
+            v_wb = [] #GT velocity
+            angular_velocity_perfect = [] #GT angular_velocity in x, y, z
+            linear_acceleration_perfect = [] #GT linear_acceleration in x, y, z
+            angular_velocity_IMU_noise = [] # GT + IMU noise
+            linear_acceleration_IMU_noise = []
+            #angular_velocity_bias_noise = []  # GT + bias + noise on bias
+            #linear_acceleration_bias_noise = []
+            angular_velocity_raw = [] #GT + bias + noise on bias + noise on IMU
+            linear_acceleration_raw = []
+            bias_acc = np.random.normal(0,stdBias_acc,3) #bias generation using gaussian distribution - Lin. Accel.
+            bias_ang = np.random.normal(0,stdBias_gyro,3) #bias generation using gaussian distribution - Ang. Vel. 
+            
+        
+            first = True
+            with rosbag.Bag(bagfile, 'r') as bag:
+                for (topic, msg, ts) in bag.read_messages():
+                    if topic == topic_imu:
+                        #IMU Interpolation at 1000 Hz -> IMU_measurements.txt
 
-                    first = False
+                        # Noise generation on IMU and bias for angular velocity and linear acceleration
+                        noise_IMU_ang = np.random.normal(0,stdImuNoise_gyro,3) #mean, std, number elements
+                        noise_IMU_acc = np.random.normal(0,stdImuNoise_acc,3) 
+                        noise_bias_ang = np.random.normal(0,stdBiasNoise_gyro,3) 
+                        noise_bias_acc = np.random.normal(0,stdBiasNoise_acc,3) 
+                        # Find delta_time needed to compute the noise on the biases
+                        if first:
+                            dt_sqrt = 0
+                            ts_imu.append(msg.header.stamp.to_sec())
 
-                else:
-                    curr_ts_imu = msg.header.stamp.to_sec()
-                    prev_ts_imu = ts_imu[-1]
+                            #Angular velocity and Linear Acceleration PERFECT (from simulation)
+                            angular_velocity_perfect.append(np.array([msg.angular_velocity.x, msg.angular_velocity.y, msg.angular_velocity.z]))
+                            linear_acceleration_perfect.append(np.array([msg.linear_acceleration.x, msg.linear_acceleration.y, msg.linear_acceleration.z]))
+                            #Angular velocity and Linear Acceleration corrupted by the IMU NOISE
+                            angular_velocity_IMU_noise.append(np.array([msg.angular_velocity.x, msg.angular_velocity.y, msg.angular_velocity.z]) + noise_IMU_ang)
+                            linear_acceleration_IMU_noise.append(np.array([msg.linear_acceleration.x, msg.linear_acceleration.y, msg.linear_acceleration.z]) + noise_IMU_acc)
+                            #Angular velocity and Linear Acceleration corrupted by BIASES and BIASES NOISE
+                            '''angular_velocity_bias_noise.append(np.array([msg.angular_velocity.x, msg.angular_velocity.y, msg.angular_velocity.z]) + noise_bias_ang*dt_sqrt + bias_ang)
+                            linear_acceleration_bias_noise.append(np.array([msg.linear_acceleration.x, msg.linear_acceleration.y, msg.linear_acceleration.z]) + noise_bias_acc*dt_sqrt + bias_acc)'''
+                            #Angular velocity and Linear Acceleration with biases, noise on IMU and noise biases -> RAW IMU 
+                            angular_velocity_raw.append(np.array([msg.angular_velocity.x, msg.angular_velocity.y, msg.angular_velocity.z]) + noise_IMU_ang + noise_bias_ang*dt_sqrt + bias_ang)
+                            linear_acceleration_raw.append(np.array([msg.linear_acceleration.x, msg.linear_acceleration.y, msg.linear_acceleration.z]) + noise_IMU_acc + noise_bias_acc*dt_sqrt + bias_acc)
 
-                    dt_sqrt = math.sqrt(curr_ts_imu - prev_ts_imu)
-                    dt = curr_ts_imu - prev_ts_imu
-                    t = prev_ts_imu + dt / 2.0
-                    
-                    #GT IMU Interpolation: measurements will be now at 1000 Hz
-                                      
-                    curr_w_gt = np.array([msg.angular_velocity.x, msg.angular_velocity.y, msg.angular_velocity.z])
-                    curr_a_gt = np.array([msg.linear_acceleration.x, msg.linear_acceleration.y, msg.linear_acceleration.z])
-                    
-                    prev_w_gt = angular_velocity_perfect[-1]
-                    prev_a_gt = linear_acceleration_perfect[-1]
+                            first = False
 
-                    interp_w_gt = prev_w_gt + ((curr_w_gt - prev_w_gt) / dt) * (t - prev_ts_imu)
-                    interp_a_gt = prev_a_gt + ((curr_a_gt - prev_a_gt) / dt) * (t - prev_ts_imu)
+                        else:
+                            curr_ts_imu = msg.header.stamp.to_sec()
+                            prev_ts_imu = ts_imu[-1]
 
-                    #Raw IMU Interpolation: measurements will be now at 1000 Hz
+                            dt_sqrt = math.sqrt(curr_ts_imu - prev_ts_imu)
+                            dt = curr_ts_imu - prev_ts_imu
+                            t = prev_ts_imu + dt / 2.0
+                            
+                            #GT IMU Interpolation: measurements will be now at 1000 Hz
+                                            
+                            curr_w_gt = np.array([msg.angular_velocity.x, msg.angular_velocity.y, msg.angular_velocity.z])
+                            curr_a_gt = np.array([msg.linear_acceleration.x, msg.linear_acceleration.y, msg.linear_acceleration.z])
+                            
+                            prev_w_gt = angular_velocity_perfect[-1]
+                            prev_a_gt = linear_acceleration_perfect[-1]
 
-                    curr_w_raw = np.array([msg.angular_velocity.x, msg.angular_velocity.y, msg.angular_velocity.z]) + noise_IMU_ang + noise_bias_ang*dt_sqrt + bias_ang
-                    curr_a_raw = np.array([msg.linear_acceleration.x, msg.linear_acceleration.y, msg.linear_acceleration.z]) + noise_IMU_acc + noise_bias_acc*dt_sqrt + bias_acc
-                    
-                    prev_w_raw = angular_velocity_raw[-1]
-                    prev_a_raw = linear_acceleration_raw[-1]
+                            interp_w_gt = prev_w_gt + ((curr_w_gt - prev_w_gt) / dt) * (t - prev_ts_imu)
+                            interp_a_gt = prev_a_gt + ((curr_a_gt - prev_a_gt) / dt) * (t - prev_ts_imu)
 
-                    interp_w_raw = prev_w_raw + ((curr_w_raw - prev_w_raw) / dt) * (t - prev_ts_imu)
-                    interp_a_raw = prev_a_raw + ((curr_a_raw - prev_a_raw) / dt) * (t - prev_ts_imu)
+                            #Raw IMU Interpolation: measurements will be now at 1000 Hz
+
+                            curr_w_raw = np.array([msg.angular_velocity.x, msg.angular_velocity.y, msg.angular_velocity.z]) + noise_IMU_ang + noise_bias_ang*dt_sqrt + bias_ang
+                            curr_a_raw = np.array([msg.linear_acceleration.x, msg.linear_acceleration.y, msg.linear_acceleration.z]) + noise_IMU_acc + noise_bias_acc*dt_sqrt + bias_acc
+                            
+                            prev_w_raw = angular_velocity_raw[-1]
+                            prev_a_raw = linear_acceleration_raw[-1]
+
+                            interp_w_raw = prev_w_raw + ((curr_w_raw - prev_w_raw) / dt) * (t - prev_ts_imu)
+                            interp_a_raw = prev_a_raw + ((curr_a_raw - prev_a_raw) / dt) * (t - prev_ts_imu)
 
 
-                    # Append at 1000 Hz: timestamps, w and a for GT and raw
-                    interp_ts_imu = prev_ts_imu + dt / 2.0 
-                    ts_imu.append(interp_ts_imu)
-                    ts_imu.append(curr_ts_imu)
+                            # Append at 1000 Hz: timestamps, w and a for GT and raw
+                            interp_ts_imu = prev_ts_imu + dt / 2.0 
+                            ts_imu.append(interp_ts_imu)
+                            ts_imu.append(curr_ts_imu)
 
-                    angular_velocity_perfect.append(interp_w_gt)
-                    angular_velocity_perfect.append(curr_w_gt)
+                            angular_velocity_perfect.append(interp_w_gt)
+                            angular_velocity_perfect.append(curr_w_gt)
 
-                    linear_acceleration_perfect.append(interp_a_gt)
-                    linear_acceleration_perfect.append(curr_a_gt)
+                            linear_acceleration_perfect.append(interp_a_gt)
+                            linear_acceleration_perfect.append(curr_a_gt)
 
-                    angular_velocity_raw.append(interp_w_raw)
-                    angular_velocity_raw.append(curr_w_raw)
+                            angular_velocity_raw.append(interp_w_raw)
+                            angular_velocity_raw.append(curr_w_raw)
 
-                    linear_acceleration_raw.append(interp_a_raw)
-                    linear_acceleration_raw.append(curr_a_raw)
+                            linear_acceleration_raw.append(interp_a_raw)
+                            linear_acceleration_raw.append(curr_a_raw)
 
-            if topic == topic_odometry:
-                #Save GT timestamps, pose (position + orientation) and velocity from simulation -> evolving state.txt
-                ts_odom.append(msg.header.stamp.to_sec())
-                p_wb.append(np.array([msg.pose.pose.position.x, msg.pose.pose.position.y, msg.pose.pose.position.z]))
-                q_wb.append(np.array([msg.pose.pose.orientation.x, msg.pose.pose.orientation.y,msg.pose.pose.orientation.z,msg.pose.pose.orientation.w]))
-                v_wb.append(np.array([msg.twist.twist.linear.x, msg.twist.twist.linear.y, msg.twist.twist.linear.z]))
-  
-    bag.close()
+                    if topic == topic_odometry:
+                        #Save GT timestamps, pose (position + orientation) and velocity from simulation -> evolving state.txt
+                        ts_odom.append(msg.header.stamp.to_sec())
+                        p_wb.append(np.array([msg.pose.pose.position.x, msg.pose.pose.position.y, msg.pose.pose.position.z]))
+                        q_wb.append(np.array([msg.pose.pose.orientation.x, msg.pose.pose.orientation.y,msg.pose.pose.orientation.z,msg.pose.pose.orientation.w]))
+                        v_wb.append(np.array([msg.twist.twist.linear.x, msg.twist.twist.linear.y, msg.twist.twist.linear.z]))
+        
+            bag.close()
 
-    #Transform lists to arrays
-    ts_imu = np.asarray(ts_imu)
-    ts_odom = np.asarray(ts_odom)
-    angular_velocity_perfect = np.asarray(angular_velocity_perfect)
-    linear_acceleration_perfect = np.asarray(linear_acceleration_perfect)
-    angular_velocity_raw =  np.asarray(angular_velocity_raw)
-    linear_acceleration_raw =  np.asarray(linear_acceleration_raw)
-    p_wb = np.asarray(p_wb)
-    q_wb = np.asarray(q_wb)
-    v_wb = np.asarray(v_wb)
+            #Transform lists to arrays
+            ts_imu = np.asarray(ts_imu)
+            ts_odom = np.asarray(ts_odom)
+            angular_velocity_perfect = np.asarray(angular_velocity_perfect)
+            linear_acceleration_perfect = np.asarray(linear_acceleration_perfect)
+            angular_velocity_raw =  np.asarray(angular_velocity_raw)
+            linear_acceleration_raw =  np.asarray(linear_acceleration_raw)
+            p_wb = np.asarray(p_wb)
+            q_wb = np.asarray(q_wb)
+            v_wb = np.asarray(v_wb)
 
-    
+            
 
-    # ================================== EXPORT FILES FOR DATASET GENERATION ==================================
-    
-    #Generate: mytimestamps_p.txt
+            # ================================== EXPORT FILES FOR DATASET GENERATION ==================================
+            
+            #Generate: mytimestamps_p.txt
 
-    with open("my_timestamps_p.txt", "w") as txt_file:
-        for line in ts_odom.tolist():
-            txt_file.write(str(line)) 
-            txt_file.write("\n") 
+            with open("my_timestamps_p.txt", "w") as txt_file:
+                for line in ts_odom.tolist():
+                    txt_file.write(str(line)) 
+                    txt_file.write("\n") 
 
-    #Generate: imu_measurements.txt
+            #Generate: imu_measurements.txt
 
-    ts_imu_row, col = linear_acceleration_raw.shape 
-    ts_imu = np.reshape(ts_imu, (ts_imu_row, 1))
+            ts_imu_row, col = linear_acceleration_raw.shape 
+            ts_imu = np.reshape(ts_imu, (ts_imu_row, 1))
 
-    ts_odom_row, col = q_wb.shape
-    ts_odom = np.reshape(ts_odom, (ts_odom_row, 1))
+            ts_odom_row, col = q_wb.shape
+            ts_odom = np.reshape(ts_odom, (ts_odom_row, 1))
 
-        #Create hasVio vector
-    hasVio = np.zeros((ts_imu_row, 1))
-    it = range(ts_odom_row)
-    for m in it:
-        if ts_odom[m] in ts_imu:
-            where = np.where(ts_imu == ts_odom[m])
-            hasVio[where] = 1
+                #Create hasVio vector
+            hasVio = np.zeros((ts_imu_row, 1))
+            it = range(ts_odom_row)
+            for m in it:
+                if ts_odom[m] in ts_imu:
+                    where = np.where(ts_imu == ts_odom[m])
+                    hasVio[where] = 1
 
-        #Structure your file
-    tableIMU = np.hstack((ts_imu, linear_acceleration_raw, linear_acceleration_perfect, angular_velocity_raw, angular_velocity_perfect, hasVio))
-       
-    file = open("imu_measurements.txt", "w")
-    for row in tableIMU:      
-        line = str(row).lstrip('[').rstrip(']')
-        line += (f'\n')
-        line += (f'\n')
-        file.write(line)
-    file.close()
+                #Structure your file
+            tableIMU = np.hstack((ts_imu, linear_acceleration_raw, linear_acceleration_perfect, angular_velocity_raw, angular_velocity_perfect, hasVio))
+            
+            file = open("imu_measurements.txt", "w")
+            for row in tableIMU:      
+                line = str(row).lstrip('[').rstrip(']')
+                line += (f'\n')
+                line += (f'\n')
+                file.write(line)
+            file.close()
 
-    #Generate: evolving_state.txt
+            #Generate: evolving_state.txt
 
-    tableEvolvingState = np.hstack((ts_odom, q_wb, p_wb, v_wb))
-    file = open("evolving_state.txt", "w")
-    for row in tableEvolvingState:    
-        line = str(row).lstrip('[').rstrip(']')
-        line += (f'\n')
-        line += (f'\n')
-        file.write(line)
-    file.close()
+            tableEvolvingState = np.hstack((ts_odom, q_wb, p_wb, v_wb))
+            file = open("evolving_state.txt", "w")
+            for row in tableEvolvingState:    
+                line = str(row).lstrip('[').rstrip(']')
+                line += (f'\n')
+                line += (f'\n')
+                file.write(line)
+            file.close()
 
     # =============================================   PLOTTING  ===========================hasVio===============================
 
