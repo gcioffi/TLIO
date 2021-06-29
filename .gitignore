@@ -2,3 +2,6 @@ data/*
 src/dataloader/_*
 src/utils/_*
 src/scripts/tlio/_*
+src/params/dataloader_params_giovanni.yaml
+results/
+src/network/_*

@@ -234,7 +234,7 @@ def perturbationIMUandBiases(config_fn):
 
     # Save others
     fn = os.path.join(out_dir, "n_sequences.txt")
-    np.savetxt(fn, np.array([n_trajectories], dtype=np.int), fmt='%d')
+    np.savetxt(fn, np.array([n_trajectories], dtype=int), fmt='%d')
 
     #ToDo
     all_biases = np.array(all_biases)

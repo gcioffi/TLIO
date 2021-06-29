@@ -24,6 +24,7 @@ import h5py
 import matplotlib.pyplot as plt
 import numpy as np
 import progressbar
+import IPython
 from numba import jit
 from scipy.interpolate import interp1d
 from scipy.spatial.transform import Rotation
@@ -63,7 +64,6 @@ def save_hdf5(args):
     fn = os.path.join(data_dir, "n_sequences.txt")
     n_seq = int(np.loadtxt(fn))
 
-
     print("Loading %d sequences" % n_seq)
     
     name = []
@@ -74,9 +74,22 @@ def save_hdf5(args):
 
     gravity = np.array([0, 0, -args.gravity])
     
+    # save train.txt, val.txt, test.txt
+    perc_train_seq = 0.8
+    perc_test_seq = 0.1
+    perc_val_seq = 0.1
+
+    n_train_seq = int(perc_train_seq*n_seq)
+    n_test_seq = int(perc_test_seq*n_seq)
+    n_val_seq = int(perc_val_seq*n_seq)
+
+    train_list = []
+    test_list = []
+    val_list = []
+
     #for i in progressbar.progressbar(range(n_seq), redirect_stdout=True):
-    for i in range(n_seq):
-        datapath = name[i]
+    for seq_id in range(n_seq):
+        datapath = name[seq_id]
        
         # start with the 20th image processed, bypass vio initialization
         image_ts = np.loadtxt(osp.join(datapath, "my_timestamps_p.txt"))
@@ -212,6 +225,36 @@ def save_hdf5(args):
             vio_v_s = f.create_dataset("vio_v", data=vio_v)
             print("File data.hdf5 written to " + outdir)
 
+        seq_name = "seq" + str(seq_id+1)
+        if 0 <= seq_id < n_train_seq:
+            train_list.append(seq_name)
+        elif n_train_seq <= seq_id < n_train_seq + n_test_seq:
+            test_list.append(seq_name)
+        elif seq_id >= n_train_seq + n_test_seq:
+            val_list.append(seq_name)
+    
+    # Save train.txt, val.txt, test.txt
+    train_fn = osp.join(data_dir, 'train.txt')
+    f_txt = open(train_fn, "w")
+    for fn_seq in train_list:
+        f_txt.write(fn_seq)
+        f_txt.write("\n")
+    f_txt.close()
+
+    test_fn = osp.join(data_dir, 'test.txt')
+    f_txt = open(test_fn, "w")
+    for fn_seq in test_list:
+        f_txt.write(fn_seq)
+        f_txt.write("\n")
+    f_txt.close()
+
+    val_fn = osp.join(data_dir, 'val.txt')
+    f_txt = open(val_fn, "w")
+    for fn_seq in val_list:
+        f_txt.write(fn_seq)
+        f_txt.write("\n")
+    f_txt.close()
+
 
 if __name__ == "__main__":
 
@@ -223,16 +266,7 @@ if __name__ == "__main__":
         "--data_dir", type=str, default="/home/rpg/Desktop/TLIO/data/Dataset"
     )
 
-    '''parser.add_argument("--output_dir", type=str, default="../../dataset_test_output")
-    parser.add_argument(
-        "--data_dir", type=str, default="/raid0/docker-raid/wenxin/data/Dataset"
-    )
-    parser.add_argument(
-        "--data_list",
-        type=str,
-        default="/raid0/docker-raid/wenxin/data/Dataset/golden_test_small.txt",
-    )'''
-
     args = parser.parse_args()
 
     save_hdf5(args)
+

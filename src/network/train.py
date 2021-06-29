@@ -12,7 +12,7 @@ from os import path as osp
 
 import numpy as np
 import torch
-from dataloader.dataset_fb import FbSequenceDataset
+from dataloader.dataset_racing import RacingSequenceDataset
 from network.losses import get_loss
 from network.model_factory import get_model
 from torch.utils.data import DataLoader
@@ -241,7 +241,7 @@ def net_train(args):
     start_t = time.time()
     train_list = get_datalist(args.train_list)
     try:
-        train_dataset = FbSequenceDataset(
+        train_dataset = RacingSequenceDataset(
             args.root_dir, train_list, args, data_window_config, mode="train"
         )
         train_loader = DataLoader(
@@ -257,7 +257,7 @@ def net_train(args):
     if args.val_list is not None:
         val_list = get_datalist(args.val_list)
         try:
-            val_dataset = FbSequenceDataset(
+            val_dataset = RacingSequenceDataset(
                 args.root_dir, val_list, args, data_window_config, mode="val"
             )
             val_loader = DataLoader(val_dataset, batch_size=512, shuffle=True)
