@@ -1,0 +1,20 @@
+# Input
+bagfile: /data/storage/aurora/TLIO/data/rosbags/raceTraj18Jun21.bag
+topic_imu: /kingfisher/ground_truth/imu
+topic_odometry: /kingfisher/ground_truth/odometry
+
+# Output
+n_trajectories: 10
+out_dir: /home/aurora/TLIO/data/Dataset
+
+# Noise params
+stdImuNoise_acc: 0.2
+stdImuNoise_gyro: 0.1
+bias_acc: [-0.3, 0.3]
+bias_gyro: [-0.1, 0.1]
+stdBiasNoise_acc: 0.01
+stdBiasNoise_gyro: 0.01
+
+
+
+
