@@ -1,11 +1,11 @@
 # Input
-bagfile: /home/giovanni/Desktop/RaceTraj.bag
+bagfile: /home/rpg/Desktop/RaceTraj.bag
 topic_imu: /kingfisher/ground_truth/imu
 topic_odometry: /kingfisher/ground_truth/odometry
 
 # Output
 n_trajectories: 2
-out_dir: /home/giovanni/TLIO/data/Dataset
+out_dir: /home/rpg/Desktop/TLIO/data/Dataset
 
 # Noise params
 stdImuNoise_acc: 0.2
@@ -14,6 +14,7 @@ bias_acc: [-0.3, 0.3]
 bias_gyro: [-0.1, 0.1]
 stdBiasNoise_acc: 0.01
 stdBiasNoise_gyro: 0.01
+
 
 
 

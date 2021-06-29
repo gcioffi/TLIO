@@ -63,6 +63,7 @@ def save_hdf5(args):
     fn = os.path.join(data_dir, "n_sequences.txt")
     n_seq = int(np.loadtxt(fn))
 
+
     print("Loading %d sequences" % n_seq)
     
     name = []
@@ -72,10 +73,11 @@ def save_hdf5(args):
         name.append(osp.join(seq_dir))
 
     gravity = np.array([0, 0, -args.gravity])
-
-    for i in progressbar.progressbar(range(n_seq), redirect_stdout=True):
+    
+    #for i in progressbar.progressbar(range(n_seq), redirect_stdout=True):
+    for i in range(n_seq):
         datapath = name[i]
-
+       
         # start with the 20th image processed, bypass vio initialization
         image_ts = np.loadtxt(osp.join(datapath, "my_timestamps_p.txt"))
         imu_meas = np.loadtxt(osp.join(datapath, "imu_measurements.txt"))
@@ -120,8 +122,9 @@ def save_hdf5(args):
         ]
         state_init = np.concatenate((r_init.as_rotvec(), p_init, v_init), axis=0)
         state_data[0, :] = state_init
-
-        for i in progressbar.progressbar(range(1, N)):
+        
+        #for i in progressbar.progressbar(range(1, N)):
+        for i in range(1,N):    
             # get calibrated imu data for integration
             imu_data_i = np.concatenate((imu_data[i, 4:7], imu_data[i, 10:13]), axis=0)
             curr_t = imu_data[i, 0]
@@ -177,7 +180,8 @@ def save_hdf5(args):
         rvec_integration = np.zeros((N, 3))
         rvec_integration[0, :] = state_data[0, 1:4]
 
-        for i in progressbar.progressbar(range(1, N)):
+        #for i in progressbar.progressbar(range(1, N)):
+        for i in range(1,N):
             dt = ts[i] - ts[i - 1]
             last_rvec = Rotation.from_rotvec(rvec_integration[i - 1, :])
             last_R = last_rvec.as_matrix()
@@ -195,7 +199,7 @@ def save_hdf5(args):
 
         # output
         outdir = datapath
-
+        
         # everything under the same timestamp ts
         with h5py.File(osp.join(outdir, "data.hdf5"), "w") as f:
             ts_s = f.create_dataset("ts", data=ts)
@@ -216,7 +220,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--gravity", type=float, default=9.81)
     parser.add_argument(
-        "--data_dir", type=str, default="/home/rpg/TLIO/data/Dataset"
+        "--data_dir", type=str, default="/home/rpg/Desktop/TLIO/data/Dataset"
     )
 
     '''parser.add_argument("--output_dir", type=str, default="../../dataset_test_output")

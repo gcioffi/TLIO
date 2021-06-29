@@ -41,7 +41,7 @@ def perturbationIMUandBiases(config_fn):
             if key == 'n_trajectories':
                 n_trajectories = value
             if key == 'out_dir':
-                out_dir = value
+                out_dir = value 
             else:
                 if key == 'stdImuNoise_acc':
                     stdImuNoise_acc = value
@@ -82,6 +82,7 @@ def perturbationIMUandBiases(config_fn):
         a_calib = [] # GT + IMU noise
         w_raw = [] #GT + bias + noise on bias + noise on IMU
         a_raw = []
+    
     
         first = True
         with rosbag.Bag(bagfile, 'r') as bag:
@@ -215,7 +216,17 @@ def perturbationIMUandBiases(config_fn):
         fn = os.path.join(seq_dir, "evolving_state.txt")
         np.savetxt(fn, tableEvolvingState)
 
-        # ToDo: save bias
+        # Save biases values: bias.txt
+        
+        biasesValues = np.concatenate((bias_acc,bias_w), axis=0)  
+        targetsBiases  = np.array(["Bias_acc_x", "Bias_acc_y", "Bias_acc_z", "Bias_w_x", "Bias_w_y", "Bias_w_z"])
+        biasesValues = np.array(biasesValues)
+        ab = np.zeros(targetsBiases.size, dtype=[('Targets', 'U256'), ('Biases', float)])
+        ab['Targets'] = targetsBiases
+        ab['Biases'] = biasesValues
+        fn = os.path.join(seq_dir, "Biases.txt")
+        np.savetxt(fn, ab, fmt="%-10s , %-10.3f", header="Bias type, Value")    
+
 
     # Save others
     fn = os.path.join(out_dir, "n_sequences.txt")
@@ -228,7 +239,7 @@ def perturbationIMUandBiases(config_fn):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("--config", type=str, default='/home/rpg/TLIO/src/params/dataloader_params.yaml')
+    parser.add_argument("--config", type=str, default='/home/rpg/Desktop/TLIO/src/params/dataloader_params.yaml')
     args = parser.parse_args()
     config_fn = args.config
     perturbationIMUandBiases(config_fn)
