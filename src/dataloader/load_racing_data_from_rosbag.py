@@ -64,6 +64,8 @@ def perturbationIMUandBiases(config_fn):
     print('- %s' % topic_odometry)
     print('Saving results to: %s' % out_dir)
 
+    all_biases = []
+
     for i in range(n_trajectories):
         print("Creating file with trajectory:", i)
 
@@ -82,6 +84,7 @@ def perturbationIMUandBiases(config_fn):
         a_calib = [] # GT + IMU noise
         w_raw = [] #GT + bias + noise on bias + noise on IMU
         a_raw = []
+        
     
     
         first = True
@@ -219,18 +222,27 @@ def perturbationIMUandBiases(config_fn):
         # Save biases values: bias.txt
         
         biasesValues = np.concatenate((bias_acc,bias_w), axis=0)  
+        all_biases.append(np.asarray(biasesValues))
         targetsBiases  = np.array(["Bias_acc_x", "Bias_acc_y", "Bias_acc_z", "Bias_w_x", "Bias_w_y", "Bias_w_z"])
         biasesValues = np.array(biasesValues)
         ab = np.zeros(targetsBiases.size, dtype=[('Targets', 'U256'), ('Biases', float)])
         ab['Targets'] = targetsBiases
         ab['Biases'] = biasesValues
         fn = os.path.join(seq_dir, "Biases.txt")
-        np.savetxt(fn, ab, fmt="%-10s , %-10.3f", header="Bias type, Value")    
+        np.savetxt(fn, ab, fmt="%-10s : %-10.3f", header="Bias type, Value")    
 
 
     # Save others
     fn = os.path.join(out_dir, "n_sequences.txt")
     np.savetxt(fn, np.array([n_trajectories], dtype=np.int), fmt='%d')
+
+    #ToDo
+    all_biases = np.array(all_biases)
+    targetsBiases  = np.array(["Bias_acc_x", "Bias_acc_y", "Bias_acc_z", "Bias_w_x", "Bias_w_y", "Bias_w_z"])
+    fn = os.path.join(out_dir, "all_biases.txt")
+    np.savetxt(fn, all_biases, header = "Bias_acc_x, Bias_acc_y, Bias_acc_z, Bias_w_x, Bias_w_y, Bias_w_z")
+
+
 
     # IPython.embed()
 
