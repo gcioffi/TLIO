@@ -357,9 +357,11 @@ At this point, the following txt files will be produced:
 - evolving_state.txt
 
 **COMMAND TO LAUNCH (on SNAGA)**
+
 python src/dataloader/load_racing_data_from_rosbag.py --config src/params/dataloader_params_snaga.yaml
 
 **COMMAND TO LAUNCH (on LAPTOP)**
+
 python src/dataloader/load_racing_data_from_rosbag.py --config src/params/dataloader_params.yaml
 
 ### gen_racing_data.py
@@ -368,6 +370,7 @@ Launching "gen_racing_data.py", it is possible to get the hdf5 needed for the tr
 When launching this script, a data directory --data_dir should be specified: TLIO/data/Dataset. 
 
 **COMMAND TO LAUNCH:**
+
 python src/dataloader/gen_racing_data.py --data_dir data/Dataset/
 
 ### SNAGA: Training
@@ -375,6 +378,7 @@ python src/dataloader/gen_racing_data.py --data_dir data/Dataset/
 Training is carried out in SNAGA. 
 
 **COMMAND TO LAUNCH:**
+
 python src/main_net.py --mode train --root_dir data/Dataset --train_list data/Dataset/train.txt --val_list data/Dataset/val.txt --out_dir results/race_track_18Jun21/ --batch_size 5 --imu_freq 500
 
 ### SNAGA: Links to Wiki
@@ -388,24 +392,29 @@ https://app.gitbook.com/@rpg-uzh/s/rpg-uzh/computers-storage-and-printers/worksh
 ### SNAGA: key concepts
 
 **Connect to SNAGA**
+
 - ssh aurora@snaga.ifi.uzh.ch
 
 **Create a virtual environment on SNAGA**
+
 - conda deactivate
 - conda activate
 - conda create --name TLIO
 - conda activate TLIO
 
 **Create a directory to store results and files**
+
 In this case, it is:
 - /data/storage/aurora/TLIO
 Never store results in the HOME directory! 
 
 **Create soft link between TLIO code in HOME and your results folder**
+
 in ~TLIO: ln -s /data/storage/aurora/TLIO/data .
 in ~TLIO: ln -s /data/storage/aurora/TLIO/results/ .
 
 **Source ROS**
+
 Add it to BASHRC in order to have it automatically
 - source /opt/ros/melodic/setup.bash
 
@@ -413,13 +422,16 @@ Add it to BASHRC in order to have it automatically
 - mv RaceTraj.bag raceTraj18Jun21.bag
 
 **Create a COPY from local laptop to snaga**
+
 Run the following on your local terminal:
 - scp raceTraj18Jun21.bag aurora@snaga.ifi.uzh.ch:/data/storage/aurora/TLIO/data/rosbags 
 
 **Create a COPY from snaga to local laptop**
+
 - scp -r aurora@snaga.ifi.uzh.ch:/home/aurora/TLIO/results/race18June21 . 
 
 **Check GPU usage and set a gpu for training**
+
 - gpustat
 - export CUDA_VISIBLE_DEVICES=X ---> where X is the number of a free gpu
 - screen 
@@ -427,6 +439,7 @@ Run the following on your local terminal:
 "Screen" is needed to avoid killing the script if and when connection is lost.
 
 **Exit SCREEN and SNAGA**
+
 - exit
 - exit
 
