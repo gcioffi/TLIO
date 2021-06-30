@@ -364,7 +364,7 @@ python src/dataloader/load_racing_data_from_rosbag.py --config src/params/datalo
 
 python src/dataloader/load_racing_data_from_rosbag.py --config src/params/dataloader_params.yaml
 
-### gen_racing_data.py
+### PYScript: gen_racing_data.py
 
 Launching "gen_racing_data.py", it is possible to get the hdf5 needed for the training step and the train.txt, test.txt and val.txt files.
 When launching this script, a data directory --data_dir should be specified: TLIO/data/Dataset. 
