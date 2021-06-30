@@ -333,8 +333,6 @@ python -m analysis.display_json \
 --glob_dataset "../batch_filter_outputs/*/"
 
 
-
-
 # Details Implementation
 
 ## Parameters
@@ -418,6 +416,7 @@ Run the following on your local terminal:
 - gpustat
 - export CUDA_VISIBLE_DEVICES=X ---> where X is the number of a free gpu
 - screen 
+- press enter
 "Screen" is needed to avoid killing the script if and when connection is lost.
 
 **Exit SCREEN and SNAGA**
