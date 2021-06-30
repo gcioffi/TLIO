@@ -333,7 +333,7 @@ python -m analysis.display_json \
 --glob_dataset "../batch_filter_outputs/*/"
 ```
 
-# Details Implementation
+# Implementation Details
 
 ## Parameters
 
