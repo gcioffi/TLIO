@@ -83,9 +83,7 @@ def perturbationIMUandBiases(config_fn):
     with rosbag.Bag(bagfile, 'r') as bag:
         for (topic, msg, ts) in bag.read_messages():
             if topic == topic_imu:
-                
-
-                
+              
                 if first:
                     dt_sqrt_ = 0
                     dt_sqrt.append(dt_sqrt_)
@@ -162,7 +160,7 @@ def perturbationIMUandBiases(config_fn):
         q_wb = np.asarray(q_wb)
         v_wb = np.asarray(v_wb)
         dt_sqrt = np.asarray(dt_sqrt)
-        dt_sqrt = np.reshape(dt_sqrt, (21107,1)) #modify number
+        dt_sqrt = np.reshape(dt_sqrt, (dt_sqrt.shape[0],1)) 
 
         # Noise generation on IMU and bias for w and a
         noise_IMU_w = np.random.normal(0,stdImuNoise_gyro,(w_calib.shape[0], w_calib.shape[1])) #mean, std, number elements
@@ -173,8 +171,8 @@ def perturbationIMUandBiases(config_fn):
         w_calib = w_calib + noise_IMU_w
         a_calib = a_calib + noise_IMU_acc
                   
-        w_raw = w_raw + noise_IMU_w + bias_w + noise_bias_w* dt_sqrt
-        a_raw = a_raw + noise_IMU_acc + bias_acc + noise_bias_acc* dt_sqrt
+        w_raw = w_raw + noise_IMU_w + bias_w + noise_bias_w * dt_sqrt
+        a_raw = a_raw + noise_IMU_acc + bias_acc + noise_bias_acc * dt_sqrt
 
    
         # ================================== EXPORT FILES FOR DATASET GENERATION ==================================
