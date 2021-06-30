@@ -331,9 +331,7 @@ To generate plots from the metrics:
 ```shell script
 python -m analysis.display_json \
 --glob_dataset "../batch_filter_outputs/*/"
-
-
-
+```
 
 # Details Implementation
 
