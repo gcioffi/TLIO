@@ -505,6 +505,7 @@ def net_test(args):
 
     print("model_state_dict: loading!")
     network.load_state_dict(checkpoint["model_state_dict"])
+    print("failing!")
     network.eval()
     logging.info(f"Model {args.model_path} loaded to device {device}.")
 
