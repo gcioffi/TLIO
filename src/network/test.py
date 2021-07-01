@@ -9,6 +9,7 @@ from os import path as osp
 import matplotlib.pyplot as plt
 import torch
 from dataloader.dataset_fb import FbSequenceDataset
+from dataloader.dataset_racing import RacingSequenceDataset
 from network.losses import get_loss
 from network.model_factory import get_model
 from scipy.interpolate import interp1d
@@ -504,8 +505,7 @@ def net_test(args):
     )
 
     print("model_state_dict: loading!")
-    network.load_state_dict(checkpoint["model_state_dict"])
-    print("failing!")
+    network.load_state_dict(checkpoint["model_state_dict"]) # problem
     network.eval()
     logging.info(f"Model {args.model_path} loaded to device {device}.")
 
@@ -515,7 +515,7 @@ def net_test(args):
     for data in test_list:
         logging.info(f"Processing {data}...")
         try:
-            seq_dataset = FbSequenceDataset(
+            seq_dataset = RacingSequenceDataset(
                 args.root_dir, [data], args, data_window_config, mode="test"
             )
             seq_loader = DataLoader(seq_dataset, batch_size=1024, shuffle=False)

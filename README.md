@@ -379,7 +379,7 @@ Training is carried out in SNAGA.
 
 **COMMAND TO LAUNCH:**
 
-python src/main_net.py --mode train --root_dir data/Dataset --train_list data/Dataset/train.txt --val_list data/Dataset/val.txt --out_dir results/race_track_18Jun21/ --batch_size 5 --imu_freq 500
+python src/main_net.py --mode train --root_dir data/Dataset --train_list data/Dataset/train.txt --val_list data/Dataset/val.txt --out_dir results/race_track_18Jun21/ --batch_size 100 --imu_freq 500
 
 ### SNAGA: Testing
 
@@ -387,7 +387,9 @@ Testing is carried out in SNAGA.
 
 **COMMAND TO LAUNCH:**
 
-python3 src/main_net.py --mode test --root_dir data/Dataset --test_list data/Dataset/test.txt --model_path results/race_track_18Jun21/checkpoints/checkpoint_1.pt --out_dir results/results_test
+You need to create a directory for the results and set the checkpoint and the batch size. 
+
+python3 src/main_net.py --mode test --root_dir data/Dataset --test_list data/Dataset/test.txt --model_path results/race_track_18Jun21/checkpoints/checkpoint_1.pt --out_dir results/results_test --batch_size 1 --imu_freq 500 --save_plot
 
 ### SNAGA: Links to Wiki
 - Machine learning hardware

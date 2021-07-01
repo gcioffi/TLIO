@@ -66,10 +66,8 @@ class RacingSequence(CompiledSequence):
             gyro = np.copy(f["gyro_dcalibrated"])
             accel = np.copy(f["accel_dcalibrated"])
             # integ_q = np.copy(f["integration_q_wxyz"])
-            
             # ToDo: set up our evaluation
-            #filter_q = np.copy(f["filter_q_wxyz"])
-            filter_q = np.array([0., 0., 0.])
+            filter_q = np.copy(f["vio_q_wxyz"])
 
         # subsample from IMU base rate:
         subsample_factor = int(np.around(self.imu_base_freq / self.imu_freq))
@@ -79,7 +77,7 @@ class RacingSequence(CompiledSequence):
         gyro = gyro[::subsample_factor, :]
         acce = accel[::subsample_factor, :]
         # integ_q = integ_q[::subsample_factor,:]
-        # filter_q = filter_q[::subsample_factor, :]
+        filter_q = filter_q[::subsample_factor, :]
 
         # ground truth displacement
         gt_disp = vio_p[self.interval :] - vio_p[: -self.interval]
