@@ -4,7 +4,7 @@ topic_imu: /kingfisher/ground_truth/imu
 topic_odometry: /kingfisher/ground_truth/odometry
 
 # Output
-n_trajectories: 2
+n_trajectories: 10
 out_dir: /home/rpg/Desktop/TLIO/data/Dataset
 
 # Noise params

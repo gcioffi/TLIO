@@ -358,11 +358,11 @@ At this point, the following txt files will be produced:
 
 **COMMAND TO LAUNCH (on SNAGA)**
 
-python src/dataloader/load_racing_data_from_rosbag.py --config src/params/dataloader_params_snaga.yaml
+python3 src/dataloader/load_racing_data_from_rosbag.py --config src/params/dataloader_params_snaga.yaml
 
 **COMMAND TO LAUNCH (on LAPTOP)**
 
-python src/dataloader/load_racing_data_from_rosbag.py --config src/params/dataloader_params.yaml
+python3 src/dataloader/load_racing_data_from_rosbag.py --config src/params/dataloader_params.yaml
 
 ### PYScript: gen_racing_data.py
 
@@ -371,7 +371,7 @@ When launching this script, a data directory --data_dir should be specified: TLI
 
 **COMMAND TO LAUNCH:**
 
-python src/dataloader/gen_racing_data.py --data_dir data/Dataset/
+python3 src/dataloader/gen_racing_data.py --data_dir data/Dataset/
 
 ### SNAGA: Training
 
@@ -379,7 +379,7 @@ Training is carried out in SNAGA.
 
 **COMMAND TO LAUNCH:**
 
-python src/main_net.py --mode train --root_dir data/Dataset --train_list data/Dataset/train.txt --val_list data/Dataset/val.txt --out_dir results/race_track_18Jun21/ --batch_size 100 --imu_freq 500
+python3 src/main_net.py --mode train --root_dir data/Dataset --train_list data/Dataset/train.txt --val_list data/Dataset/val.txt --out_dir results/race_track_18Jun21/ --batch_size 100 --imu_freq 500
 
 ### SNAGA: Testing
 
@@ -390,6 +390,13 @@ Testing is carried out in SNAGA.
 You need to create a directory for the results and set the checkpoint and the batch size. 
 
 python3 src/main_net.py --mode test --root_dir data/Dataset --test_list data/Dataset/test.txt --model_path results/race_track_18Jun21/checkpoints/checkpoint_1.pt --out_dir results/results_test --batch_size 1 --imu_freq 500 --save_plot
+
+Locally on laptop:
+
+Go in TLIO/src folder, write "poetry shell", go back to TLIO directory and then launch:
+
+python3 src/main_net.py --mode test --root_dir data/Dataset --test_list data/Dataset/test.txt --model_path results/race_track_18Jun21/checkpoints/checkpoint_1.pt --out_dir results/results_test --batch_size 1 --imu_freq 500 --save_plot
+
 
 ### SNAGA: Links to Wiki
 - Machine learning hardware

@@ -59,8 +59,8 @@ def pose_integrate(args, dataset, preds):
     """
     Concatenate predicted velocity to reconstruct sequence trajectory
     """
-    dp_t = args.window_time
-    pred_vels = preds / dp_t
+    dp_t = args.window_time #dp_t = 1.0
+    pred_vels = preds / dp_t # 402 x 3
 
     ind = np.array([i[1] for i in dataset.index_map], dtype=np.int)
     delta_int = int(
@@ -68,9 +68,8 @@ def pose_integrate(args, dataset, preds):
     )  # velocity as the middle of the segment
     if not (args.window_time * args.imu_freq / 2.0).is_integer():
         logging.info("Trajectory integration point is not centered.")
-    ind_intg = ind + delta_int  # the indices of doing integral
-
-    ts = dataset.ts[0]
+    ind_intg = ind + delta_int  # the indices of doing integral #402 idx
+    ts = dataset.ts[0] # 10534 ts
     dts = np.mean(ts[ind_intg[1:]] - ts[ind_intg[:-1]])
     pos_intg = np.zeros([pred_vels.shape[0] + 1, args.output_dim])
     pos_intg[0] = dataset.gt_pos[0][ind_intg[0], :]
@@ -93,6 +92,7 @@ def pose_integrate(args, dataset, preds):
         "eul_gt": eul_gt,
     }
 
+  
     return traj_attr_dict
 
 
@@ -387,13 +387,12 @@ def get_inference(network, data_loader, device, epoch):
         pred, pred_cov = network(feat.to(device))
         targ = targ.to(device)
         loss = get_loss(pred, pred_cov, targ, epoch)
-
         targets_all.append(torch_to_numpy(targ))
         preds_all.append(torch_to_numpy(pred))
         preds_cov_all.append(torch_to_numpy(pred_cov))
         losses_all.append(torch_to_numpy(loss))
 
-    targets_all = np.concatenate(targets_all, axis=0)
+    targets_all = np.concatenate(targets_all, axis=0) #402 x 3
     preds_all = np.concatenate(preds_all, axis=0)
     preds_cov_all = np.concatenate(preds_cov_all, axis=0)
     losses_all = np.concatenate(losses_all, axis=0)
@@ -505,7 +504,7 @@ def net_test(args):
     )
 
     print("model_state_dict: loading!")
-    network.load_state_dict(checkpoint["model_state_dict"]) # problem
+    network.load_state_dict(checkpoint["model_state_dict"])
     network.eval()
     logging.info(f"Model {args.model_path} loaded to device {device}.")
 
@@ -518,6 +517,7 @@ def net_test(args):
             seq_dataset = RacingSequenceDataset(
                 args.root_dir, [data], args, data_window_config, mode="test"
             )
+            print("seq_dataset", seq_dataset)
             seq_loader = DataLoader(seq_dataset, batch_size=1024, shuffle=False)
         except OSError as e:
             print(e)
@@ -533,7 +533,7 @@ def net_test(args):
         trajectory_data = np.concatenate(
             [
                 traj_attr_dict["ts"].reshape(-1, 1),
-                traj_attr_dict["pos_pred"],
+                traj_attr_dict["pos_pred"], #10025 x 3
                 traj_attr_dict["pos_gt"],
             ],
             axis=1,

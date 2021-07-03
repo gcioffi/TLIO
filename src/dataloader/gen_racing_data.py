@@ -19,7 +19,6 @@ Image frequency is known, and IMU data is interpolated evenly between the two im
 
 import os
 from os import path as osp
-
 import h5py
 import matplotlib.pyplot as plt
 import numpy as np
@@ -62,7 +61,7 @@ def save_hdf5(args):
     # get list of data to process
     data_dir = args.data_dir
     fn = os.path.join(data_dir, "n_sequences.txt")
-    n_seq = int(np.loadtxt(fn))
+    n_seq = int(np.loadtxt(fn)) 
 
     print("Loading %d sequences" % n_seq)
     
@@ -136,21 +135,29 @@ def save_hdf5(args):
         state_init = np.concatenate((r_init.as_rotvec(), p_init, v_init), axis=0)
         state_data[0, :] = state_init
         
+        #ToDO
+        counter = 0
         #for i in progressbar.progressbar(range(1, N)):
-        for i in range(1,N):    
+        for i in range(1,N): 
+            #ToDo
+            counter = counter +1  
             # get calibrated imu data for integration
             imu_data_i = np.concatenate((imu_data[i, 4:7], imu_data[i, 10:13]), axis=0)
             curr_t = imu_data[i, 0]
             past_t = imu_data[i - 1, 0]
             dt = (curr_t - past_t) * 1e-6  # s
-
+           
+            
             last_state = state_data[i - 1, :]
             new_state = imu_integrate(gravity, last_state, imu_data_i, dt)
             state_data[i, :] = new_state
 
             # if this state has vio output, correct with vio
-            has_vio = int(imu_data[i, 13])
-            if has_vio == 1:
+            has_vio = int(imu_data[i, 13]) 
+
+            #ToDO
+            if has_vio == 1 and counter%10==0:
+
                 vio_idx = np.searchsorted(vio_states[:, 0], imu_data[i, 0])
                 r_vio = Rotation.from_quat(
                     [
@@ -172,6 +179,7 @@ def save_hdf5(args):
                 ]
                 vio_state = np.concatenate((r_vio.as_rotvec(), p_vio, v_vio), axis=0)
                 state_data[i, :] = vio_state
+
         # adding timestamps in state_data
         state_data = np.concatenate(
             (np.expand_dims(imu_data[:, 0], axis=1), state_data), axis=1
@@ -233,6 +241,22 @@ def save_hdf5(args):
         elif seq_id >= n_train_seq + n_test_seq:
             val_list.append(seq_name)
     
+
+
+    #Todo
+    #Plotting VIO
+    
+    fig1 = plt.figure(num="prediction vs gt")
+    plt.plot(vio_p[:,0], vio_p[:,1])
+    plt.plot(vio_states[:,5], vio_states[:,6])
+    plt.axis("equal")
+    plt.legend(["Predicted", "Ground truth"])
+    plt.title("2D trajectory and ATE error against time")
+    fig1.savefig(osp.join(data_dir, "mygraph.png"))
+    
+
+
+
     # Save train.txt, val.txt, test.txt
     train_fn = osp.join(data_dir, 'train.txt')
     f_txt = open(train_fn, "w")
@@ -270,3 +294,5 @@ if __name__ == "__main__":
 
     save_hdf5(args)
 
+
+#Question: imu_integrate does not take values in world frame. Is this an issue? t should be in sec?

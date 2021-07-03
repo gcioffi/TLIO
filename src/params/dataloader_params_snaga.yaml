@@ -5,7 +5,7 @@ topic_odometry: /kingfisher/ground_truth/odometry
 
 # Output
 n_trajectories: 10000
-out_dir: /home/aurora/TLIO/data/Dataset
+out_dir: /home/aurora/TLIO/data/Dataset_trial
 
 # Noise params
 stdImuNoise_acc: 0.2
