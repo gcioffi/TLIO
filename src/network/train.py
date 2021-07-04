@@ -39,7 +39,7 @@ def get_inference(network, data_loader, device, epoch):
     targets_all, preds_all, preds_cov_all, losses_all = [], [], [], []
     network.eval()
 
-    for bid, (feat, targ, _, _) in enumerate(data_loader):
+    for bid, (feat, targ, _, _) in enumerate(data_loader): #bid should be the index in data_loader, #feat the features, #targ the label
         pred, pred_cov = network(feat.to(device))
         targ = targ.to(device)
         loss = get_loss(pred, pred_cov, targ, epoch)

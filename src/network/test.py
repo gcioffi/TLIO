@@ -66,10 +66,13 @@ def pose_integrate(args, dataset, preds):
     delta_int = int(
         args.window_time * args.imu_freq / 2.0
     )  # velocity as the middle of the segment
+
     if not (args.window_time * args.imu_freq / 2.0).is_integer():
         logging.info("Trajectory integration point is not centered.")
     ind_intg = ind + delta_int  # the indices of doing integral #402 idx
-    ts = dataset.ts[0] # 10534 ts
+
+    #The mistake was here -> time should be brought back to seconds!
+    ts = dataset.ts[0] * 1e6# 10534 ts
     dts = np.mean(ts[ind_intg[1:]] - ts[ind_intg[:-1]])
     pos_intg = np.zeros([pred_vels.shape[0] + 1, args.output_dim])
     pos_intg[0] = dataset.gt_pos[0][ind_intg[0], :]
@@ -295,6 +298,7 @@ def make_plots(args, plot_dict, outdir):
         dpi=dpi,
         figsize=figsize,
     )
+
     fig3 = plot_3d_2var_with_sigma(
         pred_ts,
         preds,
@@ -517,7 +521,6 @@ def net_test(args):
             seq_dataset = RacingSequenceDataset(
                 args.root_dir, [data], args, data_window_config, mode="test"
             )
-            print("seq_dataset", seq_dataset)
             seq_loader = DataLoader(seq_dataset, batch_size=1024, shuffle=False)
         except OSError as e:
             print(e)
