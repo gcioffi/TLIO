@@ -71,8 +71,8 @@ def pose_integrate(args, dataset, preds):
         logging.info("Trajectory integration point is not centered.")
     ind_intg = ind + delta_int  # the indices of doing integral #402 idx
 
-    #The mistake was here -> time should be brought back to seconds!
-    ts = dataset.ts[0] * 1e6# 10534 ts
+    #ToDo: The mistake was here in ts = ... -> time should be brought back to seconds!
+    ts = dataset.ts[0] * 1e6 
     dts = np.mean(ts[ind_intg[1:]] - ts[ind_intg[:-1]])
     pos_intg = np.zeros([pred_vels.shape[0] + 1, args.output_dim])
     pos_intg[0] = dataset.gt_pos[0][ind_intg[0], :]

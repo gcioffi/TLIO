@@ -111,6 +111,7 @@ class ImuTracker:
         )
 
         # IMU initial calibration
+        #ToDo: we do not have imu_calib
         self.icalib = imu_calib
         # MSCKF
         self.filter = ImuMSCKF(filter_tuning)

@@ -145,7 +145,7 @@ def save_hdf5(args):
             imu_data_i = np.concatenate((imu_data[i, 4:7], imu_data[i, 10:13]), axis=0)
             curr_t = imu_data[i, 0]
             past_t = imu_data[i - 1, 0]
-            dt = (curr_t - past_t) * 1e-6  # s
+            dt = (curr_t - past_t) * 1e-6  # s 
            
             
             last_state = state_data[i - 1, :]

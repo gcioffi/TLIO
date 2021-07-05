@@ -42,7 +42,7 @@ class ImuTrackerRunner:
         self.f_debug = open(os.path.join(outdir, "debug.txt"), "w")
         logging.info(f"writing to {outfile}")
 
-        imu_calib = ImuCalib.from_attitude_file(dataset, args)
+        imu_calib = ImuCalib.from_attitude_file(dataset, args) #Problem: we do not have atttitude!
 
         filter_tuning = dotdict(
             {
@@ -69,6 +69,7 @@ class ImuTrackerRunner:
             }
         )
 
+        #ToDo: no IMU calib from atttitude -> says optional in imu_tracker.py -> check on that
         # ImuTracker object
         self.tracker = ImuTracker(
             model_path=args.model_path,

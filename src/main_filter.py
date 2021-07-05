@@ -35,10 +35,11 @@ if __name__ == "__main__":
     io_groups.add_argument(
         "--root_dir", type=str, default=None, help="Path to data directory"
     )
-    io_groups.add_argument("--data_list", type=str, default=None)
+    io_groups.add_argument("--data_list", type=str, default=None) #to test.txt
+    #ToDo: what is this value "dataset_number"?
     io_groups.add_argument("--dataset_number", type=int, default=None)
-    io_groups.add_argument("--model_path", type=str, default=None)
-    io_groups.add_argument("--model_param_path", type=str, default=None, required=True)
+    io_groups.add_argument("--model_path", type=str, default=None) #checkpoint
+    io_groups.add_argument("--model_param_path", type=str, default=None, required=True) #parameter json file for this model
     io_groups.add_argument("--out_dir", type=str, default=".")
     io_groups.add_argument("--out_filename", type=str, default="not_vio_state.txt")
     io_groups.add_argument("--save_as_npy", action="store_true")
@@ -54,6 +55,7 @@ if __name__ == "__main__":
     net_groups.add_argument("--cpu", action="store_true")
 
     # ----------------------- filter params -----------------------
+    #ToDO: should we change these parameters? 
     filter_group = parser.add_argument_group("filter tuning:")
 
     filter_group.add_argument("--update_freq", type=float, default=20.0)  # (Hz)
@@ -112,6 +114,7 @@ if __name__ == "__main__":
         "--const_cov_val_z", type=float, default=np.power(0.1, 2.0)
     )
 
+    #ToDo: use_vio_meas: true or false? 
     # measurement alternatives (note: if use_vio_meas is false, add_sim_meas_noise must be false)
     add_bool_arg(
         debug_groups,
@@ -137,6 +140,7 @@ if __name__ == "__main__":
 
     logging.info("Program options:")
     logging.info(pprint(vars(args)))
+    
     # run filter
     with open(args.data_list) as f:
         data_names = [
@@ -148,7 +152,7 @@ if __name__ == "__main__":
     if not os.path.exists(args.out_dir):
         os.mkdir(args.out_dir)
 
-    param_dict = vars(args)
+    param_dict = vars(args) #make a dictionary with the parameters in args
     param_dict["git_version"] = git_version()
     param_dict["date"] = str(datetime.datetime.now())
     with open(args.out_dir + "/parameters.json", "w") as parameters_file:
@@ -164,10 +168,16 @@ if __name__ == "__main__":
         else:
             logging.info("Running in batch mode")
             # add metadata for logging
-            n_data = len(data_names)
+            #ToDO: is n_data the number of sequences in test.txt?
+            n_data = len(data_names) data_names should be the number of sequences in test.txt
             for i, name in enumerate(data_names):
                 logging.info(f"Processing {i} / {n_data} dataset {name}")
                 try:
+                    '''
+                    ImuTracker is responsible for feeding the EKF with the correct data
+                    It receives the imu measurement, fills the buffer, runs the network with 
+                    imu data in buffer and drives the filter.
+                    '''
                     trackerRunner = ImuTrackerRunner(args, name)
                     trackerRunner.run_tracker(args)
                 except FileExistsError as e:
