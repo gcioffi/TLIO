@@ -26,16 +26,33 @@ class ImuCalib:
         ret.gyroBias = init_calib[31:34].reshape((3, 1))
         return ret
 
+    @classmethod
+    def from_groundtruth_bias(cls, dataset, args):
+        ret = cls()
+        biases_path = osp.join(args.root_dir, dataset, "Biases.txt")
+        values = []
+        fhand = open('biases_path.txt')
+        for line in fhand:
+            line = line.rstrip()
+            contents = line.split(':')
+            values.append(contents[1])
+        ret.accelBias = np.array([values[0], values[1], values[2]]).reshape((3, 1))
+        ret.gyroBias = np.array([values[3], values[4], values[5]]).reshape((3, 1))
+        print("-- Using groundtruth biases --")
+        print("Acc. bias")
+        print(ret.accelBias)
+        print("Gyro. bias")
+        print(ret.gyroBias)
+        return ret
+
+    # This is a simplified version of the original code using attitude filter.
     def calibrate_raw(self, acc, gyr):
-        acc_cal = np.dot(self.accelScaleInv, acc) - self.accelBias
-        gyr_cal = (
-            np.dot(self.gyroScaleInv, gyr)
-            - np.dot(self.gyroGSense, acc)
-            - self.gyroBias
-        )
+        acc_cal = acc - self.accelBias
+        gyr_cal = ( gyr - self.gyroBias )
         return acc_cal, gyr_cal
 
+    # This is a simplified version of the original code using attitude filter.
     def scale_raw(self, acc, gyr):
-        acc_cal = np.dot(self.accelScaleInv, acc)
-        gyr_cal = np.dot(self.gyroScaleInv, gyr) - np.dot(self.gyroGSense, acc)
+        acc_cal = acc
+        gyr_cal = gyr
         return acc_cal, gyr_cal

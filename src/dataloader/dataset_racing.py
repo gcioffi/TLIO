@@ -84,14 +84,16 @@ class RacingSequence(CompiledSequence):
 
         # rotation in the world frame in quaternions
         ori_R_vio = Rotation.from_quat(vio_q[:, [1, 2, 3, 0]])
-        if self.mode in ["train", "val"]:
+        # we use vio (= gt) orientation in any mode  
+        ori_R = ori_R_vio
+        '''if self.mode in ["train", "val"]:
             ori_R = ori_R_vio
         elif self.mode in ["test", "eval"]:
             ori_R = Rotation.from_quat(filter_q[:, [1, 2, 3, 0]])
             ori_R_vio_z = Rotation.from_euler("z", ori_R_vio.as_euler("xyz")[0, 2])
             ori_R_z = Rotation.from_euler("z", ori_R.as_euler("xyz")[0, 2])
             dRz = ori_R_vio_z * ori_R_z.inv()
-            ori_R = dRz * ori_R
+            ori_R = dRz * ori_R'''
 
         glob_gyro = np.einsum("tip,tp->ti", ori_R.as_matrix(), gyro)
         glob_acce = np.einsum("tip,tp->ti", ori_R.as_matrix(), acce)
