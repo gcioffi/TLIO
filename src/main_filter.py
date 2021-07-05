@@ -55,22 +55,21 @@ if __name__ == "__main__":
     net_groups.add_argument("--cpu", action="store_true")
 
     # ----------------------- filter params -----------------------
-    #ToDO: should we change these parameters? 
     filter_group = parser.add_argument_group("filter tuning:")
 
     filter_group.add_argument("--update_freq", type=float, default=20.0)  # (Hz)
 
     filter_group.add_argument(
-        "--sigma_na", type=float, default=np.sqrt(1e-3)
+        "--sigma_na", type=float, default=0.2
     )  # accel noise  m/s^2
     filter_group.add_argument(
-        "--sigma_ng", type=float, default=np.sqrt(1e-4)
+        "--sigma_ng", type=float, default=0.1
     )  # gyro noise  rad/s
     filter_group.add_argument(
-        "--ita_ba", type=float, default=1e-4
+        "--ita_ba", type=float, default=0.01
     )  # accel bias noise  m/s^2/sqrt(s)
     filter_group.add_argument(
-        "--ita_bg", type=float, default=1e-6
+        "--ita_bg", type=float, default=0.01
     )  # gyro bias noise  rad/s/sqrt(s)
 
     filter_group.add_argument(
@@ -113,8 +112,7 @@ if __name__ == "__main__":
     debug_groups.add_argument(
         "--const_cov_val_z", type=float, default=np.power(0.1, 2.0)
     )
-
-    #ToDo: use_vio_meas: true or false? 
+ 
     # measurement alternatives (note: if use_vio_meas is false, add_sim_meas_noise must be false)
     add_bool_arg(
         debug_groups,
@@ -142,6 +140,7 @@ if __name__ == "__main__":
     logging.info(pprint(vars(args)))
     
     # run filter
+ 
     with open(args.data_list) as f:
         data_names = [
             s.strip().split("," or " ")[0]
@@ -168,7 +167,6 @@ if __name__ == "__main__":
         else:
             logging.info("Running in batch mode")
             # add metadata for logging
-            #ToDO: is n_data the number of sequences in test.txt?
             n_data = len(data_names) # ToDo: data_names number of sequences in test.txt
             for i, name in enumerate(data_names):
                 logging.info(f"Processing {i} / {n_data} dataset {name}")

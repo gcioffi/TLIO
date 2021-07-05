@@ -6,6 +6,7 @@ from scipy.interpolate import interp1d
 from scipy.spatial.transform import Rotation
 from utils.logging import logging
 from utils.math_utils import unwrap_rpy, wrap_rpy
+import numpy.matlib
 
 
 class DataIO:
@@ -75,11 +76,7 @@ class DataIO:
             + osp.join(args.root_dir, dataset, "evolving_state.txt")
         )
         vio_states = np.loadtxt(
-            osp.join(args.root_dir, dataset, "evolving_state.txt"), delimiter=","
-        )
-        vio_calibs = np.loadtxt(
-            osp.join(args.root_dir, dataset, "calib_state.txt"), delimiter=","
-        )
+            osp.join(args.root_dir, dataset, "evolving_state.txt") )
         self.vio_ts = vio_states[:, 0] * 1e-6
         self.vio_p = vio_states[:, 5:8]
         self.vio_v = vio_states[:, 8:11]
@@ -91,12 +88,35 @@ class DataIO:
         )
         self.vio_eul = vio_r.as_euler("xyz", degrees=True)
         self.vio_R = vio_r.as_matrix()
-        self.vio_calib_ts = vio_calibs[:, 0] * 1e-6
-        self.vio_ba = vio_calibs[:, 28:31]
-        self.vio_bg = vio_calibs[:, 31:34]
-        self.vio_accelScaleInv = vio_calibs[:, 1:10].reshape((-1, 3, 3))
+
+        biases_fn = osp.join(args.root_dir, dataset, "Biases.txt")
+        values = []
+        fhand = open(biases_fn)
+
+        counter_line = -1
+        for line in fhand:
+            counter_line = counter_line + 1 
+            if counter_line == 0: continue
+            line = line.rstrip()
+            contents = line.split(':')
+            values.append(float(contents[1]))
+
+        accelBias = np.array([values[0], values[1], values[2]]).reshape((3, 1))
+        gyroBias = np.array([values[3], values[4], values[5]]).reshape((3, 1))
+
+        vio_my_ts = np.loadtxt(
+            osp.join(args.root_dir, dataset, "my_timestamps_p.txt") )    
+        # is this sec or usec?
+        self.vio_calib_ts = vio_my_ts * 1e-6
+        # self.vio_calib_ts = vio_my_ts
+        
+        num_my_ts = vio_my_ts.shape[0]
+        self.vio_ba = np.matlib.repmat(accelBias, 1, num_my_ts).T
+        self.vio_bg = np.matlib.repmat(gyroBias, 1, num_my_ts).T
+        
+        '''self.vio_accelScaleInv = vio_calibs[:, 1:10].reshape((-1, 3, 3))
         self.vio_gyroScaleInv = vio_calibs[:, 10:19].reshape((-1, 3, 3))
-        self.vio_gyroGSense = vio_calibs[:, 19:28].reshape((-1, 3, 3))
+        self.vio_gyroGSense = vio_calibs[:, 19:28].reshape((-1, 3, 3))'''
 
     def load_sim_data(self, args):
         """

@@ -65,9 +65,18 @@ def plotImuCalibVsRaw(times, meas_calib, meas_raw, sens):
     plt.ylabel('z')
 
 
-def plotGtPosXY(times, pos):
+def plotGtPosXY(pos):
     plt.plot(pos[:, 0], pos[:, 1])
     plt.grid()
+    plt.xlabel('x')
+    plt.ylabel('y')
+
+
+def plotFilterVsGtPosXY(pos_filter, pos_gt):
+    plt.plot(pos_filter[:, 0], pos_filter[:, 1], label='filter')
+    plt.plot(pos_gt[:, 0], pos_gt[:, 1], label='gt')
+    plt.grid()
+    plt.legend()
     plt.xlabel('x')
     plt.ylabel('y')
 

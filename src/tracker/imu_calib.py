@@ -29,13 +29,18 @@ class ImuCalib:
     @classmethod
     def from_groundtruth_bias(cls, dataset, args):
         ret = cls()
+        print("root_dir", args.root_dir)
+        print("dataset", dataset)
         biases_path = osp.join(args.root_dir, dataset, "Biases.txt")
         values = []
-        fhand = open('biases_path.txt')
+        fhand = open(biases_path)
+        counter_line = -1
         for line in fhand:
+            counter_line = counter_line + 1 
+            if counter_line == 0: continue
             line = line.rstrip()
             contents = line.split(':')
-            values.append(contents[1])
+            values.append(float(contents[1]))
         ret.accelBias = np.array([values[0], values[1], values[2]]).reshape((3, 1))
         ret.gyroBias = np.array([values[3], values[4], values[5]]).reshape((3, 1))
         print("-- Using groundtruth biases --")

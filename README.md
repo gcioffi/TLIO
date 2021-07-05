@@ -397,6 +397,26 @@ Go in TLIO/src folder, write "poetry shell", go back to TLIO directory and then 
 
 python3 src/main_net.py --mode test --root_dir data/Dataset --test_list data/Dataset/test.txt --model_path results/race_track_18Jun21/checkpoints/checkpoint_1.pt --out_dir results/results_test --batch_size 1 --imu_freq 500 --save_plot --window_time 0.2
 
+### Run EKF Filter and Network 
+
+Go to TLIO and launch:
+
+**COMMAND TO LAUNCH:**
+
+python3 src/main_filter.py --root_dir data/Dataset --data_list data/Dataset/test.txt --model_path results/race_track_18Jun21/checkpoints/checkpoint_33.pt --model_param_path results/race_track_18Jun21/parameters.json --out_dir results/race_track_18Jun21/results/filter/ --initialize_with_vio --erase_old_log
+
+
+### Plot EKF Results
+
+Go to TLIO/src and launch:
+
+**COMMAND TO LAUNCH:**
+
+python3 plot_filter_results.py --data_dir ../data/Dataset --data_list ../data/Dataset/test.txt --filter_dir ../results/race_track_18Jun21/results/filter/
+
+
+
+
 
 ### SNAGA: Links to Wiki
 - Machine learning hardware
