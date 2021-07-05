@@ -169,7 +169,7 @@ if __name__ == "__main__":
             logging.info("Running in batch mode")
             # add metadata for logging
             #ToDO: is n_data the number of sequences in test.txt?
-            n_data = len(data_names) data_names should be the number of sequences in test.txt
+            n_data = len(data_names) # ToDo: data_names number of sequences in test.txt
             for i, name in enumerate(data_names):
                 logging.info(f"Processing {i} / {n_data} dataset {name}")
                 try:
