@@ -1,4 +1,7 @@
 data/*
+src/dataloader/evolving_state.txt
+src/dataloader/imu_measurements.txt
+src/dataloader/my_timestamps_p.txt
 src/dataloader/_*
 src/utils/_*
 src/scripts/tlio/_*
