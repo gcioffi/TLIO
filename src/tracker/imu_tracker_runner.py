@@ -42,7 +42,7 @@ class ImuTrackerRunner:
         self.f_debug = open(os.path.join(outdir, "debug.txt"), "w")
         logging.info(f"writing to {outfile}")
 
-        imu_calib = ImuCalib.from_attitude_file(dataset, args)
+        imu_calib = ImuCalib.from_groundtruth_bias(dataset, args)
 
         filter_tuning = dotdict(
             {

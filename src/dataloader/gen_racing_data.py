@@ -241,8 +241,6 @@ def save_hdf5(args):
         elif seq_id >= n_train_seq + n_test_seq:
             val_list.append(seq_name)
     
-
-
     #Todo
     #Plotting VIO
     
@@ -254,8 +252,6 @@ def save_hdf5(args):
     plt.title("2D trajectory and ATE error against time")
     fig1.savefig(osp.join(data_dir, "mygraph.png"))
     
-
-
 
     # Save train.txt, val.txt, test.txt
     train_fn = osp.join(data_dir, 'train.txt')
