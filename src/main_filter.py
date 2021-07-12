@@ -59,18 +59,30 @@ if __name__ == "__main__":
 
     filter_group.add_argument("--update_freq", type=float, default=20.0)  # (Hz)
 
+    # debug
+    '''filter_group.add_argument(
+        "--sigma_na", type=float, default=0.002
+    )  # accel noise  m/s^2
+    filter_group.add_argument(
+        "--sigma_ng", type=float, default=0.001
+    )'''  # gyro noise  rad/s
+    # end
+
     filter_group.add_argument(
         "--sigma_na", type=float, default=0.2
     )  # accel noise  m/s^2
     filter_group.add_argument(
         "--sigma_ng", type=float, default=0.1
     )  # gyro noise  rad/s
+
+    # debug: Trust initial bias a lot?
     filter_group.add_argument(
-        "--ita_ba", type=float, default=0.01
+        "--ita_ba", type=float, default=0.001
     )  # accel bias noise  m/s^2/sqrt(s)
     filter_group.add_argument(
-        "--ita_bg", type=float, default=0.01
+        "--ita_bg", type=float, default=0.001
     )  # gyro bias noise  rad/s/sqrt(s)
+    # end
 
     filter_group.add_argument(
         "--init_attitude_sigma", type=float, default=10.0 / 180.0 * np.pi

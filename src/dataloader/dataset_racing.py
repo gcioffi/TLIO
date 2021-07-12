@@ -95,8 +95,12 @@ class RacingSequence(CompiledSequence):
             dRz = ori_R_vio_z * ori_R_z.inv()
             ori_R = dRz * ori_R'''
 
+        # debug
         glob_gyro = np.einsum("tip,tp->ti", ori_R.as_matrix(), gyro)
         glob_acce = np.einsum("tip,tp->ti", ori_R.as_matrix(), acce)
+        #glob_gyro = gyro
+        #glob_acce = acce
+        # end
 
         self.ts = ts  # ts of the beginning of each window
         self.features = np.concatenate([glob_gyro, glob_acce], axis=1)
@@ -184,7 +188,10 @@ class RacingSequenceDataset(Dataset):
         ]
         targ = self.targets[seq_id][frame_id]  # the beginning of the sequence
 
+        # debug
         if self.mode in ["train", "eval"]:
+        #if self.mode in ["train", "eval", "test"]:
+        # end
             if self.transform:
                 # rotate in the yaw plane
                 angle = np.random.random() * (2 * np.pi)

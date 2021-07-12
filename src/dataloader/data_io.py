@@ -8,6 +8,10 @@ from utils.logging import logging
 from utils.math_utils import unwrap_rpy, wrap_rpy
 import numpy.matlib
 
+# debug
+from pyquaternion import Quaternion
+# end
+
 
 class DataIO:
     def __init__(self):
@@ -36,18 +40,32 @@ class DataIO:
         load timestamps, accel and gyro data from dataset
         """
         with h5py.File(osp.join(args.root_dir, dataset, "data.hdf5"), "r") as f:
-            ts_all = np.copy(f["ts"]) * 1e6
+            # we save ts in .hdf5 as 1e-6 * sec
+            ts_all = np.copy(f["ts"]) * 1e12 # usec
             acc_all = np.copy(f["accel_raw"])
             gyr_all = np.copy(f["gyro_raw"])
         if args.start_from_ts is not None:
             idx_start = np.where(ts_all >= args.start_from_ts)[0][0]
         else:
             idx_start = 50
+
+        # debug
+        idx_start = 0
+        # end
+
         self.ts_all = ts_all[idx_start:]
         self.acc_all = acc_all[idx_start:, :]
         self.gyr_all = gyr_all[idx_start:, :]
         self.dataset_size = self.ts_all.shape[0]
         self.init_ts = self.ts_all[0]
+
+        # debug
+        '''self.ts_all = ts_all[::2]
+        self.acc_all = acc_all[::2, :]
+        self.gyr_all = gyr_all[::2, :]
+        self.dataset_size = self.ts_all.shape[0]
+        self.init_ts = self.ts_all[0]'''
+        # end
 
     def load_filter(self, dataset, args):
         """
@@ -75,9 +93,44 @@ class DataIO:
             "loading vio states from "
             + osp.join(args.root_dir, dataset, "evolving_state.txt")
         )
+        # debug
         vio_states = np.loadtxt(
             osp.join(args.root_dir, dataset, "evolving_state.txt") )
-        self.vio_ts = vio_states[:, 0] * 1e-6
+        # ts in evolving_state.txt are secs
+
+        '''vio_states_downsampled = np.loadtxt(
+            osp.join(args.root_dir, dataset, "evolving_state.txt") )
+        # interpolation at 1000 Hz
+        vio_states = []
+        for i in range(len(vio_states_downsampled)-1):
+            t = vio_states_downsampled[i, 0]
+            dt = vio_states_downsampled[i+1, 0] - vio_states_downsampled[i, 0]
+            inter_t = t + dt / 2.0
+
+            p = vio_states_downsampled[i, 5:8]
+            p_next = vio_states_downsampled[i+1, 5:8]
+            inter_p = p + ((p_next - p) / dt) * (inter_t - t)
+
+            v = vio_states_downsampled[i, 8:11]
+            v_next = vio_states_downsampled[i+1, 8:11]
+            inter_v = v + ((v_next - v) / dt) * (inter_t - t)
+
+            q = Quaternion(vio_states_downsampled[i, 1:5])
+            q_next = Quaternion(vio_states_downsampled[i+1, 1:5])
+            inter_q = Quaternion.slerp(q, q_next, (inter_t - t) / dt)
+            q_vec = np.array([q.w, q.x, q.y, q.z])
+            inter_q_vec = np.array([inter_q.w, inter_q.x, inter_q.y, inter_q.z])
+
+            vio_state_arr = np.hstack((t, q_vec, p, v))
+            inter_vio_state_arr = np.hstack((inter_t, inter_q_vec, inter_p, inter_v))
+
+            vio_states.append(vio_state_arr)
+            vio_states.append(inter_vio_state_arr)
+
+        vio_states = np.asarray(vio_states)'''
+        # end
+        
+        self.vio_ts = vio_states[:, 0] # sec
         self.vio_p = vio_states[:, 5:8]
         self.vio_v = vio_states[:, 8:11]
         self.vio_rq = vio_states[:, 1:5]
@@ -106,11 +159,14 @@ class DataIO:
 
         vio_my_ts = np.loadtxt(
             osp.join(args.root_dir, dataset, "my_timestamps_p.txt") )    
-        # is this sec or usec?
-        self.vio_calib_ts = vio_my_ts * 1e-6
-        # self.vio_calib_ts = vio_my_ts
+        # ts in my_timestamps_p.txt are in sec
+
+        # debug
+        # self.vio_calib_ts = vio_my_ts # sec
+        self.vio_calib_ts = self.ts_all * 1e-6 # sec
+        # end
         
-        num_my_ts = vio_my_ts.shape[0]
+        num_my_ts = self.vio_calib_ts.shape[0]
         self.vio_ba = np.matlib.repmat(accelBias, 1, num_my_ts).T
         self.vio_bg = np.matlib.repmat(gyroBias, 1, num_my_ts).T
         
@@ -181,6 +237,13 @@ class DataIO:
         helper function This extracts a fake measurement from vio,
         can be used for debug to bypass the network
         """
+        # to sec
+        ts_oldest_state *= 1e-6
+        ts_end *= 1e-6
+
+        if ts_end > self.vio_ts[-1]:
+            return None, None, False
+
         # obtain vio_Ri for rotating to relative frame
         idx_left = np.where(self.vio_ts < ts_oldest_state)[0][-1]
         idx_right = np.where(self.vio_ts > ts_oldest_state)[0][0]
@@ -192,8 +255,13 @@ class DataIO:
         ts_interp = np.array([ts_oldest_state, ts_end])
         vio_interp = interp1d(self.vio_ts, self.vio_p, axis=0)(ts_interp)
         vio_meas = vio_interp[1] - vio_interp[0]  # simulated displacement measurement
-        meas_cov = np.diag(np.array([1e-2, 1e-2, 1e-2]))  # [3x3]
+        
+        # meas_cov = np.diag(np.array([1e-2, 1e-2, 1e-2]))  # [3x3]
+        # debug
+        meas_cov = np.diag(np.array([1e-3, 1e-3, 1e-3]))  # [3x3]
+        # end
+
         # express in gravity aligned frame bty normalizing on yaw
         Ri_z = Rotation.from_euler("z", vio_eul[2]).as_matrix()
         meas = Ri_z.T.dot(vio_meas.reshape((3, 1)))
-        return meas, meas_cov
+        return meas, meas_cov, True

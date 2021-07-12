@@ -387,7 +387,30 @@ def get_inference(network, data_loader, device, epoch):
     targets_all, preds_all, preds_cov_all, losses_all = [], [], [], []
     network.eval()
 
+    # debug
+    net_in_gyro_x = []
+    net_in_gyro_y = []
+    net_in_gyro_z = []
+
+    net_in_acc_x = []
+    net_in_acc_y = []
+    net_in_acc_z = []
+    # end
+
     for bid, (feat, targ, _, _) in enumerate(data_loader):
+
+        # debug
+        np_feat = torch_to_numpy(feat)
+
+        net_in_gyro_x.append(np_feat[0, 0, :])
+        net_in_gyro_y.append(np_feat[0, 1, :])
+        net_in_gyro_z.append(np_feat[0, 2, :])
+
+        net_in_acc_x.append(np_feat[0, 3, :])
+        net_in_acc_y.append(np_feat[0, 4, :])
+        net_in_acc_z.append(np_feat[0, 5, :])
+        # end
+
         pred, pred_cov = network(feat.to(device))
         targ = targ.to(device)
         loss = get_loss(pred, pred_cov, targ, epoch)
@@ -405,6 +428,15 @@ def get_inference(network, data_loader, device, epoch):
         "preds": preds_all,
         "preds_cov": preds_cov_all,
         "losses": losses_all,
+
+        # debug
+        "net_in_gyro_x": net_in_gyro_x,
+        "net_in_gyro_y": net_in_gyro_y,
+        "net_in_gyro_z": net_in_gyro_z,
+        "net_in_acc_x": net_in_acc_x,
+        "net_in_acc_y": net_in_acc_y,
+        "net_in_acc_z": net_in_acc_z,
+        # end
     }
     return attr_dict
 
@@ -521,13 +553,13 @@ def net_test(args):
             seq_dataset = RacingSequenceDataset(
                 args.root_dir, [data], args, data_window_config, mode="test"
             )
-            seq_loader = DataLoader(seq_dataset, batch_size=1024, shuffle=False)
+            seq_loader = DataLoader(seq_dataset, batch_size=1, shuffle=False)
         except OSError as e:
             print(e)
             continue
 
         # Obtain trajectory
-        net_attr_dict = get_inference(network, seq_loader, device, epoch=50)
+        net_attr_dict = get_inference(network, seq_loader, device, epoch=1)
         traj_attr_dict = pose_integrate(args, seq_dataset, net_attr_dict["preds"])
         outdir = osp.join(args.out_dir, data)
         if osp.exists(outdir) is False:
@@ -564,6 +596,26 @@ def net_test(args):
 
         if args.save_plot:
             make_plots(args, plot_dict, outdir)
+
+        # debug
+        of = osp.join(outdir, "net_in_gyro_x.txt")
+        np.savetxt(of, np.asarray(net_attr_dict["net_in_gyro_x"]))
+
+        of = osp.join(outdir, "net_in_gyro_y.txt")
+        np.savetxt(of, np.asarray(net_attr_dict["net_in_gyro_y"])) 
+
+        of = osp.join(outdir, "net_in_gyro_z.txt")
+        np.savetxt(of, np.asarray(net_attr_dict["net_in_gyro_z"]))
+
+        of = osp.join(outdir, "net_in_acc_x.txt")
+        np.savetxt(of, np.asarray(net_attr_dict["net_in_acc_x"]))
+
+        of = osp.join(outdir, "net_in_acc_y.txt")
+        np.savetxt(of, np.asarray(net_attr_dict["net_in_acc_y"])) 
+
+        of = osp.join(outdir, "net_in_acc_z.txt")
+        np.savetxt(of, np.asarray(net_attr_dict["net_in_acc_z"]))
+        # end
 
         try:
             with open(args.out_dir + "/metrics.json", "w") as f:

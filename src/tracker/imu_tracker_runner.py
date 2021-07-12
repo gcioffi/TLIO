@@ -221,6 +221,38 @@ class ImuTrackerRunner:
             np.save(self.outfile + ".npy", states)
             os.remove(self.outfile)
 
+        # debug
+        outd = os.path.dirname(self.outfile)
+
+        # save network displacements
+        if not args.use_vio_meas:
+            outf = os.path.join(outd, 'net_disp.txt')
+            np.savetxt(outf, self.tracker.net_dis)
+
+            outf = os.path.join(outd, 'net_in_gyro_x.txt')
+            np.savetxt(outf, self.tracker.net_in_gyro_x)
+
+            outf = os.path.join(outd, 'net_in_gyro_y.txt')
+            np.savetxt(outf, self.tracker.net_in_gyro_y)
+
+            outf = os.path.join(outd, 'net_in_gyro_z.txt')
+            np.savetxt(outf, self.tracker.net_in_gyro_z)
+
+            outf = os.path.join(outd, 'net_in_acc_x.txt')
+            np.savetxt(outf, self.tracker.net_in_acc_x)
+            
+            outf = os.path.join(outd, 'net_in_acc_y.txt')
+            np.savetxt(outf, self.tracker.net_in_acc_y)
+
+            outf = os.path.join(outd, 'net_in_acc_z.txt')
+            np.savetxt(outf, self.tracker.net_in_acc_z)
+
+        else:
+            # save vio displacements
+            outf = os.path.join(outd, 'vio_disp.txt')
+            np.savetxt(outf, self.tracker.vio_dis)
+        # end
+
     def scale_raw_dynamic(self, t, acc, gyr):
         """ This scale with gt data, for debug purpose only"""
         idx = np.searchsorted(self.input.vio_calib_ts, t)

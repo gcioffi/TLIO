@@ -8,3 +8,4 @@ src/scripts/tlio/_*
 src/params/dataloader_params_giovanni.yaml
 results/
 src/network/_*
+src/tracker/__pycache__/
