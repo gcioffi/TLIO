@@ -471,9 +471,9 @@ class ImuMSCKF:
             logging.info("Filter is now assumed to have converged")
             self.converged = True
 
-        # debug
+        # This is a hack.
+        # We use const cov for netwrok update.
         meas_cov = np.diag(np.array([1e-3, 1e-3, 1e-3]))
-        # end
 
         try:
             begin_idx = self.state.si_timestamps_us.index(t_begin_us)
@@ -523,23 +523,19 @@ class ImuMSCKF:
                 [0, 0, 1],
             ]
         )
-        #pred = Ri_z.T.dot(self.state.si_ps[end_idx] - self.state.si_ps[begin_idx])
-        # debug
+        # This is a hack.
+        # We do not remove yaw rotation.
         pred = self.state.si_ps[end_idx] - self.state.si_ps[begin_idx]
-        # end
 
         assert begin_idx < end_idx, "begin_idx is larger than end_idx!"
         assert (
             end_idx < self.state.N
         ), "end_idx is larger than the number of past states in the filter!"
         H = np.zeros((3, 15 + 6 * self.state.N))
-        # debug
-        #H[:, (6 * begin_idx + 3) : (6 * begin_idx + 6)] = -Ri_z.T
-        #H[:, (6 * end_idx + 3) : (6 * end_idx + 6)] = Ri_z.T
-
+        # This is a hack.
+        # We do not remove yaw rotation.
         H[:, (6 * begin_idx + 3) : (6 * begin_idx + 6)] = np.eye(3)
         H[:, (6 * end_idx + 3) : (6 * end_idx + 6)] = np.eye(3)
-        # end
 
         Hz = np.array(
             [
@@ -548,14 +544,11 @@ class ImuMSCKF:
                 [np.cos(ri_z) * np.tan(ri_y), np.sin(ri_z) * np.tan(ri_y), 1],
             ]
         )
-        # debug
-        '''H[:, (6 * begin_idx) : (6 * begin_idx + 3)] = np.linalg.multi_dot(
-            [Ri_z.T, hat(self.state.si_ps[end_idx] - self.state.si_ps[begin_idx]), Hz]
-        )'''
+        # This is a hack.
+        # We do not remove yaw rotation.
         H[:, (6 * begin_idx) : (6 * begin_idx + 3)] = np.linalg.multi_dot(
             [np.eye(3), hat(self.state.si_ps[end_idx] - self.state.si_ps[begin_idx]), Hz]
         )
-        # end
 
         # check for singularity, if has singularity drop the update
         if abs(np.cos(ri_y)) < 1e-5:

@@ -387,7 +387,8 @@ def get_inference(network, data_loader, device, epoch):
     targets_all, preds_all, preds_cov_all, losses_all = [], [], [], []
     network.eval()
 
-    # debug
+    # Save inputs to the network for later comparison with the filter 
+    # (see src/scripts/plot_imu_inputs_test_and_filter.py)
     net_in_gyro_x = []
     net_in_gyro_y = []
     net_in_gyro_z = []
@@ -395,21 +396,17 @@ def get_inference(network, data_loader, device, epoch):
     net_in_acc_x = []
     net_in_acc_y = []
     net_in_acc_z = []
-    # end
 
     for bid, (feat, targ, _, _) in enumerate(data_loader):
 
-        # debug
+        # Save network inputs
         np_feat = torch_to_numpy(feat)
-
         net_in_gyro_x.append(np_feat[0, 0, :])
         net_in_gyro_y.append(np_feat[0, 1, :])
         net_in_gyro_z.append(np_feat[0, 2, :])
-
         net_in_acc_x.append(np_feat[0, 3, :])
         net_in_acc_y.append(np_feat[0, 4, :])
         net_in_acc_z.append(np_feat[0, 5, :])
-        # end
 
         pred, pred_cov = network(feat.to(device))
         targ = targ.to(device)
@@ -429,14 +426,12 @@ def get_inference(network, data_loader, device, epoch):
         "preds_cov": preds_cov_all,
         "losses": losses_all,
 
-        # debug
         "net_in_gyro_x": net_in_gyro_x,
         "net_in_gyro_y": net_in_gyro_y,
         "net_in_gyro_z": net_in_gyro_z,
         "net_in_acc_x": net_in_acc_x,
         "net_in_acc_y": net_in_acc_y,
         "net_in_acc_z": net_in_acc_z,
-        # end
     }
     return attr_dict
 
@@ -597,7 +592,8 @@ def net_test(args):
         if args.save_plot:
             make_plots(args, plot_dict, outdir)
 
-        # debug
+        # Save inputs to the network for later comparison with the filter 
+        # (see src/scripts/plot_imu_inputs_test_and_filter.py)
         of = osp.join(outdir, "net_in_gyro_x.txt")
         np.savetxt(of, np.asarray(net_attr_dict["net_in_gyro_x"]))
 
@@ -615,7 +611,6 @@ def net_test(args):
 
         of = osp.join(outdir, "net_in_acc_z.txt")
         np.savetxt(of, np.asarray(net_attr_dict["net_in_acc_z"]))
-        # end
 
         try:
             with open(args.out_dir + "/metrics.json", "w") as f:

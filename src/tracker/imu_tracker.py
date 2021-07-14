@@ -135,7 +135,6 @@ class ImuTracker:
         self.next_aug_t_us = None
         self.has_done_first_update = False
 
-        # debug
         # save network or vio displacements for debugging
         self.net_dis = []
         self.vio_dis = []
@@ -146,7 +145,7 @@ class ImuTracker:
         self.net_in_acc_x = []
         self.net_in_acc_y = []
         self.net_in_acc_z = []
-        # end
+        
 
     @jit(forceobj=True, parallel=False, cache=False)
     def _get_imu_samples_for_network(self, t_begin_us, t_oldest_state_us, t_end_us):
@@ -160,18 +159,6 @@ class ImuTracker:
 
         assert net_gyr.shape[0] == self.net_input_size
         assert net_acc.shape[0] == self.net_input_size
-
-        # debug
-        '''print('net_tus')
-        print(net_tus)
-
-        print('self.state.si_timestamps_us')
-        print(self.filter.state.si_timestamps_us)
-
-        for t in net_tus:
-            R, _ = self.filter.get_past_state(int(t))
-            assert R.shape[0] == 3, "R: %s" % np.array2string(R)''' 
-        # end
 
         # get data from filter
         R_oldest_state_wfb, _ = self.filter.get_past_state(t_oldest_state_us)  # 3 x 3
@@ -207,19 +194,17 @@ class ImuTracker:
             R_oldest_state_wfb @ Rs_bofbi[oldest_state_idx_in_net, :, :].T
         )  # [3 x 3]
 
-        # debug: wrong
+        # This is an hack.
+        # We take the full R_wb estimated by the filter 
+        # (differently from the original version, which remove the yaw component of R_wb).
         R_oldest_state_wfb = Ri_z @ R_oldest_state_wfb
         R_bofboldstate = R_oldest_state_wfb
-        # end
         
         Rs_net_wfb = np.einsum("ip,tpj->tij", R_bofboldstate, Rs_bofbi)
         net_acc_w = np.einsum("tij,tj->ti", Rs_net_wfb, net_acc)  # N x 3
         net_gyr_w = np.einsum("tij,tj->ti", Rs_net_wfb, net_gyr)  # N x 3
-
-        # debug
+        
         return net_gyr_w, net_acc_w
-        #return net_gyr, net_acc
-        # end
 
     def on_imu_measurement(self, t_us, gyr_raw, acc_raw):
         assert isinstance(t_us, int)
@@ -283,11 +268,6 @@ class ImuTracker:
         do_interpolation_of_imu = t_us >= self.next_interp_t_us
         do_augmentation_and_update = t_us >= self.next_aug_t_us
 
-        # debug
-        #do_interpolation_of_imu = False
-        #do_augmentation_and_update = False
-        # end
-
         # if augmenting the state, check that we compute interpolated measurement also
         assert (
             do_augmentation_and_update and do_interpolation_of_imu
@@ -300,20 +280,12 @@ class ImuTracker:
         t_augmentation_us = self.next_aug_t_us if do_augmentation_and_update else None
 
         # IMU interpolation and data saving for network (using compensated IMU)
-        # debug
-        # moved below
         if do_interpolation_of_imu:
             self._add_interpolated_imu_to_buffer(acc_biascpst, gyr_biascpst, t_us)
-        # end
 
         self.filter.propagate(
             acc_raw, gyr_raw, t_us, t_augmentation_us=t_augmentation_us
         )
-
-        # debug
-        '''if do_interpolation_of_imu:
-            self._add_interpolated_imu_to_buffer(acc_biascpst, gyr_biascpst, t_us)'''
-        # end
 
         # filter update
         did_update = False
@@ -349,10 +321,8 @@ class ImuTracker:
             meas, meas_cov, success = self.debug_callback_get_meas(t_oldest_state_us, t_end_us)
             if not success:
                 return False
-
-            # debug
+            # Save vio measurements for debugging
             self.vio_dis.append(meas.flatten())
-            # end
             
         else:  # using network for measurements
             net_gyr_w, net_acc_w = self._get_imu_samples_for_network(
@@ -362,7 +332,7 @@ class ImuTracker:
                 net_gyr_w, net_acc_w
             )
 
-            # debug
+            # Save network measurements for debugging
             self.net_dis.append(meas.flatten())
 
             debug_gyro = np.hstack((t_begin_us*1e-6, net_gyr_w[:,0]))
@@ -382,7 +352,6 @@ class ImuTracker:
 
             debug_acc = np.hstack((t_begin_us*1e-6, net_acc_w[:,2]))
             self.net_in_acc_z.append(debug_acc)
-            # end
 
         # filter update
         self.filter.update(meas, meas_cov, t_oldest_state_us, t_end_us)

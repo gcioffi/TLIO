@@ -8,10 +8,6 @@ from utils.logging import logging
 from utils.math_utils import unwrap_rpy, wrap_rpy
 import numpy.matlib
 
-# debug
-from pyquaternion import Quaternion
-# end
-
 
 class DataIO:
     def __init__(self):
@@ -47,25 +43,15 @@ class DataIO:
         if args.start_from_ts is not None:
             idx_start = np.where(ts_all >= args.start_from_ts)[0][0]
         else:
-            idx_start = 50
-
-        # debug
-        idx_start = 0
-        # end
+            # Start from first measurements 
+            # (differently from original code where idx_start = 50) 
+            idx_start = 0
 
         self.ts_all = ts_all[idx_start:]
         self.acc_all = acc_all[idx_start:, :]
         self.gyr_all = gyr_all[idx_start:, :]
         self.dataset_size = self.ts_all.shape[0]
         self.init_ts = self.ts_all[0]
-
-        # debug
-        '''self.ts_all = ts_all[::2]
-        self.acc_all = acc_all[::2, :]
-        self.gyr_all = gyr_all[::2, :]
-        self.dataset_size = self.ts_all.shape[0]
-        self.init_ts = self.ts_all[0]'''
-        # end
 
     def load_filter(self, dataset, args):
         """
@@ -93,7 +79,6 @@ class DataIO:
             "loading vio states from "
             + osp.join(args.root_dir, dataset, "evolving_state.txt")
         )
-        # debug
         vio_states = np.loadtxt(
             osp.join(args.root_dir, dataset, "evolving_state.txt") )
         # ts in evolving_state.txt are secs
@@ -160,11 +145,8 @@ class DataIO:
         vio_my_ts = np.loadtxt(
             osp.join(args.root_dir, dataset, "my_timestamps_p.txt") )    
         # ts in my_timestamps_p.txt are in sec
-
-        # debug
-        # self.vio_calib_ts = vio_my_ts # sec
+        
         self.vio_calib_ts = self.ts_all * 1e-6 # sec
-        # end
         
         num_my_ts = self.vio_calib_ts.shape[0]
         self.vio_ba = np.matlib.repmat(accelBias, 1, num_my_ts).T
@@ -256,10 +238,7 @@ class DataIO:
         vio_interp = interp1d(self.vio_ts, self.vio_p, axis=0)(ts_interp)
         vio_meas = vio_interp[1] - vio_interp[0]  # simulated displacement measurement
         
-        # meas_cov = np.diag(np.array([1e-2, 1e-2, 1e-2]))  # [3x3]
-        # debug
         meas_cov = np.diag(np.array([1e-3, 1e-3, 1e-3]))  # [3x3]
-        # end
 
         # express in gravity aligned frame bty normalizing on yaw
         Ri_z = Rotation.from_euler("z", vio_eul[2]).as_matrix()

@@ -1,3 +1,7 @@
+'''
+This script plots a comparison between imu inputs as seen by the network during test and filter mode.
+'''
+
 import argparse
 import matplotlib.pyplot as plt
 import numpy as np

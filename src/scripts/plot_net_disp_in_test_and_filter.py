@@ -1,3 +1,7 @@
+'''
+This script plot the displacements estimated by the network in test and filter mode.
+'''
+
 import argparse
 import matplotlib.pyplot as plt
 import numpy as np
