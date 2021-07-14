@@ -6,6 +6,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
+def plotArray(x, y, title, labels):
+    plt.plot(x, y)
+    plt.grid()
+    plt.xlabel(labels[0])
+    plt.ylabel(labels[1])
+    plt.title(title)
+
+
 def plotImu(times, meas, sens):
     plt.subplot(311)
     plt.plot(times, meas[:, 0], label='x')
@@ -79,4 +87,27 @@ def plotFilterVsGtPosXY(pos_filter, pos_gt):
     plt.legend()
     plt.xlabel('x')
     plt.ylabel('y')
+
+
+def plotImuBiases(ts, biases):
+    plt.plot(ts, biases[:, 0], label='x')
+    plt.plot(ts, biases[:, 1], label='y')
+    plt.plot(ts, biases[:, 2], label='z')
+    plt.grid()
+    plt.legend()
+    plt.xlabel('t')
+    plt.ylabel('bias')
+
+
+# [in] ts = timestamps
+# [in] errs = np.array[[err_x err_y, err_z], [...], ...]
+def plotRotErrEulerXYZ(ts, errs):
+    plt.plot(ts, errs[:, 0], label='x')
+    plt.plot(ts, errs[:, 1], label='y')
+    plt.plot(ts, errs[:, 2], label='z')
+    plt.grid()
+    plt.legend()
+    plt.xlabel('t')
+    plt.ylabel('errors')
+    plt.title('Error euler angles')
 

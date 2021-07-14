@@ -36,13 +36,16 @@ class DataIO:
         load timestamps, accel and gyro data from dataset
         """
         with h5py.File(osp.join(args.root_dir, dataset, "data.hdf5"), "r") as f:
-            ts_all = np.copy(f["ts"]) * 1e6
+            # we save ts in .hdf5 as 1e-6 * sec
+            ts_all = np.copy(f["ts"]) * 1e12 # usec
             acc_all = np.copy(f["accel_raw"])
             gyr_all = np.copy(f["gyro_raw"])
         if args.start_from_ts is not None:
             idx_start = np.where(ts_all >= args.start_from_ts)[0][0]
         else:
-            idx_start = 50
+            # Start from first measurements
+            # (differently from original code where idx_start = 50)
+            idx_start = 0
         self.ts_all = ts_all[idx_start:]
         self.acc_all = acc_all[idx_start:, :]
         self.gyr_all = gyr_all[idx_start:, :]
@@ -77,7 +80,8 @@ class DataIO:
         )
         vio_states = np.loadtxt(
             osp.join(args.root_dir, dataset, "evolving_state.txt") )
-        self.vio_ts = vio_states[:, 0] * 1e-6
+        # ts in evolving_state.txt are secs
+        self.vio_ts = vio_states[:, 0]
         self.vio_p = vio_states[:, 5:8]
         self.vio_v = vio_states[:, 8:11]
         self.vio_rq = vio_states[:, 1:5]
@@ -106,17 +110,13 @@ class DataIO:
 
         vio_my_ts = np.loadtxt(
             osp.join(args.root_dir, dataset, "my_timestamps_p.txt") )    
-        # is this sec or usec?
-        self.vio_calib_ts = vio_my_ts * 1e-6
-        # self.vio_calib_ts = vio_my_ts
+        # ts in my_timestamps_p.txt are in sec
+
+        self.vio_calib_ts = self.ts_all * 1e-6 # sec
         
-        num_my_ts = vio_my_ts.shape[0]
+        num_my_ts = self.vio_calib_ts.shape[0]
         self.vio_ba = np.matlib.repmat(accelBias, 1, num_my_ts).T
         self.vio_bg = np.matlib.repmat(gyroBias, 1, num_my_ts).T
-        
-        '''self.vio_accelScaleInv = vio_calibs[:, 1:10].reshape((-1, 3, 3))
-        self.vio_gyroScaleInv = vio_calibs[:, 10:19].reshape((-1, 3, 3))
-        self.vio_gyroGSense = vio_calibs[:, 19:28].reshape((-1, 3, 3))'''
 
     def load_sim_data(self, args):
         """
@@ -181,6 +181,13 @@ class DataIO:
         helper function This extracts a fake measurement from vio,
         can be used for debug to bypass the network
         """
+        # to sec
+        ts_oldest_state *= 1e-6
+        ts_end *= 1e-6
+
+        if ts_end > self.vio_ts[-1]:
+            return None, None, False
+
         # obtain vio_Ri for rotating to relative frame
         idx_left = np.where(self.vio_ts < ts_oldest_state)[0][-1]
         idx_right = np.where(self.vio_ts > ts_oldest_state)[0][0]
@@ -192,8 +199,9 @@ class DataIO:
         ts_interp = np.array([ts_oldest_state, ts_end])
         vio_interp = interp1d(self.vio_ts, self.vio_p, axis=0)(ts_interp)
         vio_meas = vio_interp[1] - vio_interp[0]  # simulated displacement measurement
-        meas_cov = np.diag(np.array([1e-2, 1e-2, 1e-2]))  # [3x3]
+        meas_cov = np.diag(np.array([1e-3, 1e-3, 1e-3]))
         # express in gravity aligned frame bty normalizing on yaw
         Ri_z = Rotation.from_euler("z", vio_eul[2]).as_matrix()
         meas = Ri_z.T.dot(vio_meas.reshape((3, 1)))
-        return meas, meas_cov
+        return meas, meas_cov, True
+        

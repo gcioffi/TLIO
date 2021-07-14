@@ -521,13 +521,13 @@ def net_test(args):
             seq_dataset = RacingSequenceDataset(
                 args.root_dir, [data], args, data_window_config, mode="test"
             )
-            seq_loader = DataLoader(seq_dataset, batch_size=1024, shuffle=False)
+            seq_loader = DataLoader(seq_dataset, batch_size=1, shuffle=False)
         except OSError as e:
             print(e)
             continue
 
         # Obtain trajectory
-        net_attr_dict = get_inference(network, seq_loader, device, epoch=50)
+        net_attr_dict = get_inference(network, seq_loader, device, epoch=1)
         traj_attr_dict = pose_integrate(args, seq_dataset, net_attr_dict["preds"])
         outdir = osp.join(args.out_dir, data)
         if osp.exists(outdir) is False:

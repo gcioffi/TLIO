@@ -66,10 +66,10 @@ if __name__ == "__main__":
         "--sigma_ng", type=float, default=0.1
     )  # gyro noise  rad/s
     filter_group.add_argument(
-        "--ita_ba", type=float, default=0.01
+        "--ita_ba", type=float, default=0.001
     )  # accel bias noise  m/s^2/sqrt(s)
     filter_group.add_argument(
-        "--ita_bg", type=float, default=0.01
+        "--ita_bg", type=float, default=0.001
     )  # gyro bias noise  rad/s/sqrt(s)
 
     filter_group.add_argument(

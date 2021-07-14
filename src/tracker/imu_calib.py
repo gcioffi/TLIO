@@ -53,7 +53,7 @@ class ImuCalib:
     # This is a simplified version of the original code using attitude filter.
     def calibrate_raw(self, acc, gyr):
         acc_cal = acc - self.accelBias
-        gyr_cal = ( gyr - self.gyroBias )
+        gyr_cal = gyr - self.gyroBias
         return acc_cal, gyr_cal
 
     # This is a simplified version of the original code using attitude filter.
