@@ -403,7 +403,7 @@ Go to TLIO and launch:
 
 **COMMAND TO LAUNCH:**
 
-python3 src/main_filter.py --root_dir data/Dataset --data_list data/Dataset/test.txt --model_path results/race_track_18Jun21/checkpoints/checkpoint_33.pt --model_param_path results/race_track_18Jun21/parameters.json --out_dir results/race_track_18Jun21/results/filter/ --initialize_with_vio --erase_old_log
+python3 src/main_filter.py --root_dir data/Dataset --data_list data/Dataset/test.txt --model_path results/race_track_18Jun21/checkpoints/checkpoint_33.pt --model_param_path results/race_track_18Jun21/parameters.json --out_dir results/race_track_18Jun21/results/filter/ --initialize_with_offline_calib --erase_old_log --update_freq 20
 
 
 ### Plot EKF Results

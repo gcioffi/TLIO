@@ -126,7 +126,8 @@ class RacingSequenceDataset(Dataset):
         self.window_size = data_window_config["window_size"]
         self.past_data_size = data_window_config["past_data_size"]
         self.future_data_size = data_window_config["future_data_size"]
-        self.step_size = data_window_config["step_size"]
+        # use varying window size
+        self.list_sample_frequencies = [5, 10, 20, 25, 50, 100]
 
         self.do_bias_shift = args.do_bias_shift
         self.accel_bias_range = args.accel_bias_range
@@ -160,6 +161,8 @@ class RacingSequenceDataset(Dataset):
             self.orientations.append(aux[:, 1:5])
             self.gt_pos.append(aux[:, 5:8])
             self.gt_ori.append(aux[:, 8:12])
+            # sample step size randomly
+            self.step_size =  int(args.imu_freq / self.list_sample_frequencies[int(np.random.uniform(0,6,1))])
             self.index_map += [
                 [i, j]
                 for j in range(
