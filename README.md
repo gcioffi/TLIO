@@ -395,7 +395,8 @@ Locally on laptop:
 
 Go in TLIO/src folder, write "poetry shell", go back to TLIO directory and then launch:
 
-python3 src/main_net.py --mode test --root_dir data/Dataset --test_list data/Dataset/test.txt --model_path results/race_track_18Jun21/checkpoints/checkpoint_1.pt --out_dir results/results_test --batch_size 1 --imu_freq 500 --save_plot --window_time 0.2
+python3 src/main_net.py --mode test --root_dir data/Dataset_StepSize --test_list data/Dataset_StepSize/test.txt --model_path results/race_track_18Jun21_StepSize/checkpoints/checkpoint_39.pt --out_dir results/race_track_18Jun21_StepSize/results/network --batch_size 1 --imu_freq 500 --save_plot --window_time 0.2
+
 
 ### Run EKF Filter and Network 
 
