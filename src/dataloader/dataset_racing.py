@@ -176,7 +176,6 @@ class RacingSequenceDataset(Dataset):
             random.shuffle(self.index_map)
 
     def __getitem__(self, item):
-        print("In get_item")
         seq_id, frame_id = self.index_map[item][0], self.index_map[item][1]
 
         # in the world frame
@@ -230,7 +229,7 @@ class RacingSequenceDataset(Dataset):
                 R_mat = r.as_matrix()
                 feat[:, 0:3] = np.matmul(R_mat, feat[:, 0:3].T).T
                 feat[:, 3:6] = np.matmul(R_mat, feat[:, 3:6].T).T
-        print("End getItem")
+
 
         return feat.astype(np.float32).T, targ.astype(np.float32), seq_id, frame_id
 
