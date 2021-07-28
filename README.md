@@ -381,6 +381,8 @@ Training is carried out in SNAGA.
 
 python3 src/main_net.py --mode train --root_dir data/Dataset --train_list data/Dataset/train.txt --val_list data/Dataset/val.txt --out_dir results/race_track_18Jun21/ --batch_size 100 --imu_freq 500 --window_time 0.2 --epochs 100
 
+python3 src/main_net.py --mode train --root_dir data/Dataset_cpc_1_65/ --train_list data/Dataset_cpc_1_65/train.txt --val_list data/Dataset_cpc_1_65/val.txt --out_dir results/cpc_1_65_StepSize_tw1/ --batch_size 100 --imu_freq 500 --window_time 0.2 --epochs 100
+
 ### SNAGA: Testing
 
 Testing is carried out in SNAGA. 
