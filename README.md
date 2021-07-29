@@ -364,6 +364,27 @@ python3 src/dataloader/load_racing_data_from_rosbag.py --config src/params/datal
 
 python3 src/dataloader/load_racing_data_from_rosbag.py --config src/params/dataloader_params.yaml
 
+
+
+### PYScript: load_random_trajectories_from_rosbag.py
+
+"load_random_trajectories_from_rosbag" loads a certain numnber of rosbags, containing different randomly generated trajectories. Furthermore, each trajectory generates other versions of it, with perturbed biases and noises on both IMU and biases. The number of versions for each trajecotry is specified by "n_trajectories: " in the "dataloader_params.yaml". 
+Angular velocity and acceleration GT (from simulation) are imported, whereas calibrated (GT + noise on the IMU) and raw (GT + bias + noise on the IMU and bias) angular velocity and acceleration are generated. 
+At this point, the following txt files will be produced: 
+
+- my_timestamps_p.txt
+- imu_measurements.txt
+- evolving_state.txt
+
+**COMMAND TO LAUNCH (on SNAGA)**
+
+python3 src/dataloader/load_random_trajectories_from_rosbag.py --config src/params/dataloader_params_snaga.yaml
+
+**COMMAND TO LAUNCH (on LAPTOP)**
+
+python3 src/dataloader/load_random_trajectories_from_rosbag.py --config src/params/dataloader_params.yaml
+
+
 ### PYScript: gen_racing_data.py
 
 Launching "gen_racing_data.py", it is possible to get the hdf5 needed for the training step and the train.txt, test.txt and val.txt files.
@@ -373,16 +394,26 @@ When launching this script, a data directory --data_dir should be specified: TLI
 
 python3 src/dataloader/gen_racing_data.py --data_dir data/Dataset/
 
+
+
 ### SNAGA: Training
 
 Training is carried out in SNAGA. 
 
 **COMMAND TO LAUNCH:**
 
-python3 src/main_net.py --mode train --root_dir data/Dataset --train_list data/Dataset/train.txt --val_list data/Dataset/val.txt --out_dir results/race_track_18Jun21/ --batch_size 100 --imu_freq 500 --window_time 0.2 --epochs 100
+python3 src/main_net.py --mode train --root_dir data/Dataset_cpc_1_65/ --train_list data/Dataset_cpc_1_65/train.txt --val_list data/Dataset_cpc_1_65/val.txt --out_dir results/cpc_1_65_StepSize_wt1/ --batch_size 100 --imu_freq 500 --window_time 0.8 --epochs 100 
 
-python3 src/main_net.py --mode train --root_dir data/Dataset_cpc_1_65/ --train_list data/Dataset_cpc_1_65/train.txt --val_list data/Dataset_cpc_1_65/val.txt --out_dir results/cpc_1_65_StepSize_tw1/ --batch_size 100 --imu_freq 500 --window_time 0.2 --epochs 100
 
+
+python3 src/main_net.py --mode train --root_dir /data/scratch/aurora/TLIO/data/Dataset_Multiple_Traj --train_list /data/scratch/aurora/TLIO/data/Dataset_Multiple_Traj/train.txt --val_list /data/scratch/aurora/TLIO/data/Dataset_Multiple_Traj/val.txt --out_dir /data/scratch/aurora/TLIO/results/Dataset_Multiple_Traj --batch_size 128 --imu_freq 500 --window_time 0.5 --epochs 50 --continue_from results/Dataset_Multiple_Traj/checkpoints/checkpoint_3.pt | tee output.txt
+
+
+python3 src/main_net.py --mode train --root_dir /home/rpg/Desktop/TLIO/data/Dataset_Multiple_Traj --train_list /home/rpg/Desktop/TLIO/data/Dataset_Multiple_Traj/train.txt --val_list /home/rpg/Desktop/TLIO/data/Dataset_Multiple_Traj/val.txt --out_dir /home/rpg/Desktop/TLIO/results/Multiple_Traj --batch_size 128 --imu_freq 500 --window_time 0.5 --epochs 50 | tee output.txt
+
+python3 src/main_net.py --mode train --root_dir /data/scratch/aurora/TLIO/data/Dataset_cpc_1_65 --train_list /data/scratch/aurora/TLIO/data/Dataset_cpc_1_65/train.txt --val_list /data/scratch/aurora/TLIO/data/Dataset_cpc_1_65/val.txt --out_dir results/cpc_1_65_StepSize_wt1/ --batch_size 100 --imu_freq 500 --window_time 0.8 --epochs 100 
+
+/data/scratch/aurora/TLIO/data/Dataset_cpc_1_65
 ### SNAGA: Testing
 
 Testing is carried out in SNAGA. 
@@ -390,14 +421,17 @@ Testing is carried out in SNAGA.
 **COMMAND TO LAUNCH:**
 
 You need to create a directory for the results and set the checkpoint and the batch size. 
-
-python3 src/main_net.py --mode test --root_dir data/Dataset --test_list data/Dataset/test.txt --model_path results/race_track_18Jun21/checkpoints/checkpoint_1.pt --out_dir results/results_test --batch_size 1 --imu_freq 500 --save_plot --window_time 0.2
-
 Locally on laptop:
 
 Go in TLIO/src folder, write "poetry shell", go back to TLIO directory and then launch:
 
-python3 src/main_net.py --mode test --root_dir data/Dataset_StepSize --test_list data/Dataset_StepSize/test.txt --model_path results/race_track_18Jun21_StepSize/checkpoints/checkpoint_39.pt --out_dir results/race_track_18Jun21_StepSize/results/network --batch_size 1 --imu_freq 500 --save_plot --window_time 0.2
+python3 src/main_net.py --mode test --root_dir data/Dataset/ --test_list data/Dataset/test.txt --model_path results/Multiple_Traj/checkpoints/checkpoint_3.pt --out_dir results/Multiple_Traj/results/network/ --batch_size 1 --imu_freq 500 --save_plot --window_time 0.2
+
+
+
+
+
+python3 src/main_net.py --mode test --root_dir data/Dataset/ --test_list data/Dataset/test.txt --model_path results/race_track_18Jun21_StepSize/checkpoints/checkpoint_27.pt --out_dir results/race_track_18Jun21_StepSize/results/network/ --batch_size 1 --imu_freq 500 --save_plot --window_time 0.2
 
 
 ### Run EKF Filter and Network 
@@ -406,8 +440,13 @@ Go to TLIO and launch:
 
 **COMMAND TO LAUNCH:**
 
-python3 src/main_filter.py --root_dir data/Dataset --data_list data/Dataset/test.txt --model_path results/race_track_18Jun21/checkpoints/checkpoint_33.pt --model_param_path results/race_track_18Jun21/parameters.json --out_dir results/race_track_18Jun21/results/filter/ --initialize_with_offline_calib --erase_old_log --update_freq 20
+python3 src/main_filter.py --root_dir data/Dataset --data_list data/Dataset/test.txt --model_path results/race_track_18Jun21_StepSize/checkpoints/checkpoint_27.pt --model_param_path results/race_track_18Jun21_StepSize/parameters.json --out_dir results/race_track_18Jun21_StepSize/results/filter/ --update_freq 20 --initialize_with_offline_calib --erase_old_log
 
+
+python3 src/main_filter.py --root_dir data/Dataset_cpc_1_65 --data_list data/Dataset_cpc_1_65/test.txt --model_path results/cpc_1_65_StepSize/checkpoints/checkpoint_84.pt --model_param_path results/cpc_1_65_StepSize/parameters.json --out_dir results/cpc_1_65_StepSize/results/filter/ --update_freq 20 --initialize_with_offline_calib --erase_old_log
+
+
+python3 src/main_filter.py --root_dir data/Dataset --data_list data/Dataset/test.txt --model_path results/Multiple_Traj/checkpoints/checkpoint_3.pt --model_param_path results/Multiple_Traj/parameters.json --out_dir results/Multiple_Traj/results/filter/ --update_freq 20 --initialize_with_offline_calib --erase_old_log
 
 ### Plot EKF Results
 
@@ -415,9 +454,10 @@ Go to TLIO/src and launch:
 
 **COMMAND TO LAUNCH:**
 
-python3 plot_filter_results.py --data_dir ../data/Dataset --data_list ../data/Dataset/test.txt --filter_dir ../results/race_track_18Jun21/results/filter/
+python3 plot_filter_results.py --data_dir ../data/Dataset_cpc_1_65 --data_list ../data/Dataset_cpc_1_65/test.txt --filter_dir ../results/cpc_1_65_StepSize/results/filter/
 
 
+python3 plot_filter_results.py --data_dir ../data/Dataset --data_list ../data/Dataset/test.txt --filter_dir ../results/Multiple_Traj/results/filter/
 
 
 
@@ -465,6 +505,7 @@ Add it to BASHRC in order to have it automatically
 
 Run the following on your local terminal:
 - scp raceTraj18Jun21.bag aurora@snaga.ifi.uzh.ch:/data/storage/aurora/TLIO/data/rosbags 
+
 
 **Create a COPY from snaga to local laptop**
 

@@ -1,11 +1,11 @@
 # Input
-bagfile: /data/storage/aurora/TLIO/data/rosbags/raceTraj18Jun21.bag
+bagfile: /data/scratch/aurora/TLIO/data/Multiple_Rosbags
 topic_imu: /kingfisher/ground_truth/imu
 topic_odometry: /kingfisher/ground_truth/odometry
 
 # Output
-n_trajectories: 10000
-out_dir: /home/aurora/TLIO/data/Dataset
+n_trajectories: 100
+out_dir: /data/scratch/aurora/TLIO/data/Dataset_Multiple_Traj_New
 
 
 # Noise params

@@ -1,11 +1,11 @@
 # Input
-bagfile: /home/rpg/Desktop/RaceTraj.bag
+bagfile: /home/rpg/Desktop/rosbags_file/Multiple_Rosbags
 topic_imu: /kingfisher/ground_truth/imu
 topic_odometry: /kingfisher/ground_truth/odometry
 
 # Output
 n_trajectories: 10
-out_dir: /home/rpg/Desktop/TLIO/data/Dataset
+out_dir: /home/rpg/Desktop/TLIO/data/Dataset_finto
 
 # Noise params
 stdImuNoise_acc: 0.2
