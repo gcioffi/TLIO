@@ -244,10 +244,11 @@ def net_train(args):
         train_dataset = RacingSequenceDataset(
             args.root_dir, train_list, args, data_window_config, mode="train"
         )
+        #ToDo: modify number of workers
+        
         train_loader = DataLoader(
-            train_dataset, batch_size=args.batch_size, shuffle=True
+            train_dataset, batch_size=args.batch_size, shuffle=True,  num_workers = 32
         )
-    
     except OSError as e:
         logging.error(e)
         return
@@ -261,8 +262,7 @@ def net_train(args):
             val_dataset = RacingSequenceDataset(
                 args.root_dir, val_list, args, data_window_config, mode="val"
             )
-            val_loader = DataLoader(val_dataset, batch_size=512, shuffle=True)
-           
+            val_loader = DataLoader(val_dataset, batch_size=512, shuffle=True,  num_workers = 32)
         except OSError as e:
             logging.error(e)
             return
