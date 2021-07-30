@@ -4,7 +4,7 @@ topic_imu: /kingfisher/ground_truth/imu
 topic_odometry: /kingfisher/ground_truth/odometry
 
 # Output
-n_trajectories: 100
+n_trajectories: 50
 out_dir: /data/scratch/aurora/TLIO/data/Dataset_Multiple_Traj_New
 
 

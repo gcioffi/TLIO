@@ -1,10 +1,10 @@
 # Input
-bagfile: /home/rpg/Desktop/rosbags_file/Multiple_Rosbags
+bagfile: /home/rpg/Desktop/rosbags_file/Rosbags_Cut_Renamed
 topic_imu: /kingfisher/ground_truth/imu
 topic_odometry: /kingfisher/ground_truth/odometry
 
 # Output
-n_trajectories: 10
+n_trajectories: 2
 out_dir: /home/rpg/Desktop/TLIO/data/Dataset_finto
 
 # Noise params
