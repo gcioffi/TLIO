@@ -172,6 +172,7 @@ def perturbationIMUandBiases(config_fn, file, conf, traj_analysed, rosbags_num, 
         
 
         seq_name = "seq" + str(n_trajectories*traj_analysed + i+1)
+        print("seq_name", seq_name)
         seq_dir = os.path.join(out_dir, seq_name)
         if not os.path.exists(seq_dir):
             os.makedirs(seq_dir)
@@ -237,7 +238,7 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", type=str, default='/home/rpg/Desktop/TLIO/src/params/dataloader_params.yaml')
-    parser.add_argument("--continue_from", type=int, default=-1) # write name of the bag - 1 of the bag you want to read from
+    parser.add_argument("--continue_from", type=int, default=0) # write name of bag number - 1 of the bag you want to read from
     args = parser.parse_args()
     config_fn = args.config
     
@@ -254,12 +255,12 @@ if __name__ == '__main__':
         rosbags_num = len(filenames)
 
         for file in sorted(filenames, key=to_keys):
-            if sorted(filenames, key=to_keys).index(file) < traj_analysed:
-                print(sorted(filenames, key=to_keys).index(file))
+            if sorted(filenames, key=to_keys).index(file) == traj_analysed:
+                print("Analysis Bag", file)
+                perturbationIMUandBiases(config_fn, file, conf, traj_analysed, rosbags_num, all_biases)
+                traj_analysed = traj_analysed + 1
+            else:
                 continue
-            traj_analysed = traj_analysed + 1
-            print("Analysis Bag", file)
-            perturbationIMUandBiases(config_fn, file, conf, traj_analysed, rosbags_num, all_biases)
         break
     
 
