@@ -416,9 +416,9 @@ python3 src/main_net.py --mode train --root_dir /data/scratch/aurora/TLIO/data/D
 python3 src/main_net.py --mode train --root_dir /data/scratch/aurora/TLIO/data/Dataset_Multiple_Traj_New/ --train_list /data/scratch/aurora/TLIO/data/Dataset_Multiple_Traj_New/train.txt --val_list /data/scratch/aurora/TLIO/data/Dataset_Multiple_Traj_New/val.txt --out_dir /data/scratch/aurora/TLIO/results/Dataset_Multiple_Traj_New0_2/ --batch_size 128 --imu_freq 500 --window_time 0.2 --epochs 50 | tee new_train0_2.txt
 
 
-python3 src/main_net.py --mode train --root_dir /data/scratch/aurora/TLIO/data/Lemniscate/ --train_list /data/scratch/aurora/TLIO/data/Lemniscate/train.txt --val_list /data/scratch/aurora/TLIO/data/Lemniscate/val.txt --out_dir /data/scratch/aurora/TLIO/results/Lemniscate/ --batch_size 100 --imu_freq 500 --window_time 0.5 --epochs 50 | tee lemniscate.txt
+python3 src/main_net.py --mode train --root_dir /data/scratch/aurora/TLIO/data/Lemniscate_No_Noise/ --train_list /data/scratch/aurora/TLIO/data/Lemniscate_No_Noise/train.txt --val_list /data/scratch/aurora/TLIO/data/Lemniscate_No_Noise/val.txt --out_dir /data/scratch/aurora/TLIO/results/Lemniscate_No_Noise/ --batch_size 100 --imu_freq 500 --window_time 0.5 --epochs 50 
 
-python3 src/main_net.py --mode train --root_dir /data/scratch/aurora/TLIO/data/Circle3D/ --train_list /data/scratch/aurora/TLIO/data/Circle3D/train.txt --val_list /data/scratch/aurora/TLIO/data/Circle3D/val.txt --out_dir /data/scratch/aurora/TLIO/results/Circle3D/ --batch_size 100 --imu_freq 500 --window_time 0.5 --epochs 50 | tee circle3d.txt
+python3 src/main_net.py --mode train --root_dir /data/scratch/aurora/TLIO/data/Circle_No_Noise/ --train_list /data/scratch/aurora/TLIO/data/Circle_No_Noise/train.txt --val_list /data/scratch/aurora/TLIO/data/Circle_No_Noise/val.txt --out_dir /data/scratch/aurora/TLIO/results/Circle_No_Noise/ --batch_size 100 --imu_freq 500 --window_time 0.5 --epochs 100
 
 
 
