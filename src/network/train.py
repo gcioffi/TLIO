@@ -179,7 +179,9 @@ def net_train(args):
     """
     Main function for network training
     """
-
+    train_losses_txt = []
+    val_losses_txt = []
+    
     try:
         if args.root_dir is None:
             raise ValueError("root_dir must be specified.")
@@ -310,9 +312,13 @@ def net_train(args):
     logging.info(f"-------------- Init, Epoch {start_epoch} --------------")
     attr_dict = get_inference(network, train_loader, device, start_epoch)
     write_summary(summary_writer, attr_dict, start_epoch, optimizer, "train")
+    train_losses_txt.append(np.mean(attr_dict["losses"]))
+
     if val_loader is not None:
         attr_dict = get_inference(network, val_loader, device, start_epoch)
         write_summary(summary_writer, attr_dict, start_epoch, optimizer, "val")
+        val_losses_txt.append(np.mean(attr_dict["losses"]))
+ 
 
     def stop_signal_handler(args, epoch, network, optimizer, signal, frame):
         logging.info("-" * 30)
@@ -334,12 +340,15 @@ def net_train(args):
         start_t = time.time()
         train_attr_dict = do_train(network, train_loader, device, epoch, optimizer)
         write_summary(summary_writer, train_attr_dict, epoch, optimizer, "train")
+        train_losses_txt.append(np.mean(train_attr_dict["losses"]))
         end_t = time.time()
         logging.info(f"time usage: {end_t - start_t:.3f}s")
 
         if val_loader is not None:
             val_attr_dict = get_inference(network, val_loader, device, epoch)
             write_summary(summary_writer, val_attr_dict, epoch, optimizer, "val")
+            val_losses_txt.append(np.mean(val_attr_dict["losses"]))
+
             if np.mean(val_attr_dict["losses"]) < best_val_loss:
                 best_val_loss = np.mean(val_attr_dict["losses"])
                 save_model(args, epoch, network, optimizer)
@@ -347,5 +356,12 @@ def net_train(args):
             save_model(args, epoch, network, optimizer)
 
     logging.info("Training complete.")
+
+    #Save train and validation losses
+    train_losses_path = os.path.join(args.out_dir, "train_losses.txt")
+    np.savetxt(train_losses_path, np.asarray(train_losses_txt))
+    val_losses_path = os.path.join(args.out_dir, "val_losses.txt")
+    np.savetxt(val_losses_path, np.asarray(val_losses_txt))
+
 
     return

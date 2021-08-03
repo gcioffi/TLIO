@@ -407,7 +407,7 @@ python3 src/main_net.py --mode train --root_dir data/Dataset_cpc_1_65/ --train_l
 python3 src/main_net.py --mode train --root_dir /data/scratch/aurora/TLIO/data/Dataset_Multiple_Traj --train_list /data/scratch/aurora/TLIO/data/Dataset_Multiple_Traj/train.txt --val_list /data/scratch/aurora/TLIO/data/Dataset_Multiple_Traj/val.txt --out_dir /data/scratch/aurora/TLIO/results/Dataset_Multiple_Traj --batch_size 128 --imu_freq 500 --window_time 0.5 --epochs 50 --continue_from results/Dataset_Multiple_Traj/checkpoints/checkpoint_3.pt | tee output.txt
 
 
-python3 src/main_net.py --mode train --root_dir /home/rpg/Desktop/TLIO/data/Dataset_Multiple_Traj --train_list /home/rpg/Desktop/TLIO/data/Dataset_Multiple_Traj/train.txt --val_list /home/rpg/Desktop/TLIO/data/Dataset_Multiple_Traj/val.txt --out_dir /home/rpg/Desktop/TLIO/results/Multiple_Traj --batch_size 128 --imu_freq 500 --window_time 0.5 --epochs 50 | tee output.txt
+python3 src/main_net.py --mode train --root_dir /home/rpg/Desktop/TLIO/data/Dataset_finto --train_list /home/rpg/Desktop/TLIO/data/Dataset_finto/train.txt --val_list /home/rpg/Desktop/TLIO/data/Dataset_finto/val.txt --out_dir /home/rpg/Desktop/TLIO/results/Dataset_finto --batch_size 128 --imu_freq 500 --window_time 0.5 --epochs 1
 
 python3 src/main_net.py --mode train --root_dir /data/scratch/aurora/TLIO/data/Dataset_cpc_1_65 --train_list /data/scratch/aurora/TLIO/data/Dataset_cpc_1_65/train.txt --val_list /data/scratch/aurora/TLIO/data/Dataset_cpc_1_65/val.txt --out_dir results/cpc_1_65_StepSize_wt1/ --batch_size 100 --imu_freq 500 --window_time 0.8 --epochs 100 
 

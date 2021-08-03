@@ -228,7 +228,6 @@ def perturbationIMUandBiases(config_fn, file, conf, traj_analysed, rosbags_num, 
         all_biases = np.reshape(all_biases, (n_trajectories * rosbags_num, 6))
         targetsBiases  = np.array(["Bias_acc_x", "Bias_acc_y", "Bias_acc_z", "Bias_w_x", "Bias_w_y", "Bias_w_z"])
         fn = os.path.join(out_dir, "all_biases.txt")
-        print("here")
         np.savetxt(fn, all_biases, header = "Bias_acc_x, Bias_acc_y, Bias_acc_z, Bias_w_x, Bias_w_y, Bias_w_z")
         
     return 
