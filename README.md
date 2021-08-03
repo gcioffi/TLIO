@@ -404,8 +404,6 @@ Training is carried out in SNAGA.
 
 python3 src/main_net.py --mode train --root_dir data/Dataset_cpc_1_65/ --train_list data/Dataset_cpc_1_65/train.txt --val_list data/Dataset_cpc_1_65/val.txt --out_dir results/cpc_1_65_StepSize_wt1/ --batch_size 100 --imu_freq 500 --window_time 0.8 --epochs 100 
 
-
-
 python3 src/main_net.py --mode train --root_dir /data/scratch/aurora/TLIO/data/Dataset_Multiple_Traj --train_list /data/scratch/aurora/TLIO/data/Dataset_Multiple_Traj/train.txt --val_list /data/scratch/aurora/TLIO/data/Dataset_Multiple_Traj/val.txt --out_dir /data/scratch/aurora/TLIO/results/Dataset_Multiple_Traj --batch_size 128 --imu_freq 500 --window_time 0.5 --epochs 50 --continue_from results/Dataset_Multiple_Traj/checkpoints/checkpoint_3.pt | tee output.txt
 
 
@@ -413,7 +411,17 @@ python3 src/main_net.py --mode train --root_dir /home/rpg/Desktop/TLIO/data/Data
 
 python3 src/main_net.py --mode train --root_dir /data/scratch/aurora/TLIO/data/Dataset_cpc_1_65 --train_list /data/scratch/aurora/TLIO/data/Dataset_cpc_1_65/train.txt --val_list /data/scratch/aurora/TLIO/data/Dataset_cpc_1_65/val.txt --out_dir results/cpc_1_65_StepSize_wt1/ --batch_size 100 --imu_freq 500 --window_time 0.8 --epochs 100 
 
-/data/scratch/aurora/TLIO/data/Dataset_cpc_1_65
+python3 src/main_net.py --mode train --root_dir /data/scratch/aurora/TLIO/data/Dataset_Multiple_Traj_New/ --train_list /data/scratch/aurora/TLIO/data/Dataset_Multiple_Traj_New/train.txt --val_list /data/scratch/aurora/TLIO/data/Dataset_Multiple_Traj_New/val.txt --out_dir /data/scratch/aurora/TLIO/results/Dataset_Multiple_Traj_New/ --batch_size 128 --imu_freq 500 --window_time 0.5 --epochs 50 | tee new_train.txt
+
+python3 src/main_net.py --mode train --root_dir /data/scratch/aurora/TLIO/data/Dataset_Multiple_Traj_New/ --train_list /data/scratch/aurora/TLIO/data/Dataset_Multiple_Traj_New/train.txt --val_list /data/scratch/aurora/TLIO/data/Dataset_Multiple_Traj_New/val.txt --out_dir /data/scratch/aurora/TLIO/results/Dataset_Multiple_Traj_New0_2/ --batch_size 128 --imu_freq 500 --window_time 0.2 --epochs 50 | tee new_train0_2.txt
+
+
+python3 src/main_net.py --mode train --root_dir /data/scratch/aurora/TLIO/data/Lemniscate/ --train_list /data/scratch/aurora/TLIO/data/Lemniscate/train.txt --val_list /data/scratch/aurora/TLIO/data/Lemniscate/val.txt --out_dir /data/scratch/aurora/TLIO/results/Lemniscate/ --batch_size 100 --imu_freq 500 --window_time 0.5 --epochs 50 | tee lemniscate.txt
+
+python3 src/main_net.py --mode train --root_dir /data/scratch/aurora/TLIO/data/Circle3D/ --train_list /data/scratch/aurora/TLIO/data/Circle3D/train.txt --val_list /data/scratch/aurora/TLIO/data/Circle3D/val.txt --out_dir /data/scratch/aurora/TLIO/results/Circle3D/ --batch_size 100 --imu_freq 500 --window_time 0.5 --epochs 50 | tee circle3d.txt
+
+
+
 ### SNAGA: Testing
 
 Testing is carried out in SNAGA. 
@@ -428,10 +436,21 @@ Go in TLIO/src folder, write "poetry shell", go back to TLIO directory and then 
 python3 src/main_net.py --mode test --root_dir data/Dataset/ --test_list data/Dataset/test.txt --model_path results/Multiple_Traj/checkpoints/checkpoint_3.pt --out_dir results/Multiple_Traj/results/network/ --batch_size 1 --imu_freq 500 --save_plot --window_time 0.2
 
 
+python3 src/main_net.py --mode test --root_dir data/Dataset_Multiple_Traj --test_list data/Dataset_Multiple_Traj/test.txt --model_path results/Multiple_Traj/checkpoints/checkpoint_8.pt --out_dir results/Multiple_Traj/results/network/ --batch_size 1 --imu_freq 500 --save_plot --window_time 0.5
+
+
+python3 src/main_net.py --mode test --root_dir data/Dataset_Multiple_Traj_Old/ --test_list data/Dataset_Multiple_Traj_Old/test.txt --model_path results/Multiple_Traj/checkpoints/checkpoint_8.pt --out_dir results/Multiple_Traj/results/network/ --batch_size 1 --imu_freq 500 --save_plot --window_time 0.5
+
+python3 src/main_net.py --mode test --root_dir data/Dataset_cpc_1_65/ --test_list data/Dataset_cpc_1_65/test.txt --model_path results/cpc_1_65_StepSize_wt0_6/checkpoints/checkpoint_24.pt --out_dir results/cpc_1_65_StepSize_wt0_6/results/network/ --batch_size 1 --imu_freq 500 --save_plot --window_time 0.6
 
 
 
-python3 src/main_net.py --mode test --root_dir data/Dataset/ --test_list data/Dataset/test.txt --model_path results/race_track_18Jun21_StepSize/checkpoints/checkpoint_27.pt --out_dir results/race_track_18Jun21_StepSize/results/network/ --batch_size 1 --imu_freq 500 --save_plot --window_time 0.2
+python3 src/main_net.py --mode test --root_dir data/Dataset_Multiple_Traj_New --test_list data/Dataset_Multiple_Traj_New/test.txt --model_path results/Dataset_Multiple_Traj_New0_2/checkpoints/checkpoint_2.pt --out_dir results/Dataset_Multiple_Traj_New0_2/results/network/ --batch_size 1 --imu_freq 500 --save_plot --window_time 0.2
+
+
+python3 src/main_net.py --mode test --root_dir data/Circle/ --test_list data/Circle/test.txt --model_path results/Circle/checkpoints/checkpoint_45.pt --out_dir results/Circle/results/network/ --batch_size 1 --imu_freq 500 --save_plot --window_time 0.5
+
+python3 src/main_net.py --mode test --root_dir data/Lemniscate/ --test_list data/Lemniscate/test.txt --model_path results/Lemniscate/checkpoints/checkpoint_8.pt --out_dir results/Lemniscate/results/network/ --batch_size 1 --imu_freq 500 --save_plot --window_time 0.5
 
 
 ### Run EKF Filter and Network 
@@ -448,6 +467,20 @@ python3 src/main_filter.py --root_dir data/Dataset_cpc_1_65 --data_list data/Dat
 
 python3 src/main_filter.py --root_dir data/Dataset --data_list data/Dataset/test.txt --model_path results/Multiple_Traj/checkpoints/checkpoint_3.pt --model_param_path results/Multiple_Traj/parameters.json --out_dir results/Multiple_Traj/results/filter/ --update_freq 20 --initialize_with_offline_calib --erase_old_log
 
+
+python3 src/main_filter.py --root_dir data/Dataset_Multiple_Traj_Old --data_list data/Dataset_Multiple_Traj_Old/test.txt --model_path results/Multiple_Traj/checkpoints/checkpoint_8.pt --model_param_path results/Multiple_Traj/parameters.json --out_dir results/Multiple_Traj/results/filter/ --update_freq 20 --initialize_with_offline_calib --erase_old_log
+
+
+python3 src/main_filter.py --root_dir data/Dataset_cpc_1_65 --data_list data/Dataset_cpc_1_65/test.txt --model_path results/cpc_1_65_StepSize_wt0_6/checkpoints/checkpoint_24.pt --model_param_path results/cpc_1_65_StepSize_wt0_6/parameters.json --out_dir results/cpc_1_65_StepSize_wt0_6/results/filter/ --update_freq 20 --initialize_with_offline_calib --erase_old_log
+
+
+python3 src/main_filter.py --root_dir data/Dataset_Multiple_Traj_New --data_list data/Dataset_Multiple_Traj_New/test.txt --model_path results/Dataset_Multiple_Traj_New0_2/checkpoints/checkpoint_2.pt --model_param_path results/Dataset_Multiple_Traj_New0_2/parameters.json --out_dir results/Dataset_Multiple_Traj_New0_2/results/filter/ --update_freq 20 --initialize_with_offline_calib --erase_old_log
+
+python3 src/main_filter.py --root_dir data/Circle --data_list data/Circle/test.txt --model_path results/Circle/checkpoints/checkpoint_45.pt --model_param_path results/Circle/parameters.json --out_dir results/Circle/results/filter/ --update_freq 20 --initialize_with_offline_calib --erase_old_log
+
+python3 src/main_filter.py --root_dir data/Lemniscate --data_list data/Lemniscate/test.txt --model_path results/Lemniscate/checkpoints/checkpoint_8.pt --model_param_path results/Lemniscate/parameters.json --out_dir results/Lemniscate/results/filter/ --update_freq 20 --initialize_with_offline_calib --erase_old_log
+
+
 ### Plot EKF Results
 
 Go to TLIO/src and launch:
@@ -457,9 +490,15 @@ Go to TLIO/src and launch:
 python3 plot_filter_results.py --data_dir ../data/Dataset_cpc_1_65 --data_list ../data/Dataset_cpc_1_65/test.txt --filter_dir ../results/cpc_1_65_StepSize/results/filter/
 
 
-python3 plot_filter_results.py --data_dir ../data/Dataset --data_list ../data/Dataset/test.txt --filter_dir ../results/Multiple_Traj/results/filter/
+python3 plot_filter_results.py --data_dir ../data/Dataset_Multiple_Traj_Old --data_list ../data/Dataset_Multiple_Traj_Old/test.txt --filter_dir ../results/Multiple_Traj/results/filter/
 
+python3 plot_filter_results.py --data_dir ../data/Dataset_cpc_1_65 --data_list ../data/Dataset_cpc_1_65/test.txt --filter_dir ../results/cpc_1_65_StepSize_wt0_6/results/filter/
 
+python3 plot_filter_results.py --data_dir ../data/Dataset_Multiple_Traj_New --data_list ../data/Dataset_Multiple_Traj_New/test.txt --filter_dir ../results/Dataset_Multiple_Traj_New0_2/results/filter/
+
+python3 plot_filter_results.py --data_dir ../data/Circle --data_list ../data/Circle/test.txt --filter_dir ../results/Circle/results/filter/
+
+python3 plot_filter_results.py --data_dir ../data/Lemniscate --data_list ../data/Lemniscate/test.txt --filter_dir ../results/Lemniscate/results/filter/
 
 ### SNAGA: Links to Wiki
 - Machine learning hardware

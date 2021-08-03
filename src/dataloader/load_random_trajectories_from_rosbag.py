@@ -238,7 +238,7 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", type=str, default='/home/rpg/Desktop/TLIO/src/params/dataloader_params.yaml')
-    parser.add_argument("--continue_from", type=int, default=0) # write name of bag number - 1 of the bag you want to read from
+    parser.add_argument("--continue_from", type=int, default=0) # write index of bag = number_bag_in_the_name - 1 (of the bag you want to read from)
     args = parser.parse_args()
     config_fn = args.config
     
