@@ -444,11 +444,10 @@ python3 src/main_net.py --mode test --root_dir data/Dataset_Multiple_Traj_Old/ -
 python3 src/main_net.py --mode test --root_dir data/Dataset_cpc_1_65/ --test_list data/Dataset_cpc_1_65/test.txt --model_path results/cpc_1_65_StepSize_wt0_6/checkpoints/checkpoint_24.pt --out_dir results/cpc_1_65_StepSize_wt0_6/results/network/ --batch_size 1 --imu_freq 500 --save_plot --window_time 0.6
 
 
-
 python3 src/main_net.py --mode test --root_dir data/Dataset_Multiple_Traj_New --test_list data/Dataset_Multiple_Traj_New/test.txt --model_path results/Dataset_Multiple_Traj_New0_2/checkpoints/checkpoint_2.pt --out_dir results/Dataset_Multiple_Traj_New0_2/results/network/ --batch_size 1 --imu_freq 500 --save_plot --window_time 0.2
 
 
-python3 src/main_net.py --mode test --root_dir data/Circle/ --test_list data/Circle/test.txt --model_path results/Circle/checkpoints/checkpoint_45.pt --out_dir results/Circle/results/network/ --batch_size 1 --imu_freq 500 --save_plot --window_time 0.5
+python3 src/main_net.py --mode test --root_dir data/Circle/ --test_list data/Circle/test.txt --model_path results/Circle_No_Noise_wt02/checkpoints/checkpoint_94.pt --out_dir results/Circle_No_Noise_wt02/results/network/ --batch_size 1 --imu_freq 500 --save_plot --window_time 0.2
 
 python3 src/main_net.py --mode test --root_dir data/Lemniscate/ --test_list data/Lemniscate/test.txt --model_path results/Lemniscate/checkpoints/checkpoint_8.pt --out_dir results/Lemniscate/results/network/ --batch_size 1 --imu_freq 500 --save_plot --window_time 0.5
 
