@@ -416,9 +416,22 @@ python3 src/main_net.py --mode train --root_dir /data/scratch/aurora/TLIO/data/D
 python3 src/main_net.py --mode train --root_dir /data/scratch/aurora/TLIO/data/Dataset_Multiple_Traj_New/ --train_list /data/scratch/aurora/TLIO/data/Dataset_Multiple_Traj_New/train.txt --val_list /data/scratch/aurora/TLIO/data/Dataset_Multiple_Traj_New/val.txt --out_dir /data/scratch/aurora/TLIO/results/Dataset_Multiple_Traj_New0_2/ --batch_size 128 --imu_freq 500 --window_time 0.2 --epochs 50 | tee new_train0_2.txt
 
 
-python3 src/main_net.py --mode train --root_dir /data/scratch/aurora/TLIO/data/LemniscateNoise500/ --train_list /data/scratch/aurora/TLIO/data/LemniscateNoise500/train.txt --val_list /data/scratch/aurora/TLIO/data/LemniscateNoise500/val.txt --out_dir /data/scratch/aurora/TLIO/results/LemniscateNoise500/ --batch_size 100 --imu_freq 500 --window_time 0.5 --epochs 100 
+python3 src/main_net.py --mode train --root_dir /data/scratch/aurora/TLIO/data/Circle_No_Noise/ --train_list /data/scratch/aurora/TLIO/data/Circle_No_Noise/train.txt --val_list /data/scratch/aurora/TLIO/data/Circle_No_Noise/val.txt --out_dir /data/scratch/aurora/TLIO/results/Circle_No_Noise_wt05_lr_e_05_MSE_moreValidation/ --batch_size 100 --imu_freq 500 --window_time 0.5 --epochs 800 --lr 2e-05
 
-python3 src/main_net.py --mode train --root_dir /data/scratch/aurora/TLIO/data/CircleNoise50/ --train_list /data/scratch/aurora/TLIO/data/CircleNoise50/train.txt --val_list /data/scratch/aurora/TLIO/data/CircleNoise50/val.txt --out_dir /data/scratch/aurora/TLIO/results/CircleNoise50_wt04/ --batch_size 1 --imu_freq 500 --window_time 0.4 --epochs 50
+
+python3 src/main_net.py --mode train --root_dir /data/scratch/aurora/TLIO/data/OverfitCircle1000/ --train_list /data/scratch/aurora/TLIO/data/OverfitCircle1000/train.txt --val_list /data/scratch/aurora/TLIO/data/OverfitCircle1000/val.txt --out_dir /data/scratch/aurora/TLIO/results/OverfitCircle1000/ --batch_size 100 --imu_freq 500 --window_time 0.5 --epochs 800 --lr 1e-05
+
+
+python3 src/main_net.py --mode train --root_dir /data/scratch/aurora/TLIO/data/Dataset_Multiple_Traj50/ --train_list /data/scratch/aurora/TLIO/data/Dataset_Multiple_Traj50/train.txt --val_list /data/scratch/aurora/TLIO/data/Dataset_Multiple_Traj50/val.txt --out_dir /data/scratch/aurora/TLIO/results/Random_wt05_lr_e_05_MSE/ --batch_size 128 --imu_freq 500 --window_time 0.5 --epochs 1000 --lr 1e-05
+
+
+python3 src/main_net.py --mode train --root_dir /data/scratch/aurora/TLIO/data/CircleNoise50/ --train_list /data/scratch/aurora/TLIO/data/CircleNoise50/train.txt --val_list /data/scratch/aurora/TLIO/data/CircleNoise50/val.txt --out_dir /data/scratch/aurora/TLIO/results/CircleNoise50_wt05_lr_e_05_MSE/ --batch_size 128 --imu_freq 500 --window_time 0.5 --epochs 200--lr 1e-05
+
+
+python3 src/main_net.py --mode train --root_dir /data/scratch/aurora/TLIO/data/Dataset_Multiple_Traj50/ --train_list /data/scratch/aurora/TLIO/data/Dataset_Multiple_Traj50/train.txt --val_list /data/scratch/aurora/TLIO/data/Dataset_Multiple_Traj50/val.txt --out_dir /data/scratch/aurora/TLIO/results/Random_wt05_lr_e_05_MSE/ --batch_size 128 --imu_freq 500 --window_time 0.5 --epochs 1000 --lr 1e-06 --continue_from results/Random_wt05_lr_e_05_MSE/checkpoints/checkpoint_396.pt
+
+
+python3 src/main_net.py --mode train --root_dir /data/scratch/aurora/TLIO/data/Lemniscate_No_Noise/ --train_list /data/scratch/aurora/TLIO/data/Lemniscate_No_Noise/train.txt --val_list /data/scratch/aurora/TLIO/data/Lemniscate_No_Noise/val.txt --out_dir /data/scratch/aurora/TLIO/results/Lemniscate_No_Noise_wt05_lr_e_05_MSE_moreValidation/ --batch_size 128 --imu_freq 500 --window_time 0.5 --epochs 800 --lr 1e-06
 
 
 ### SNAGA: Testing
@@ -450,7 +463,18 @@ python3 src/main_net.py --mode test --root_dir data/CircleNoise500/ --test_list 
 
 python3 src/main_net.py --mode test --root_dir data/Lemniscate/ --test_list data/Lemniscate/test.txt --model_path results/Lemniscate/checkpoints/checkpoint_8.pt --out_dir results/Lemniscate/results/network/ --batch_size 1 --imu_freq 500 --save_plot --window_time 0.5
 
-python3 src/main_net.py --mode test --root_dir data/Circle_No_Noise/ --test_list data/Circle_No_Noise/test.txt --model_path results/Circle_No_Noise_wt05_ML/checkpoints/checkpoint_7.pt --out_dir results/Circle_No_Noise_wt05_ML/results/network/ --batch_size 1 --imu_freq 500 --save_plot --window_time 0.5
+python3 src/main_net.py --mode test --root_dir data/Circle_No_Noise/ --test_list data/Circle_No_Noise/test.txt --model_path results/Circle_No_Noise_wt05_lr_e_05_MSE_moreValidation/checkpoints/checkpoint_755.pt --out_dir results/Circle_No_Noise_wt05_lr_e_05_MSE_moreValidation/results/network/ --batch_size 128 --imu_freq 500 --save_plot --window_time 0.5
+
+
+python3 src/main_net.py --mode test --root_dir data/Dataset_Multiple_Traj50/ --test_list data/Dataset_Multiple_Traj50/test.txt --model_path results/MultipleCut50_wt05_lr_e_05_MSE/checkpoints/checkpoint_9.pt --out_dir results/MultipleCut50_wt05_lr_e_05_MSE/results/network/ --batch_size 128 --imu_freq 500 --save_plot --window_time 0.5
+
+
+python3 src/main_net.py --mode test --root_dir data/OverfitCircle1000/ --test_list data/OverfitCircle1000/test.txt --model_path results/OverfitCircle1000/checkpoints/checkpoint_176.pt --out_dir results/OverfitCircle1000/results/network/ --batch_size 1 --imu_freq 500 --save_plot --window_time 0.5
+
+python3 src/main_net.py --mode test --root_dir data/Dataset_Multiple_Traj50/ --test_list data/Dataset_Multiple_Traj50/test.txt --model_path results/Random_wt05_lr_e_05_MSE/checkpoints/checkpoint_259.pt --out_dir results/Random_wt05_lr_e_05_MSE/results/network/ --batch_size 1 --imu_freq 500 --save_plot --window_time 0.5
+
+
+python3 src/main_net.py --mode test --root_dir data/Dataset_Multiple_Traj50/ --test_list data/Dataset_Multiple_Traj50/test.txt --model_path results/MultipleCut50_wt05_lr_e_05_MS/checkpoints/checkpoint_22.pt --out_dir results/MultipleCut50_wt05_lr_e_05_MSE/results/network/ --batch_size 1 --imu_freq 500 --save_plot --window_time 0.5
 
 ### Run EKF Filter and Network 
 
@@ -477,8 +501,16 @@ python3 src/main_filter.py --root_dir data/Dataset_Multiple_Traj_New --data_list
 
 python3 src/main_filter.py --root_dir data/Lemniscate --data_list data/Lemniscate/test.txt --model_path results/Lemniscate/checkpoints/checkpoint_8.pt --model_param_path results/Lemniscate/parameters.json --out_dir results/Lemniscate/results/filter/ --update_freq 20 --initialize_with_offline_calib --erase_old_log
 
-python3 src/main_filter.py --root_dir data/Circle_No_Noise --data_list data/Circle_No_Noise/test.txt --model_path results/Circle_No_Noise_wt05_ML/checkpoints/checkpoint_7.pt --model_param_path results/Circle_No_Noise_wt05_ML/parameters.json --out_dir results/Circle_No_Noise_wt05_ML/results/filter/ --update_freq 20 --initialize_with_offline_calib --erase_old_log
+python3 src/main_filter.py --root_dir data/Dataset_Multiple_Traj50 --data_list data/Dataset_Multiple_Traj50/test.txt --model_path results/MultipleCut50_wt05_lr_e_05_MSE/checkpoints/checkpoint_9.pt --model_param_path results/MultipleCut50_wt05_lr_e_05_MSE/parameters.json --out_dir results/MultipleCut50_wt05_lr_e_05_MSE/results/filter/ --update_freq 20 --initialize_with_offline_calib --erase_old_log
 
+python3 src/main_filter.py --root_dir data/Circle_No_Noise --data_list data/Circle_No_Noise/test.txt --model_path results/Circle_No_Noise_wt05_lr_e_05_MSE_moreValidation/checkpoints/checkpoint_755.pt --model_param_path results/Circle_No_Noise_wt05_lr_e_05_MSE_moreValidation/parameters.json --out_dir results/Circle_No_Noise_wt05_lr_e_05_MSE_moreValidation/results/filter/ --update_freq 20 --initialize_with_offline_calib --erase_old_log
+
+
+python3 src/main_filter.py --root_dir data/OverfitCircle1000 --data_list data/OverfitCircle1000/test.txt --model_path results/OverfitCircle1000/checkpoints/checkpoint_199.pt --model_param_path results/OverfitCircle1000/parameters.json --out_dir results/OverfitCircle1000/results/filter/ --update_freq 20 --initialize_with_offline_calib --erase_old_log
+
+python3 src/main_filter.py --root_dir data/Dataset_Multiple_Traj50 --data_list data/Dataset_Multiple_Traj50/test.txt --model_path results/Random_wt05_lr_e_05_MSE/checkpoints/checkpoint_259.pt --model_param_path results/Random_wt05_lr_e_05_MSE/parameters.json --out_dir results/Random_wt05_lr_e_05_MSE/results/filter/ --update_freq 20 --initialize_with_offline_calib --erase_old_log
+
+python3 src/main_filter.py --root_dir data/Dataset_Multiple_Traj50 --data_list data/Dataset_Multiple_Traj50/test.txt --model_path results/MultipleCut50_wt05_lr_e_05_MSE/checkpoints/checkpoint_24.pt --model_param_path results/MultipleCut50_wt05_lr_e_05_MSE/parameters.json --out_dir results/MultipleCut50_wt05_lr_e_05_MSE/results/filter/ --update_freq 20 --initialize_with_offline_calib --erase_old_log
 
 ### Plot EKF Results
 
@@ -497,7 +529,14 @@ python3 plot_filter_results.py --data_dir ../data/Dataset_Multiple_Traj_New --da
 
 python3 plot_filter_results.py --data_dir ../data/Lemniscate --data_list ../data/Lemniscate/test.txt --filter_dir ../results/Lemniscate/results/filter/
 
-python3 plot_filter_results.py --data_dir ../data/Circle_No_Noise --data_list ../data/Circle_No_Noise/test.txt --filter_dir ../results/Circle_No_Noise_wt05_ML/results/filter/
+python3 plot_filter_results.py --data_dir ../data/Dataset_Multiple_Traj50 --data_list ../data/Dataset_Multiple_Traj50/test.txt --filter_dir ../results/MultipleCut50_wt05_lr_e_05_MSE/results/filter/
+
+python3 plot_filter_results.py --data_dir ../data/Circle_No_Noise --data_list ../data/Circle_No_Noise/test.txt --filter_dir ../results/Circle_No_Noise_wt05_lr_e_05_MSE_moreValidation/results/filter/
+
+python3 plot_filter_results.py --data_dir ../data/Dataset_Multiple_Traj50 --data_list ../data/Dataset_Multiple_Traj50/test.txt --filter_dir ../results/Random_wt05_lr_e_05_MSE/results/filter/
+
+python3 plot_filter_results.py --data_dir ../data/Dataset_Multiple_Traj50 --data_list ../data/Dataset_Multiple_Traj50/test.txt --filter_dir ../results/MultipleCut50_wt05_lr_e_05_MSE/results/filter/
+
 
 
 ### SNAGA: Links to Wiki
