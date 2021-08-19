@@ -435,10 +435,10 @@ python3 src/main_net.py --mode train --root_dir /data/scratch/aurora/TLIO/data/C
 python3 src/main_net.py --mode train --root_dir /data/scratch/aurora/TLIO/data/CircleNoise500/ --train_list /data/scratch/aurora/TLIO/data/CircleNoise500/train_only.txt --out_dir /data/scratch/aurora/TLIO/results/CircleNoise500_wt05_MSE_trainOnly --imu_freq 500 --window_time 0.5 --epochs 200 
 
 
-python3 src/main_net.py --mode train --root_dir /data/scratch/aurora/TLIO/data/Circle_No_Noise/ --train_list /data/scratch/aurora/TLIO/data/Circle_No_Noise/train_only.txt --out_dir /data/scratch/aurora/TLIO/results/Circle_No_Noise_wt05_trainOnly_originalLoss --imu_freq 500 --window_time 0.5 --epochs 200 
+python3 src/main_net.py --mode train --root_dir /data/scratch/aurora/TLIO/data/Circle_No_Noise/ --train_list /data/scratch/aurora/TLIO/data/Circle_No_Noise/train_only.txt --out_dir /data/scratch/aurora/TLIO/results/Circle_No_Noise_wt05_trainOnly_originalLoss --imu_freq 500 --window_time 0.5 --epochs 600 --continue_from results/Circle_No_Noise_wt05_trainOnly_originalLoss/checkpoints/checkpoint_299.pt
 
 
-python3 src/main_net.py --mode train --root_dir /data/scratch/aurora/TLIO/data/Lemniscate_No_Noise/ --train_list /data/scratch/aurora/TLIO/data/Lemniscate_No_Noise/train_only.txt --out_dir /data/scratch/aurora/TLIO/results/Lemniscate_No_Noise_wt05_MSE_trainOnly --imu_freq 500 --window_time 0.5 --epochs 200 
+python3 src/main_net.py --mode train --root_dir /data/scratch/aurora/TLIO/data/Lemniscate_No_Noise/ --train_list /data/scratch/aurora/TLIO/data/Lemniscate_No_Noise/train_only.txt --out_dir /data/scratch/aurora/TLIO/results/Lemniscate_No_Noise_wt05_trainOnly_originalLoss/ --imu_freq 500 --window_time 0.5 --epochs 600 --continue_from results/Lemniscate_No_Noise_wt05_trainOnly_originalLoss/checkpoints/checkpoint_299.pt
 
 
 
@@ -485,11 +485,10 @@ python3 src/main_net.py --mode test --root_dir data/Dataset_Multiple_Traj50/ --t
 python3 src/main_net.py --mode test --root_dir data/Dataset_Multiple_Traj50/ --test_list data/Dataset_Multiple_Traj50/test.txt --model_path results/MultipleCut50_wt05_lr_e_05_MSE/checkpoints/checkpoint_56.pt --out_dir results/MultipleCut50_wt05_lr_e_05_MSE/results/network/ --batch_size 1 --imu_freq 500 --save_plot --window_time 0.5
 
 
-python3 src/main_net.py --mode test --root_dir data/Lemniscate_No_Noise/ --test_list data/Lemniscate_No_Noise/test.txt --model_path results/Lemniscate_No_Noise_wt05_lr_e_05_MSE_moreValidation/checkpoints/checkpoint_4835.pt --out_dir results/Lemniscate_No_Noise_wt05_lr_e_05_MSE_moreValidation/results/network/ --batch_size 1 --imu_freq 500 --save_plot --window_time 0.5
+python3 src/main_net.py --mode test --root_dir data/Lemniscate_No_Noise/ --test_list data/Lemniscate_No_Noise/test.txt --model_path results/Lemniscate_No_Noise_wt05_trainOnly_originalLoss/checkpoints/checkpoint_599.pt --out_dir results/Lemniscate_No_Noise_wt05_trainOnly_originalLoss/results/network --imu_freq 500 --save_plot --window_time 0.5
 
 
-
-python3 src/main_net.py --mode test --root_dir data/Circle_No_Noise/ --test_list data/Circle_No_Noise/test.txt --model_path results/Circle_No_Noise_wt05_MSE_trainOnly/checkpoints/checkpoint_199.pt --out_dir results/Circle_No_Noise_wt05_MSE_trainOnly/results/network/ --imu_freq 500 --save_plot --window_time 0.5
+python3 src/main_net.py --mode test --root_dir data/Circle_No_Noise/ --test_list data/Circle_No_Noise/test.txt --model_path results/Circle_No_Noise_wt05_trainOnly_originalLoss/checkpoints/checkpoint_299.pt --out_dir results/Circle_No_Noise_wt05_trainOnly_originalLoss/results/network/ --imu_freq 500 --save_plot --window_time 0.5
 
 ### Run EKF Filter and Network 
 
@@ -527,9 +526,9 @@ python3 src/main_filter.py --root_dir data/Dataset_Multiple_Traj50 --data_list d
 
 python3 src/main_filter.py --root_dir data/Dataset_Multiple_Traj50 --data_list data/Dataset_Multiple_Traj50/test.txt --model_path results/MultipleCut50_wt05_lr_e_05_MSE/checkpoints/checkpoint_56.pt --model_param_path results/MultipleCut50_wt05_lr_e_05_MSE/parameters.json --out_dir results/MultipleCut50_wt05_lr_e_05_MSE/results/filter/ --update_freq 20 --initialize_with_offline_calib --erase_old_log
 
-python3 src/main_filter.py --root_dir data/Lemniscate_No_Noise --data_list data/Lemniscate_No_Noise/test.txt --model_path results/Lemniscate_No_Noise_wt05_lr_e_05_MSE_moreValidation/checkpoints/checkpoint_4835.pt --model_param_path results/Lemniscate_No_Noise_wt05_lr_e_05_MSE_moreValidation/parameters.json --out_dir results/Lemniscate_No_Noise_wt05_lr_e_05_MSE_moreValidation/results/filter/ --update_freq 20 --initialize_with_offline_calib --erase_old_log
+python3 src/main_filter.py --root_dir data/Lemniscate_No_Noise --data_list data/Lemniscate_No_Noise/test.txt --model_path results/Lemniscate_No_Noise_wt05_trainOnly_originalLoss/checkpoints/checkpoint_599.pt --model_param_path results/Lemniscate_No_Noise_wt05_trainOnly_originalLoss/parameters.json --out_dir results/Lemniscate_No_Noise_wt05_trainOnly_originalLoss/results/filter/ --update_freq 20 --initialize_with_offline_calib --erase_old_log
 
-python3 src/main_filter.py --root_dir data/Circle_No_Noise --data_list data/Circle_No_Noise/test.txt --model_path results/Circle_No_Noise_wt05_MSE_trainOnly/checkpoints/checkpoint_199.pt --model_param_path results/Circle_No_Noise_wt05_MSE_trainOnly/parameters.json --out_dir results/Circle_No_Noise_wt05_MSE_trainOnly/results/filter/ --update_freq 20 --initialize_with_offline_calib --erase_old_log
+python3 src/main_filter.py --root_dir data/Circle_No_Noise --data_list data/Circle_No_Noise/test.txt --model_path results/Circle_No_Noise_wt05_trainOnly_originalLoss/checkpoints/checkpoint_299.pt --model_param_path results/Circle_No_Noise_wt05_trainOnly_originalLoss/parameters.json --out_dir results/Circle_No_Noise_wt05_trainOnly_originalLoss/results/filter/ --update_freq 20 --initialize_with_offline_calib --erase_old_log
 
 
 
@@ -560,9 +559,9 @@ python3 plot_filter_results.py --data_dir ../data/Lemniscate_No_Noise --data_lis
 
 python3 plot_filter_results.py --data_dir ../data/Dataset --data_list ../data/Dataset/test.txt --filter_dir ../results/race_track_18Jun21_StepSize/results/filter
 
-python3 plot_filter_results.py --data_dir ../data/Lemniscate_No_Noise --data_list ../data/Lemniscate_No_Noise/test.txt --filter_dir ../results/Lemniscate_No_Noise_wt05_lr_e_05_MSE_moreValidation/results/filter
+python3 plot_filter_results.py --data_dir ../data/Lemniscate_No_Noise --data_list ../data/Lemniscate_No_Noise/test.txt --filter_dir ../results/Lemniscate_No_Noise_wt05_trainOnly_originalLoss/results/filter
 
-python3 plot_filter_results.py --data_dir ../data/Circle_No_Noise --data_list ../data/Circle_No_Noise/test.txt --filter_dir ../results/Circle_No_Noise_wt05_MSE_trainOnly/results/filter/
+python3 plot_filter_results.py --data_dir ../data/Circle_No_Noise --data_list ../data/Circle_No_Noise/test.txt --filter_dir ../results/Circle_No_Noise_wt05_trainOnly_originalLoss/results/filter/
 
 ### SNAGA: Links to Wiki
 - Machine learning hardware
