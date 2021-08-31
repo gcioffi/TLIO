@@ -28,15 +28,15 @@ def plotData(data_dir):
     fig = plt.figure(1)
     plotImuCalibVsRaw(t_imu, gyro_calib, gyro_raw, 'gyro')
 
-    fig = plt.figure(2)
-    plotGtPosXY(t_gt, p_gt)
+    #fig = plt.figure(2)
+    #plotGtPosXY(t_gt, p_gt)
 
     plt.show()
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("--data_dir", type=str, default='/home/rpg/TLIO/data/Dataset/seq1')
+    parser.add_argument("--data_dir", type=str, default='/home/rpg/Desktop/TLIO/data/Dataset/seq1')
     args = parser.parse_args()
     data_dir = args.data_dir
     plotData(data_dir)

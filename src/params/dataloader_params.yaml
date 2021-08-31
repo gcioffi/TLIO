@@ -1,11 +1,11 @@
 # Input
-bagfile: /home/rpg/Desktop/rosbags_file/Rosbags_Cut_Renamed
+bagfile: /home/rpg/Desktop/CircularBag
 topic_imu: /kingfisher/ground_truth/imu
 topic_odometry: /kingfisher/ground_truth/odometry
 
 # Output
-n_trajectories: 2
-out_dir: /home/rpg/Desktop/TLIO/data/Dataset_finto
+n_trajectories: 1
+out_dir: /home/rpg/Desktop/TLIO/data/Circle_Traj_Generation
 
 # Noise params
 stdImuNoise_acc: 0.2

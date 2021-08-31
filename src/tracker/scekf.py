@@ -467,6 +467,9 @@ class ImuMSCKF:
            pred_cov: log(sigma) of the measurements in 3D
            meas_cov [3 x 3] : covariance of measurement matrix 
         """
+
+        meas_cov = np.diag(np.array([0.001, 0.001, 0.001]))
+
         if not self.converged and self.check_filter_convergence():
             logging.info("Filter is now assumed to have converged")
             self.converged = True

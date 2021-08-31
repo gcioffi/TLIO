@@ -392,7 +392,7 @@ When launching this script, a data directory --data_dir should be specified: TLI
 
 **COMMAND TO LAUNCH:**
 
-python3 src/dataloader/gen_racing_data.py --data_dir data/Dataset/
+python3 src/dataloader/gen_racing_data.py --data_dir data/Circle_Traj_Generation/
 
 
 
@@ -435,11 +435,12 @@ python3 src/main_net.py --mode train --root_dir /data/scratch/aurora/TLIO/data/C
 python3 src/main_net.py --mode train --root_dir /data/scratch/aurora/TLIO/data/CircleNoise500/ --train_list /data/scratch/aurora/TLIO/data/CircleNoise500/train_only.txt --out_dir /data/scratch/aurora/TLIO/results/CircleNoise500_wt05_MSE_trainOnly --imu_freq 500 --window_time 0.5 --epochs 200 
 
 
-python3 src/main_net.py --mode train --root_dir /data/scratch/aurora/TLIO/data/Circle_No_Noise/ --train_list /data/scratch/aurora/TLIO/data/Circle_No_Noise/train_only.txt --out_dir /data/scratch/aurora/TLIO/results/Circle_No_Noise_wt05_trainOnly_originalLoss --imu_freq 500 --window_time 0.5 --epochs 600 --continue_from results/Circle_No_Noise_wt05_trainOnly_originalLoss/checkpoints/checkpoint_299.pt
+python3 src/main_net.py --mode train --root_dir /data/scratch/aurora/TLIO/data/Circle_No_Noise/ --train_list /data/scratch/aurora/TLIO/data/Circle_No_Noise/train_only.txt --out_dir /data/scratch/aurora/TLIO/results/Circle_No_Noise_wt05_MSE_trainOnly/ --imu_freq 500 --window_time 0.5 --epochs 900 --continue_from results/Circle_No_Noise_wt05_MSE_trainOnly/checkpoints/checkpoint_599.pt --lr 1e-03
 
 
 python3 src/main_net.py --mode train --root_dir /data/scratch/aurora/TLIO/data/Lemniscate_No_Noise/ --train_list /data/scratch/aurora/TLIO/data/Lemniscate_No_Noise/train_only.txt --out_dir /data/scratch/aurora/TLIO/results/Lemniscate_No_Noise_wt05_trainOnly_originalLoss/ --imu_freq 500 --window_time 0.5 --epochs 600 --continue_from results/Lemniscate_No_Noise_wt05_trainOnly_originalLoss/checkpoints/checkpoint_299.pt
 
+python3 src/main_net.py --mode train --root_dir /data/scratch/aurora/TLIO/data/Circle_Traj_Generation --train_list /data/scratch/aurora/TLIO/data/Circle_Traj_Generation/train.txt --out_dir /data/scratch/aurora/TLIO/results/Circle_Traj_Generation/ --imu_freq 500 --window_time 0.5 --epochs 50 
 
 
 ### SNAGA: Testing
@@ -456,39 +457,13 @@ Go in TLIO/src folder, write "poetry shell", go back to TLIO directory and then 
 python3 src/main_net.py --mode test --root_dir data/Dataset/ --test_list data/Dataset/test.txt --model_path results/Multiple_Traj/checkpoints/checkpoint_3.pt --out_dir results/Multiple_Traj/results/network/ --batch_size 1 --imu_freq 500 --save_plot --window_time 0.2
 
 
-python3 src/main_net.py --mode test --root_dir data/Dataset_Multiple_Traj --test_list data/Dataset_Multiple_Traj/test.txt --model_path results/Multiple_Traj/checkpoints/checkpoint_8.pt --out_dir results/Multiple_Traj/results/network/ --batch_size 1 --imu_freq 500 --save_plot --window_time 0.5
-
-
-python3 src/main_net.py --mode test --root_dir data/Dataset_Multiple_Traj_Old/ --test_list data/Dataset_Multiple_Traj_Old/test.txt --model_path results/Multiple_Traj/checkpoints/checkpoint_8.pt --out_dir results/Multiple_Traj/results/network/ --batch_size 1 --imu_freq 500 --save_plot --window_time 0.5
-
-python3 src/main_net.py --mode test --root_dir data/Dataset_cpc_1_65/ --test_list data/Dataset_cpc_1_65/test.txt --model_path results/cpc_1_65_StepSize_wt0_6/checkpoints/checkpoint_24.pt --out_dir results/cpc_1_65_StepSize_wt0_6/results/network/ --batch_size 1 --imu_freq 500 --save_plot --window_time 0.6
-
-
-python3 src/main_net.py --mode test --root_dir data/Dataset_Multiple_Traj_New --test_list data/Dataset_Multiple_Traj_New/test.txt --model_path results/Dataset_Multiple_Traj_New0_2/checkpoints/checkpoint_2.pt --out_dir results/Dataset_Multiple_Traj_New0_2/results/network/ --batch_size 1 --imu_freq 500 --save_plot --window_time 0.2
-
-
-python3 src/main_net.py --mode test --root_dir data/CircleNoise500/ --test_list data/CircleNoise500/test.txt --model_path results/CircleNoise500/checkpoints/checkpoint_10.pt --out_dir results/CircleNoise500/results/network/ --batch_size 1 --imu_freq 500 --save_plot --window_time 0.5
-
-python3 src/main_net.py --mode test --root_dir data/Lemniscate/ --test_list data/Lemniscate/test.txt --model_path results/Lemniscate/checkpoints/checkpoint_8.pt --out_dir results/Lemniscate/results/network/ --batch_size 1 --imu_freq 500 --save_plot --window_time 0.5
-
-python3 src/main_net.py --mode test --root_dir data/Circle_No_Noise/ --test_list data/Circle_No_Noise/test.txt --model_path results/Circle_No_Noise_wt05_lr_e_05_MSE_moreValidation/checkpoints/checkpoint_755.pt --out_dir results/Circle_No_Noise_wt05_lr_e_05_MSE_moreValidation/results/network/ --batch_size 128 --imu_freq 500 --save_plot --window_time 0.5
-
-
-python3 src/main_net.py --mode test --root_dir data/Dataset_Multiple_Traj50/ --test_list data/Dataset_Multiple_Traj50/test.txt --model_path results/MultipleCut50_wt05_lr_e_05_MSE/checkpoints/checkpoint_9.pt --out_dir results/MultipleCut50_wt05_lr_e_05_MSE/results/network/ --batch_size 128 --imu_freq 500 --save_plot --window_time 0.5
-
-
-python3 src/main_net.py --mode test --root_dir data/OverfitCircle1000/ --test_list data/OverfitCircle1000/test.txt --model_path results/OverfitCircle1000/checkpoints/checkpoint_176.pt --out_dir results/OverfitCircle1000/results/network/ --batch_size 1 --imu_freq 500 --save_plot --window_time 0.5
-
-python3 src/main_net.py --mode test --root_dir data/Dataset_Multiple_Traj50/ --test_list data/Dataset_Multiple_Traj50/test.txt --model_path results/Random_wt05_lr_e_05_MSE/checkpoints/checkpoint_425.pt --out_dir results/Random_wt05_lr_e_05_MSE/results/network/ --batch_size 1 --imu_freq 500 --save_plot --window_time 0.5
-
-
-python3 src/main_net.py --mode test --root_dir data/Dataset_Multiple_Traj50/ --test_list data/Dataset_Multiple_Traj50/test.txt --model_path results/MultipleCut50_wt05_lr_e_05_MSE/checkpoints/checkpoint_56.pt --out_dir results/MultipleCut50_wt05_lr_e_05_MSE/results/network/ --batch_size 1 --imu_freq 500 --save_plot --window_time 0.5
-
-
-python3 src/main_net.py --mode test --root_dir data/Lemniscate_No_Noise/ --test_list data/Lemniscate_No_Noise/test.txt --model_path results/Lemniscate_No_Noise_wt05_trainOnly_originalLoss/checkpoints/checkpoint_599.pt --out_dir results/Lemniscate_No_Noise_wt05_trainOnly_originalLoss/results/network --imu_freq 500 --save_plot --window_time 0.5
+python3 src/main_net.py --mode test --root_dir data/Lemniscate_No_Noise/ --test_list data/Lemniscate_No_Noise/test.txt --model_path results/Lemniscate_No_Noise_wt05_MSE_trainOnly/checkpoints/checkpoint_599.pt --out_dir results/Lemniscate_No_Noise_wt05_MSE_trainOnly/results/network --imu_freq 500 --save_plot --window_time 0.5
 
 
 python3 src/main_net.py --mode test --root_dir data/Circle_No_Noise/ --test_list data/Circle_No_Noise/test.txt --model_path results/Circle_No_Noise_wt05_trainOnly_originalLoss/checkpoints/checkpoint_299.pt --out_dir results/Circle_No_Noise_wt05_trainOnly_originalLoss/results/network/ --imu_freq 500 --save_plot --window_time 0.5
+
+
+python3 src/main_net.py --mode test --root_dir data/CircleNoise500/ --test_list data/CircleNoise500/test.txt --model_path results/CircleNoise500_wt05_MSE_trainOnly/checkpoints/checkpoint_62.pt --out_dir results/CircleNoise500_wt05_MSE_trainOnly/results/network/ --imu_freq 500 --save_plot --window_time 0.5
 
 ### Run EKF Filter and Network 
 
@@ -496,39 +471,13 @@ Go to TLIO and launch:
 
 **COMMAND TO LAUNCH:**
 
-python3 src/maiCircle_No_Noise_wt05_ML/n_filter.py --root_dir data/Dataset --data_list data/Dataset/test.txt --model_path results/race_track_18Jun21_StepSize/checkpoints/checkpoint_27.pt --model_param_path results/race_track_18Jun21_StepSize/parameters.json --out_dir results/race_track_18Jun21_StepSize/results/filter/ --update_freq 20 --initialize_with_offline_calib --erase_old_log
-
-
-python3 src/main_filter.py --root_dir data/Dataset_cpc_1_65 --data_list data/Dataset_cpc_1_65/test.txt --model_path results/cpc_1_65_StepSize/checkpoints/checkpoint_84.pt --model_param_path results/cpc_1_65_StepSize/parameters.json --out_dir results/cpc_1_65_StepSize/results/filter/ --update_freq 20 --initialize_with_offline_calib --erase_old_log
-
-
-python3 src/main_filter.py --root_dir data/Dataset --data_list data/Dataset/test.txt --model_path results/Multiple_Traj/checkpoints/checkpoint_3.pt --model_param_path results/Multiple_Traj/parameters.json --out_dir results/Multiple_Traj/results/filter/ --update_freq 20 --initialize_with_offline_calib --erase_old_log
-
-
-python3 src/main_filter.py --root_dir data/Dataset_Multiple_Traj_Old --data_list data/Dataset_Multiple_Traj_Old/test.txt --model_path results/Multiple_Traj/checkpoints/checkpoint_8.pt --model_param_path results/Multiple_Traj/parameters.json --out_dir results/Multiple_Traj/results/filter/ --update_freq 20 --initialize_with_offline_calib --erase_old_log
-
-
-python3 src/main_filter.py --root_dir data/Dataset_cpc_1_65 --data_list data/Dataset_cpc_1_65/test.txt --model_path results/cpc_1_65_StepSize_wt0_6/checkpoints/checkpoint_24.pt --model_param_path results/cpc_1_65_StepSize_wt0_6/parameters.json --out_dir results/cpc_1_65_StepSize_wt0_6/results/filter/ --update_freq 20 --initialize_with_offline_calib --erase_old_log
-
-
-python3 src/main_filter.py --root_dir data/Dataset_Multiple_Traj_New --data_list data/Dataset_Multiple_Traj_New/test.txt --model_path results/Dataset_Multiple_Traj_New0_2/checkpoints/checkpoint_2.pt --model_param_path results/Dataset_Multiple_Traj_New0_2/parameters.json --out_dir results/Dataset_Multiple_Traj_New0_2/results/filter/ --update_freq 20 --initialize_with_offline_calib --erase_old_log
-
-python3 src/main_filter.py --root_dir data/Lemniscate --data_list data/Lemniscate/test.txt --model_path results/Lemniscate/checkpoints/checkpoint_8.pt --model_param_path results/Lemniscate/parameters.json --out_dir results/Lemniscate/results/filter/ --update_freq 20 --initialize_with_offline_calib --erase_old_log
-
-python3 src/main_filter.py --root_dir data/Dataset_Multiple_Traj50 --data_list data/Dataset_Multiple_Traj50/test.txt --model_path results/MultipleCut50_wt05_lr_e_05_MSE/checkpoints/checkpoint_9.pt --model_param_path results/MultipleCut50_wt05_lr_e_05_MSE/parameters.json --out_dir results/MultipleCut50_wt05_lr_e_05_MSE/results/filter/ --update_freq 20 --initialize_with_offline_calib --erase_old_log
-
-python3 src/main_filter.py --root_dir data/Circle_No_Noise --data_list data/Circle_No_Noise/test.txt --model_path results/Circle_No_Noise_wt05_lr_e_05_MSE_moreValidation/checkpoints/checkpoint_755.pt --model_param_path results/Circle_No_Noise_wt05_lr_e_05_MSE_moreValidation/parameters.json --out_dir results/Circle_No_Noise_wt05_lr_e_05_MSE_moreValidation/results/filter/ --update_freq 20 --initialize_with_offline_calib --erase_old_log
-
-
-python3 src/main_filter.py --root_dir data/OverfitCircle1000 --data_list data/OverfitCircle1000/test.txt --model_path results/OverfitCircle1000/checkpoints/checkpoint_199.pt --model_param_path results/OverfitCircle1000/parameters.json --out_dir results/OverfitCircle1000/results/filter/ --update_freq 20 --initialize_with_offline_calib --erase_old_log
-
-python3 src/main_filter.py --root_dir data/Dataset_Multiple_Traj50 --data_list data/Dataset_Multiple_Traj50/test.txt --model_path results/Random_wt05_lr_e_05_MSE/checkpoints/checkpoint_425.pt --model_param_path results/Random_wt05_lr_e_05_MSE/parameters.json --out_dir results/Random_wt05_lr_e_05_MSE/results/filter/ --update_freq 20 --initialize_with_offline_calib --erase_old_log
-
-python3 src/main_filter.py --root_dir data/Dataset_Multiple_Traj50 --data_list data/Dataset_Multiple_Traj50/test.txt --model_path results/MultipleCut50_wt05_lr_e_05_MSE/checkpoints/checkpoint_56.pt --model_param_path results/MultipleCut50_wt05_lr_e_05_MSE/parameters.json --out_dir results/MultipleCut50_wt05_lr_e_05_MSE/results/filter/ --update_freq 20 --initialize_with_offline_calib --erase_old_log
-
-python3 src/main_filter.py --root_dir data/Lemniscate_No_Noise --data_list data/Lemniscate_No_Noise/test.txt --model_path results/Lemniscate_No_Noise_wt05_trainOnly_originalLoss/checkpoints/checkpoint_599.pt --model_param_path results/Lemniscate_No_Noise_wt05_trainOnly_originalLoss/parameters.json --out_dir results/Lemniscate_No_Noise_wt05_trainOnly_originalLoss/results/filter/ --update_freq 20 --initialize_with_offline_calib --erase_old_log
+python3 src/main_filter.py --root_dir data/Lemniscate_No_Noise --data_list data/Lemniscate_No_Noise/test.txt --model_path results/Lemniscate_No_Noise_wt05_MSE_trainOnly/checkpoints/checkpoint_599.pt --model_param_path results/Lemniscate_No_Noise_wt05_MSE_trainOnly/parameters.json --out_dir results/Lemniscate_No_Noise_wt05_MSE_trainOnly/results/filter/ --update_freq 20 --initialize_with_offline_calib --erase_old_log
 
 python3 src/main_filter.py --root_dir data/Circle_No_Noise --data_list data/Circle_No_Noise/test.txt --model_path results/Circle_No_Noise_wt05_trainOnly_originalLoss/checkpoints/checkpoint_299.pt --model_param_path results/Circle_No_Noise_wt05_trainOnly_originalLoss/parameters.json --out_dir results/Circle_No_Noise_wt05_trainOnly_originalLoss/results/filter/ --update_freq 20 --initialize_with_offline_calib --erase_old_log
+
+
+python3 src/main_filter.py --root_dir data/CircleNoise500 --data_list data/CircleNoise500/test.txt --model_path results/CircleNoise500_wt05_MSE_trainOnly/checkpoints/checkpoint_62.pt --model_param_path results/CircleNoise500_wt05_MSE_trainOnly/parameters.json --out_dir results/CircleNoise500_wt05_MSE_trainOnly/results/filter/ --update_freq 20 --initialize_with_offline_calib --erase_old_log
+
 
 
 
@@ -538,30 +487,18 @@ Go to TLIO/src and launch:
 
 **COMMAND TO LAUNCH:**
 
-python3 plot_filter_results.py --data_dir ../data/Dataset_cpc_1_65 --data_list ../data/Dataset_cpc_1_65/test.txt --filter_dir ../results/cpc_1_65_StepSize/results/filter/
-
-
-python3 plot_filter_results.py --data_dir ../data/Dataset_Multiple_Traj_Old --data_list ../data/Dataset_Multiple_Traj_Old/test.txt --filter_dir ../results/Multiple_Traj/results/filter/
-
-python3 plot_filter_results.py --data_dir ../data/Dataset_cpc_1_65 --data_list ../data/Dataset_cpc_1_65/test.txt --filter_dir ../results/cpc_1_65_StepSize_wt0_6/results/filter/
-
-python3 plot_filter_results.py --data_dir ../data/Dataset_Multiple_Traj_New --data_list ../data/Dataset_Multiple_Traj_New/test.txt --filter_dir ../results/Dataset_Multiple_Traj_New0_2/results/filter/
-
-python3 plot_filter_results.py --data_dir ../data/Lemniscate --data_list ../data/Lemniscate/test.txt --filter_dir ../results/Lemniscate/results/filter/
-
-python3 plot_filter_results.py --data_dir ../data/Dataset_Multiple_Traj50 --data_list ../data/Dataset_Multiple_Traj50/test.txt --filter_dir ../results/MultipleCut50_wt05_lr_e_05_MSE/results/filter/
-
-python3 plot_filter_results.py --data_dir ../data/Dataset_Multiple_Traj50 --data_list ../data/Dataset_Multiple_Traj50/test.txt --filter_dir ../results/Random_wt05_lr_e_05_MSE/results/filter/
-
-python3 plot_filter_results.py --data_dir ../data/Dataset_Multiple_Traj50 --data_list ../data/Dataset_Multiple_Traj50/test.txt --filter_dir ../results/MultipleCut50_wt05_lr_e_05_MSE/results/filter/
-
-python3 plot_filter_results.py --data_dir ../data/Lemniscate_No_Noise --data_list ../data/Lemniscate_No_Noise/test.txt --filter_dir ../results/Lemniscate_No_Noise_wt05_lr_e_05_MSE_moreValidation/results/filter/
-
 python3 plot_filter_results.py --data_dir ../data/Dataset --data_list ../data/Dataset/test.txt --filter_dir ../results/race_track_18Jun21_StepSize/results/filter
 
-python3 plot_filter_results.py --data_dir ../data/Lemniscate_No_Noise --data_list ../data/Lemniscate_No_Noise/test.txt --filter_dir ../results/Lemniscate_No_Noise_wt05_trainOnly_originalLoss/results/filter
+python3 plot_filter_results.py --data_dir ../data/Lemniscate_No_Noise --data_list ../data/Lemniscate_No_Noise/test.txt --filter_dir ../results/Lemniscate_No_Noise_wt05_MSE_trainOnly/results/filter
 
 python3 plot_filter_results.py --data_dir ../data/Circle_No_Noise --data_list ../data/Circle_No_Noise/test.txt --filter_dir ../results/Circle_No_Noise_wt05_trainOnly_originalLoss/results/filter/
+
+
+python3 plot_filter_results.py --data_dir ../data/CircleNoise500 --data_list ../data/CircleNoise500/test.txt --filter_dir ../results/CircleNoise500_wt05_MSE_trainOnly/results/filter/
+
+
+
+
 
 ### SNAGA: Links to Wiki
 - Machine learning hardware

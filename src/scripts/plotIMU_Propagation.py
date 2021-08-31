@@ -187,7 +187,7 @@ def run(args):
     plotPosXY(gt_p, np.asarray(raw_imu_prop_p), np.asarray(calib_imu_prop_p))
 
     # IPython.embed()
-    print("here")
+
     plt.show()
     
 
@@ -200,4 +200,4 @@ if __name__ == '__main__':
     run(args)
 
 # Terminal: /Desktop/TLIO/src/scripts
-# Command to launch: python3 plotIMU.py --data_dir ../../data/Circle_No_Noise --data_list ../../data/Circle_No_Noise/strange.txt
+# Command to launch: python3 plotIMU_Propagation.py --data_dir ../../data/Dataset --data_list ../../data/Dataset/test.txt
