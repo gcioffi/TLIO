@@ -1,11 +1,11 @@
 # Input
-bagfile: /data/scratch/aurora/TLIO/data/Multiple_Rosbags
+bagfile: /data/scratch/aurora/TLIO/data/LemniscateBag
 topic_imu: /kingfisher/ground_truth/imu
 topic_odometry: /kingfisher/ground_truth/odometry
 
 # Output
-n_trajectories: 50
-out_dir: /data/scratch/aurora/TLIO/data/Dataset_Multiple_Traj_New
+n_trajectories: 1
+out_dir: /data/scratch/aurora/TLIO/data/Lemniscate_Traj_Generation
 
 
 # Noise params
