@@ -440,7 +440,7 @@ python3 src/main_net.py --mode train --root_dir /data/scratch/aurora/TLIO/data/C
 
 python3 src/main_net.py --mode train --root_dir /data/scratch/aurora/TLIO/data/Lemniscate_No_Noise/ --train_list /data/scratch/aurora/TLIO/data/Lemniscate_No_Noise/train_only.txt --out_dir /data/scratch/aurora/TLIO/results/Lemniscate_No_Noise_wt05_trainOnly_originalLoss/ --imu_freq 500 --window_time 0.5 --epochs 600 --continue_from results/Lemniscate_No_Noise_wt05_trainOnly_originalLoss/checkpoints/checkpoint_299.pt
 
-python3 src/main_net.py --mode train --root_dir /data/scratch/aurora/TLIO/data/Circle_Traj_Generation --train_list /data/scratch/aurora/TLIO/data/Circle_Traj_Generation/train.txt --out_dir /data/scratch/aurora/TLIO/results/Circle_Traj_Generation_MSE/ --imu_freq 500 --window_time 0.5 --epochs 200 
+python3 src/main_net.py --mode train --root_dir data/Lemniscate_Traj_Generation/ --train_list data/Lemniscate_Traj_Generation/train.txt --val_list data/Lemniscate_Traj_Generation/val.txt --out_dir results/Lemniscate_Traj_Generation_MSE/ --imu_freq 500 --window_time 0.5 --epochs 100 
 
 
 ### SNAGA: Testing
