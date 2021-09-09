@@ -1,19 +1,26 @@
 # Input
-bagfile: /home/rpg/Desktop/CircularBag
+bagfile: /home/rpg/Desktop/RosbagReal
 topic_imu: /kingfisher/ground_truth/imu
 topic_odometry: /kingfisher/ground_truth/odometry
 
 # Output
 n_trajectories: 1
-out_dir: /home/rpg/Desktop/TLIO/data/Circle_Traj_Generation
+out_dir: /home/rpg/Desktop/TLIO/data/OverfitReal
 
 # Noise params
-stdImuNoise_acc: 0.2
-stdImuNoise_gyro: 0.1
-bias_acc: [-0.3, 0.3]
-bias_gyro: [-0.1, 0.1]
-stdBiasNoise_acc: 0.01
-stdBiasNoise_gyro: 0.01
+#stdImuNoise_acc: 0.2
+#stdImuNoise_gyro: 0.1
+#bias_acc: [-0.3, 0.3]
+#bias_gyro: [-0.1, 0.1]
+#stdBiasNoise_acc: 0.01
+#stdBiasNoise_gyro: 0.01
+
+stdImuNoise_acc: 0.0
+stdImuNoise_gyro: 0.0
+bias_acc: [-0.0, 0.0]
+bias_gyro: [-0.0, 0.0]
+stdBiasNoise_acc: 0.00
+stdBiasNoise_gyro: 0.00
 
 
 
