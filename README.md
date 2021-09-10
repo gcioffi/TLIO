@@ -468,6 +468,8 @@ python3 src/main_net.py --mode test --root_dir data/Circle_No_Noise/ --test_list
 
 python3 src/main_net.py --mode test --root_dir data/Circle_Traj_Generation --test_list data/Circle_Traj_Generation/test.txt --model_path results/Circle_Traj_Generation_MSE/checkpoints/checkpoint_85.pt --out_dir results/Circle_Traj_Generation_MSE/results/network/ --imu_freq 500 --save_plot --window_time 0.5
 
+python3 src/main_net.py --mode test --root_dir data/Random_Traj_Generation_sure --test_list data/Random_Traj_Generation_sure/test.txt --model_path results/Random_Traj_Generation_sure_MSE/checkpoints/checkpoint_59.pt --out_dir results/Random_Traj_Generation_sure_MSE/results/network/ --imu_freq 500 --save_plot --window_time 0.5
+
 ### Run EKF Filter and Network 
 
 Go to TLIO and launch:
