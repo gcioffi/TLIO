@@ -5,7 +5,7 @@ topic_odometry: /kingfisher/ground_truth/odometry
 
 # Output
 n_trajectories: 1000
-out_dir: /data/scratch/aurora/TLIO/data/Dataset_Overfit_Real
+out_dir: /data/scratch/aurora/TLIO/data/Dataset_Overfit_Real_sure
 
 
 # Noise params
