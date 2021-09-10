@@ -132,7 +132,7 @@ def perturbationIMUandBiases(config_fn):
                 ts_odom.append(msg.header.stamp.to_sec())
                 p_wb.append(np.array([msg.pose.pose.position.x, msg.pose.pose.position.y, msg.pose.pose.position.z]))
                 q_wb.append(np.array([msg.pose.pose.orientation.w, msg.pose.pose.orientation.x,msg.pose.pose.orientation.y,msg.pose.pose.orientation.z]))
-                #v_wb.append(np.array([msg.twist.twist.linear.x, msg.twist.twist.linear.y, msg.twist.twist.linear.z]))
+                v_wb.append(np.array([msg.twist.twist.linear.x, msg.twist.twist.linear.y, msg.twist.twist.linear.z]))
 
     bag.close()
 
@@ -150,8 +150,6 @@ def perturbationIMUandBiases(config_fn):
         ts_odom = np.asarray(ts_odom)
         p_wb = np.asarray(p_wb)
         q_wb = np.asarray(q_wb)
-        v_wb = np.loadtxt("/home/rpg/Desktop/RosbagReal_Simulated/seq1/evolving_state.txt")
-        v_wb = v_wb[:, 8:11]
         v_wb = np.asarray(v_wb)
         dt_sqrt = np.asarray(dt_sqrt)
         dt_sqrt = np.reshape(dt_sqrt, (dt_sqrt.shape[0],1)) 
