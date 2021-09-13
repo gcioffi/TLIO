@@ -94,11 +94,13 @@ def save_hdf5(args):
         image_ts = np.loadtxt(osp.join(datapath, "my_timestamps_p.txt"))
         imu_meas = np.loadtxt(osp.join(datapath, "imu_measurements.txt"))
         vio_states = np.loadtxt(osp.join(datapath, "evolving_state.txt"))
+   
 
         # find initial state, start from the 21st output from vio_state
         start_t = image_ts[20]
         imu_idx = np.searchsorted(imu_meas[:, 0], start_t)
         vio_idx = np.searchsorted(vio_states[:, 0], start_t)
+
 
         # get imu_data - raw and calibrated
         print("obtain raw and vio-calibrated IMU data")
@@ -154,6 +156,7 @@ def save_hdf5(args):
 
             # if this state has vio output, correct with vio
             has_vio = int(imu_data[i, 13]) 
+  
 
             #ToDO
             if has_vio == 1 and counter%10==0:
@@ -185,9 +188,15 @@ def save_hdf5(args):
             (np.expand_dims(imu_data[:, 0], axis=1), state_data), axis=1
         )
 
+        #Todo
         # vio data
         vio_rvec = state_data[:, 1:4]
-        vio_p = state_data[:, 4:7]
+        #vio_p = state_data[:, 4:7]
+        vio_p = vio_states[:, 5:8]
+        print("Gen", vio_p)
+   
+      
+    
         vio_v = state_data[:, 7:10]
         vio_r = Rotation.from_rotvec(vio_rvec)
         vio_q = vio_r.as_quat()
@@ -244,13 +253,13 @@ def save_hdf5(args):
     #Todo
     #Plotting VIO
     
-    fig1 = plt.figure(num="prediction vs gt")
+    '''fig1 = plt.figure(num="prediction vs gt")
     plt.plot(vio_p[:,0], vio_p[:,1])
     plt.plot(vio_states[:,5], vio_states[:,6])
     plt.axis("equal")
     plt.legend(["Predicted", "Ground truth"])
     plt.title("2D trajectory and ATE error against time")
-    fig1.savefig(osp.join(data_dir, "mygraph.png"))
+    fig1.savefig(osp.join(data_dir, "mygraph.png"))'''
     
 
     # Save train.txt, val.txt, test.txt

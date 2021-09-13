@@ -270,8 +270,9 @@ def make_plots(args, plot_dict, outdir):
     fig1 = plt.figure(num="prediction vs gt", dpi=dpi, figsize=figsize)
     targ_names = ["dx", "dy", "dz"]
     plt.subplot2grid((3, 2), (0, 0), rowspan=2)
-    plt.plot(pos_pred[:, 0], pos_pred[:, 1])
+    #plt.plot(pos_pred[:, 0], pos_pred[:, 1])
     plt.plot(pos_gt[:, 0], pos_gt[:, 1])
+    print(pos_gt[:,0])
     plt.axis("equal")
     plt.legend(["Predicted", "Ground truth"])
     plt.title("2D trajectory and ATE error against time")

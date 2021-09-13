@@ -64,9 +64,10 @@ def perturbationIMUandBiases(config_fn, file, conf, traj_analysed, rosbags_num, 
     a_raw = []
     dt_sqrt = []
     first = True
+    first_odom = True
 
-    # imu measurements are interpolated to 1000 Hz
-    dt_interp = 0.001 # sec
+    # imu measurements are interpolated to 800 Hz
+    dt_interp = 0.00125 # sec
 
     
     with rosbag.Bag(bagfile, 'r') as bag:
@@ -80,8 +81,8 @@ def perturbationIMUandBiases(config_fn, file, conf, traj_analysed, rosbags_num, 
                     dt_sqrt_ = 0
                     dt_sqrt.append(dt_sqrt_)
                     ts_imu.append(msg.header.stamp.to_sec())
-                   
-                   
+
+
                     #Angular velocity and Linear Acceleration GT (from simulation)
                     w_gt.append(np.array([msg.angular_velocity.x, msg.angular_velocity.y, msg.angular_velocity.z]))
                     a_gt.append(np.array([msg.linear_acceleration.x, msg.linear_acceleration.y, msg.linear_acceleration.z]))
@@ -95,10 +96,10 @@ def perturbationIMUandBiases(config_fn, file, conf, traj_analysed, rosbags_num, 
                     # This is necessary in case some imu measurements are missing in the rosbag.
                     while (prev_ts_imu + dt_interp) < (curr_ts_imu - 0.0001):
                         dt = dt_interp
-                        dt_sqrt_ = math.sqrt(dt) #dt_sqrt is sampled at 1000 Hz
+                        dt_sqrt_ = math.sqrt(dt) #dt_sqrt is sampled at 800 Hz
                         t = prev_ts_imu + dt
 
-                    #IMU Interpolation: measurements at 1000 Hz
+                    #IMU Interpolation: measurements at 800 Hz
                         curr_w_gt = np.array([msg.angular_velocity.x, msg.angular_velocity.y, msg.angular_velocity.z])
                         curr_a_gt = np.array([msg.linear_acceleration.x, msg.linear_acceleration.y, msg.linear_acceleration.z])
 
@@ -107,7 +108,7 @@ def perturbationIMUandBiases(config_fn, file, conf, traj_analysed, rosbags_num, 
                         interp_w_gt = prev_w_gt + ((curr_w_gt - prev_w_gt) / dt) * (t - prev_ts_imu)
                         interp_a_gt = prev_a_gt + ((curr_a_gt - prev_a_gt) / dt) * (t - prev_ts_imu)
 
-                        # Append at 1000 Hz: timestamps, w and a for GT and raw
+                        # Append at 800 Hz: timestamps, w and a for GT and raw
                         interp_ts_imu = prev_ts_imu + dt
                         ts_imu.append(interp_ts_imu)
                         w_gt.append(interp_w_gt)
@@ -122,11 +123,21 @@ def perturbationIMUandBiases(config_fn, file, conf, traj_analysed, rosbags_num, 
                     dt_sqrt.append(dt_sqrt_)
 
             if topic == topic_odometry:
-                # Save GT timestamps, pose (position + orientation) and velocity from simulation -> evolving state.txt
-                ts_odom.append(msg.header.stamp.to_sec())
-                p_wb.append(np.array([msg.pose.position.x, msg.pose.position.y, msg.pose.position.z]))
-                q_wb.append(np.array([msg.pose.orientation.w, msg.pose.orientation.x,msg.pose.orientation.y,msg.pose.orientation.z]))
-                # v_wb.append(np.array([msg.twist.twist.linear.x, msg.twist.twist.linear.y, msg.twist.twist.linear.z]))
+                if first_odom:
+                #Save GT timestamps, pose (position + orientation) and velocity from simulation -> evolving state.txt
+                    ts_odom.append(msg.header.stamp.to_sec())
+                    p_wb.append(np.array([msg.pose.position.x, msg.pose.position.y, msg.pose.position.z]))
+                    q_wb.append(np.array([msg.pose.orientation.w, msg.pose.orientation.x,msg.pose.orientation.y,msg.pose.orientation.z]))
+                    v_wb.append(np.array([0,0,0]))
+                    first_odom = False
+
+                else: 
+                    ts_odom_prev = ts_odom[-1]
+                    ts_odom.append(msg.header.stamp.to_sec())
+                    p_wb_prev = p_wb[-1]
+                    p_wb.append(np.array([msg.pose.position.x, msg.pose.position.y, msg.pose.position.z]))
+                    q_wb.append(np.array([msg.pose.orientation.w, msg.pose.orientation.x,msg.pose.orientation.y,msg.pose.orientation.z]))
+                    v_wb.append(np.array((p_wb[-1] - p_wb_prev)/(ts_odom[-1] - ts_odom_prev))
 
     bag.close()
     
@@ -134,28 +145,29 @@ def perturbationIMUandBiases(config_fn, file, conf, traj_analysed, rosbags_num, 
     for i in range(n_trajectories):
         print("Creating files for trajectory:", i)
 
-        # IMU Biases generation
+        #IMU Biases generation
         bias_acc = np.random.uniform(bias_acc_min, bias_acc_max, 3) #bias generation using uniform distribution - Lin. Accel.
         bias_w = np.random.uniform(bias_gyro_min, bias_gyro_max, 3) #bias generation using uniform distribution - Ang. Vel.
         bias_acc = np.reshape(bias_acc, (1, 3))  
         bias_w = np.reshape(bias_w, (1, 3))
 
-        # Get np arrays
+        #Get np arrays
         ts_imu = np.asarray(ts_imu)
         ts_odom = np.asarray(ts_odom)
         p_wb = np.asarray(p_wb)
         q_wb = np.asarray(q_wb)
-        v_wb = np.asarray(w_gt)
+        v_wb = np.asarray(v_wb)
         dt_sqrt = np.asarray(dt_sqrt)
         dt_sqrt = np.reshape(dt_sqrt, (dt_sqrt.shape[0],1)) 
 
-        # Find w and a as calib (GT + IMU noise) and raw values(GT + bias + IMU noise + Bias noise)
+        #Find w and a as calib (GT + IMU noise) and raw values(GT + bias + IMU noise + Bias noise)
         w_calib = np.asarray(w_gt)
         a_calib = np.asarray(a_gt)
         w_raw =  np.asarray(w_gt)
         a_raw =  np.asarray(a_gt)
 
         # Noise generation on IMU and bias for w and a
+
         noise_IMU_w = np.random.normal(0,stdImuNoise_gyro,(w_calib.shape[0], w_calib.shape[1])) #mean, std, number elements
         noise_IMU_acc = np.random.normal(0,stdImuNoise_acc,(a_calib.shape[0], a_calib.shape[1]))
         noise_bias_w = np.random.normal(0,stdBiasNoise_gyro,(w_raw.shape[0], w_raw.shape[1]))

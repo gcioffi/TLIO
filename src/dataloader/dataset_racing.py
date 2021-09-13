@@ -102,6 +102,7 @@ class RacingSequence(CompiledSequence):
         self.features = np.concatenate([glob_gyro, glob_acce], axis=1)
         self.orientations = ori_R.as_quat()
         self.gt_pos = vio_p
+        print("In racing", self.gt_pos)
         self.gt_ori = ori_R_vio.as_quat()
         # disp from the beginning to + interval
         # does not have the last interval of data
