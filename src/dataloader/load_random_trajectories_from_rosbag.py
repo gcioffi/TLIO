@@ -122,11 +122,11 @@ def perturbationIMUandBiases(config_fn, file, conf, traj_analysed, rosbags_num, 
                     dt_sqrt.append(dt_sqrt_)
 
             if topic == topic_odometry:
-                #Save GT timestamps, pose (position + orientation) and velocity from simulation -> evolving state.txt
+                # Save GT timestamps, pose (position + orientation) and velocity from simulation -> evolving state.txt
                 ts_odom.append(msg.header.stamp.to_sec())
-                p_wb.append(np.array([msg.pose.pose.position.x, msg.pose.pose.position.y, msg.pose.pose.position.z]))
-                q_wb.append(np.array([msg.pose.pose.orientation.w, msg.pose.pose.orientation.x,msg.pose.pose.orientation.y,msg.pose.pose.orientation.z]))
-                v_wb.append(np.array([msg.twist.twist.linear.x, msg.twist.twist.linear.y, msg.twist.twist.linear.z]))
+                p_wb.append(np.array([msg.pose.position.x, msg.pose.position.y, msg.pose.position.z]))
+                q_wb.append(np.array([msg.pose.orientation.w, msg.pose.orientation.x,msg.pose.orientation.y,msg.pose.orientation.z]))
+                # v_wb.append(np.array([msg.twist.twist.linear.x, msg.twist.twist.linear.y, msg.twist.twist.linear.z]))
 
     bag.close()
     
@@ -134,29 +134,28 @@ def perturbationIMUandBiases(config_fn, file, conf, traj_analysed, rosbags_num, 
     for i in range(n_trajectories):
         print("Creating files for trajectory:", i)
 
-        #IMU Biases generation
+        # IMU Biases generation
         bias_acc = np.random.uniform(bias_acc_min, bias_acc_max, 3) #bias generation using uniform distribution - Lin. Accel.
         bias_w = np.random.uniform(bias_gyro_min, bias_gyro_max, 3) #bias generation using uniform distribution - Ang. Vel.
         bias_acc = np.reshape(bias_acc, (1, 3))  
         bias_w = np.reshape(bias_w, (1, 3))
 
-        #Get np arrays
+        # Get np arrays
         ts_imu = np.asarray(ts_imu)
         ts_odom = np.asarray(ts_odom)
         p_wb = np.asarray(p_wb)
         q_wb = np.asarray(q_wb)
-        v_wb = np.asarray(v_wb)
+        v_wb = np.asarray(w_gt)
         dt_sqrt = np.asarray(dt_sqrt)
         dt_sqrt = np.reshape(dt_sqrt, (dt_sqrt.shape[0],1)) 
 
-        #Find w and a as calib (GT + IMU noise) and raw values(GT + bias + IMU noise + Bias noise)
+        # Find w and a as calib (GT + IMU noise) and raw values(GT + bias + IMU noise + Bias noise)
         w_calib = np.asarray(w_gt)
         a_calib = np.asarray(a_gt)
         w_raw =  np.asarray(w_gt)
         a_raw =  np.asarray(a_gt)
 
         # Noise generation on IMU and bias for w and a
-
         noise_IMU_w = np.random.normal(0,stdImuNoise_gyro,(w_calib.shape[0], w_calib.shape[1])) #mean, std, number elements
         noise_IMU_acc = np.random.normal(0,stdImuNoise_acc,(a_calib.shape[0], a_calib.shape[1]))
         noise_bias_w = np.random.normal(0,stdBiasNoise_gyro,(w_raw.shape[0], w_raw.shape[1]))

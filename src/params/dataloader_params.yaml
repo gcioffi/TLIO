@@ -1,11 +1,11 @@
 # Input
 bagfile: /home/rpg/Desktop/RosbagReal
-topic_imu: /kingfisher/ground_truth/imu
-topic_odometry: /kingfisher/ground_truth/odometry
+topic_imu: /alphasense_driver_ros/imu
+topic_odometry: /vicon/parrot  
 
 # Output
 n_trajectories: 1
-out_dir: /home/rpg/Desktop/TLIO/data/OverfitReal
+out_dir: /home/rpg/Desktop/RosbagReal
 
 # Noise params
 #stdImuNoise_acc: 0.2
