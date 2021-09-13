@@ -199,10 +199,13 @@ def perturbationIMUandBiases(config_fn, file, conf, traj_analysed, rosbags_num, 
         ##Create hasVio vector
         hasVio = np.zeros((ts_imu.shape[0], 1))
         it = range(ts_odom.shape[0])
+        number_hasVio = 0
         for m in it:
             if ts_odom[m] in ts_imu:
                 where = np.where(ts_imu == ts_odom[m])
                 hasVio[where] = 1
+                number_hasVio += 1
+        print("number_hasVio", number_hasVio)
 
         ##Structure your file
         tableIMU = np.hstack((ts_imu, a_raw, a_calib, w_raw, w_calib, hasVio))
