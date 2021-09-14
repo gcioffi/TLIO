@@ -158,9 +158,9 @@ def save_hdf5(args):
             has_vio = int(imu_data[i, 13]) 
   
 
-            #ToDO
-            if has_vio == 1 and counter%10==0:
-
+            #Todo
+            if has_vio == 1:
+              
                 vio_idx = np.searchsorted(vio_states[:, 0], imu_data[i, 0])
                 r_vio = Rotation.from_quat(
                     [
@@ -191,12 +191,7 @@ def save_hdf5(args):
         #Todo
         # vio data
         vio_rvec = state_data[:, 1:4]
-        #vio_p = state_data[:, 4:7]
-        vio_p = vio_states[:, 5:8]
-        print("Gen", vio_p)
-   
-      
-    
+        vio_p = state_data[:, 4:7]
         vio_v = state_data[:, 7:10]
         vio_r = Rotation.from_rotvec(vio_rvec)
         vio_q = vio_r.as_quat()

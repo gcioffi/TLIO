@@ -78,6 +78,9 @@ def perturbationIMUandBiases(config_fn, file, conf, traj_analysed, rosbags_num, 
     
             if topic == topic_imu:
                 if first:
+                    #Remove preparation trajectory
+                    if msg.header.stamp.to_sec() < 1.627563898720235825e+09: 
+                        continue
                     dt_sqrt_ = 0
                     dt_sqrt.append(dt_sqrt_)
                     ts_imu.append(msg.header.stamp.to_sec())
@@ -90,6 +93,8 @@ def perturbationIMUandBiases(config_fn, file, conf, traj_analysed, rosbags_num, 
                     first = False
 
                 else:
+                    if msg.header.stamp.to_sec() < 1.627563898720235825e+09: 
+                        continue
                     prev_ts_imu = ts_imu[-1]
                     curr_ts_imu = msg.header.stamp.to_sec()
                     
@@ -124,6 +129,8 @@ def perturbationIMUandBiases(config_fn, file, conf, traj_analysed, rosbags_num, 
 
             if topic == topic_odometry:
                 if first_odom:
+                    if msg.header.stamp.to_sec() < 1.627563898720235825e+09: 
+                        continue
                 #Save GT timestamps, pose (position + orientation) and velocity from simulation -> evolving state.txt
                     ts_odom.append(msg.header.stamp.to_sec())
                     p_wb.append(np.array([msg.pose.position.x, msg.pose.position.y, msg.pose.position.z]))
@@ -132,12 +139,14 @@ def perturbationIMUandBiases(config_fn, file, conf, traj_analysed, rosbags_num, 
                     first_odom = False
 
                 else: 
+                    if msg.header.stamp.to_sec() < 1.627563898720235825e+09: 
+                        continue
                     ts_odom_prev = ts_odom[-1]
                     ts_odom.append(msg.header.stamp.to_sec())
                     p_wb_prev = p_wb[-1]
                     p_wb.append(np.array([msg.pose.position.x, msg.pose.position.y, msg.pose.position.z]))
                     q_wb.append(np.array([msg.pose.orientation.w, msg.pose.orientation.x,msg.pose.orientation.y,msg.pose.orientation.z]))
-                    v_wb.append(np.array((p_wb[-1] - p_wb_prev)/(ts_odom[-1] - ts_odom_prev))
+                    v_wb.append(np.array((p_wb[-1] - p_wb_prev)/(ts_odom[-1] - ts_odom_prev)))
 
     bag.close()
     
@@ -267,8 +276,8 @@ if __name__ == '__main__':
     for(dirpath, dirnames, filenames) in os.walk(fpath):
         rosbags_num = len(filenames)
 
-        for file in sorted(filenames, key=to_keys):
-            if sorted(filenames, key=to_keys).index(file) == traj_analysed:
+        for file in sorted(filenames):
+            if sorted(filenames).index(file) == traj_analysed:
                 print("Analysis Bag", file)
                 perturbationIMUandBiases(config_fn, file, conf, traj_analysed, rosbags_num, all_biases)
                 traj_analysed = traj_analysed + 1

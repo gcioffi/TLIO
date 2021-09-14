@@ -443,7 +443,7 @@ python3 src/main_net.py --mode train --root_dir /data/scratch/aurora/TLIO/data/L
 python3 src/main_net.py --mode train --root_dir data/Random_Traj_Generation/ --train_list data/Random_Traj_Generation/train.txt --val_list data/Random_Traj_Generation/val.txt --out_dir results/Random_Traj_Generation_MSE/ --imu_freq 500 --window_time 0.5 --epochs 100 
 
 
-python3 src/main_net.py --mode train --root_dir data/Dataset_Overfit_Real/ --train_list data/Dataset_Overfit_Real/train.txt --val_list data/Dataset_Overfit_Real/val.txt --out_dir results/Overfit_Real_MSE --imu_freq 500 --window_time 0.5 --epochs 100 
+python3 src/main_net.py --mode train --root_dir data/Random_Traj_Generation_sure/ --train_list data/Random_Traj_Generation_sure/train.txt --val_list data/Random_Traj_Generation_sure/val.txt --out_dir results/Random_Traj_Genraion_sure_MSE --imu_freq 500 --window_time 0.5 --epochs 100 
 
 
 ### SNAGA: Testing
