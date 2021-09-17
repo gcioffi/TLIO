@@ -165,7 +165,7 @@ def perturbationIMUandBiases(config_fn, file, conf, traj_analysed, rosbags_num, 
             if (abs(v_wb[i, :]) > v_wb_mean + 3 * v_wb_std).any():
                 counter += 1
                 v_wb[i] = (v_wb[i+1] + v_wb[i-1])/2
-
+        print("Counter", counter)
 
     v_wb_x = savgol_filter(v_wb[:, 0], 501, 6) # window size 51, polynomial order 3
     v_wb_y = savgol_filter(v_wb[:, 1], 501, 6)
