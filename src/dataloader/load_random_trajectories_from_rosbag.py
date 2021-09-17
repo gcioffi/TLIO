@@ -162,7 +162,7 @@ def perturbationIMUandBiases(config_fn, file, conf, traj_analysed, rosbags_num, 
         v_wb_std = np.std(v_wb, axis = 0)
 
         for i in range(v_wb.shape[0]):
-            if (abs(v_wb[i, :]) > v_wb_mean + 3 * v_wb_std).any():
+            if (v_wb[i, :] > v_wb_mean + 3 * v_wb_std).any() or (v_wb[i, :] < v_wb_mean - 3 * v_wb_std).any():
                 counter += 1
                 v_wb[i] = (v_wb[i+1] + v_wb[i-1])/2
         print("Counter", counter)
