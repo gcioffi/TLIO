@@ -151,7 +151,7 @@ def perturbationIMUandBiases(config_fn, file, conf, traj_analysed, rosbags_num, 
 
     # Obtain VICON velocity from VICON position and smooth the signal
     v_wb = np.array(v_wb)
-    v_wb_mean = np.mean(v_wb, axis = 0)
+    '''v_wb_mean = np.mean(v_wb, axis = 0)
     v_wb_std = np.std(v_wb, axis = 0)
 
     counter = -1
@@ -164,7 +164,7 @@ def perturbationIMUandBiases(config_fn, file, conf, traj_analysed, rosbags_num, 
         for i in range(v_wb.shape[0]):
             if (v_wb[i, :] > v_wb_mean + 3 * v_wb_std).any() or (v_wb[i, :] < v_wb_mean - 3 * v_wb_std).any():
                 counter += 1
-                v_wb[i] = (v_wb[i+1] + v_wb[i-1])/2
+                v_wb[i, :] = (v_wb[i+1, :] + v_wb[i-1, :])/2
         print("Counter", counter)
 
     v_wb_x = savgol_filter(v_wb[:, 0], 501, 6) # window size 51, polynomial order 3
@@ -173,7 +173,7 @@ def perturbationIMUandBiases(config_fn, file, conf, traj_analysed, rosbags_num, 
     #v_wb_z = savgol_filter(v_wb[:, 2], 501, 0) -> In this trajectory is simply 0
     v_wb[:, 0] = v_wb_x
     v_wb[:, 1] = v_wb_y
-    v_wb[:, 2] = v_wb_z
+    v_wb[:, 2] = v_wb_z'''
 
     
     for i in range(n_trajectories):
