@@ -9,13 +9,16 @@ out_dir: /data/scratch/aurora/TLIO/data/Dataset_Overfit_Real_sure
 
 
 # Noise params
-stdImuNoise_acc: 0.2
-stdImuNoise_gyro: 0.1
-bias_acc: [-0.3, 0.3]
-bias_gyro: [-0.1, 0.1]
-stdBiasNoise_acc: 0.01
-stdBiasNoise_gyro: 0.01
 
-
+stdImuNoise_acc_x: 0.50
+stdImuNoise_acc_y: 0.4
+stdImuNoise_acc_z: 0.6
+stdImuNoise_gyro_x: 0.01
+stdImuNoise_gyro_y: 0.06
+stdImuNoise_gyro_z: 0.03
+bias_acc: [-0.1, 0.2]
+bias_gyro: [-0.01, 0.01]
+stdBiasNoise_acc: 0.001
+stdBiasNoise_gyro: 0.001
 
 
