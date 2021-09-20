@@ -1,11 +1,11 @@
 # Input
-bagfile: /home/rpg/Desktop/RosbagReal2
+bagfile: /home/rpg/Desktop/RosbagReal_13_43_48
 topic_imu: /alphasense_driver_ros/imu
 topic_odometry: /vicon/parrot  
 
 # Output
 n_trajectories: 1
-out_dir: /home/rpg/Desktop/RosbagReal2
+out_dir: /home/rpg/Desktop/RosbagReal_13_43_48
 
 # Noise params
 
