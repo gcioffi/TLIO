@@ -23,7 +23,7 @@ The following files will be generated:
 
 In "evolving_state.txt", the VICON velocity will not be inserted and VICON/IMU are not time-synchronized. Thus, it is necessary to execute all the next steps in order to have a complete version of "evolving_state.txt". 
 
-**COMMAND TO LAUNCH (on LAPTOP)**
+**Command to launch**
 
 python3 src/dataloader/load_real_flight_bag.py --config src/params/dataloader_params.yaml
 
@@ -32,7 +32,7 @@ python3 src/dataloader/load_real_flight_bag.py --config src/params/dataloader_pa
 Running "Sync_Vicon_IMU.py", there will be a csv file as output (LOG00001). Put this file and the real-flight bag in the VICON folder (Christian Pfeiffer) in order to get time offset between the Vicon and the Imu. In particular, t_sync_vicon = t_vicon - offset.
 Go in the scripts directory and type:
 
-**COMMAND TO LAUNCH (on LAPTOP)**
+**Command to launch**
 
 python3 Sync_Vicon_IMU.py
 
@@ -40,7 +40,7 @@ python3 Sync_Vicon_IMU.py
 
 Subtract the offset value obtained before from ts_odom in "load_real_flight_bag.py_sync.py" (see lines 137 & 148) and run this script to load again the files loaded before but now synchronized. 
 
-**COMMAND TO LAUNCH (on LAPTOP)**
+**Command to launch**
 
 python3 src/dataloader/load_real_flight_bag_sync.py --config src/params/dataloader_params.yaml
 
@@ -54,7 +54,7 @@ Use "Replace_Evolving_State_&_Plot.py" in src/scripts in order to read the VICON
 Furthermore, some plots about position and velocity ground-truth vs. VICON will be generated.
 Just make sure that the directories in this script correspond to the directories in your workspace. Furthermore, it is crucial to insert the time offset between the simulated and the real trajectory in the plotting part, in order to have them aligned. 
 
-**COMMAND TO LAUNCH (on LAPTOP)**
+**Command to launch**
 
 python3 Replace_Evolving_State_&_Plot.py
 
@@ -78,7 +78,7 @@ Just make sure that the directories in this script correspond to the directories
 Launching "gen_racing_data.py", it is possible to get the hdf5 file needed for the training step and the train.txt, test.txt and val.txt files.
 When launching this script, a data directory --data_dir should be specified: TLIO/data/Dataset. 
 
-**COMMAND TO LAUNCH:**
+**Command to launch**
 
 python3 src/dataloader/gen_racing_data.py --data_dir data/...("your_dataset_directory")...
 
