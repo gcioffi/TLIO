@@ -44,29 +44,31 @@ Go to src/scripts and type:
 
 **Command to launch**
 
-python3 Sync_Vicon_IMU.py
-
-Go to src/Vicon/src and type:
+In src/scripts, type: python3 Sync_Vicon_IMU.py
 
 **Command to launch**
 
-python main.py
+In src/Vicon/src, type: python main.py
 
 ### Load the synchronized trajectory 
 
-Subtract the offset value obtained before from ts_odom in "load_real_flight_bag.py_sync.py" (see lines 137 and 148) and run this script to load again the files loaded before but now synchronized. 
+Subtract the offset value obtained before from ts_odom in "load_real_flight_bag_sync.py" (see lines 137 and 148) and run this script to load again the files loaded before but now synchronized. 
 
 **Command to launch**
 
-python3 src/dataloader/load_real_flight_bag_sync.py --config src/params/dataloader_params.yaml
+In TLIO: python3 src/dataloader/load_real_flight_bag_sync.py --config src/params/dataloader_params.yaml
 
 ### Load the simulated trajectory 
 
-Change branch, go to "simulate_real_noise" and run "load_random_trajectories_from_rosbag", loading the simulated bag of the real-flown trajectory. In this way, we can then compare the simulated vs. real trajectory tests of the traind model.  
+Change branch, go to "simulate_real_noise". 
+
+In src/params/dataloader_params.yaml change bagfile and out_dir, according to the directory of your copy bag. Run "load_random_trajectories_from_rosbag", loading the simulated bag of the real-flown trajectory. 
+
+In this way, we can then compare the simulated vs. real trajectory tests of the traind model.  
 
 ### Add VICON velocity and plot
 
-Use "Replace_Evolving_State_and_Plot.py" in src/scripts in order to read the VICON computed velocity (from VICON folder - Christian Pfeiffer) and timestamps and insert the velocity values in the evolving_state.txt.
+Use "Replace_Evolving_State_and_Plot.py" in src/scripts in order to read the VICON computed velocity in src/Vicon/data and insert the velocity values in the evolving_state.txt.
 In addition, some plots about position and velocity GT vs. VICON will be generated.
 
 Just make sure that the directories in this script correspond to the directories in your workspace. It is also crucial to insert the time offset between the simulated and the real trajectory in the plotting part, in order to have them aligned. 
@@ -74,7 +76,7 @@ Go to src/scripts and type:
 
 **Command to launch**
 
-python3 Replace_Evolving_State_and_Plot.py
+In src/scripts: python3 Replace_Evolving_State_and_Plot.py
 
 ### Interpolate data at the required frequency
 

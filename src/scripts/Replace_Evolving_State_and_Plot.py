@@ -3,23 +3,27 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import scipy
 from scipy.signal import savgol_filter
-
+import os
+import yaml
 
 # Replace evolving state of the real trajectory where the velocity is null and insert the data coming from Vicon Sync script
 
-v_wb_real = np.loadtxt("v.txt")
+v_wb_real = np.loadtxt(os.getcwd() + "/../Vicon/data/ViconVelocity.txt")
+config_fn = os.path.abspath(os.getcwd()) + '/../params/dataloader_params.yaml' 
+with open(str(config_fn), 'r') as file:
+	    conf = yaml.load(file, Loader=yaml.FullLoader)
+folder_directory = conf["bagfile"]
+folder_directory_simulation = conf["bagfile_sim"]
 
-evolving_state = np.loadtxt("evolving_state.txt") # Original
+evolving_state = np.loadtxt(folder_directory + "/seq1/evolving_state.txt") # Original
 evolving_state[:, 8:11] = v_wb_real
-np.savetxt("evolving_state.txt", evolving_state) # Original with Vicon velocity smoothed
+np.savetxt(folder_directory + "/seq1/evolving_state.txt", evolving_state) # Original with Vicon velocity smoothed
 
 v_wb = evolving_state[:, 8:11] # related to imu ts at 400 Hz
 p_wb = evolving_state[:, 5:8] # related to imu ts at 400 Hz
 ts_real = evolving_state[:, 0] - evolving_state[0, 0]  # ts di evolving state real -> no problem to use ts_evolving or ts_imu: they are =
 
-
-
-evolving_state_gt = np.loadtxt("evolving_state_sim.txt")
+evolving_state_gt = np.loadtxt(folder_directory_simulation + "/seq1/evolving_state.txt")
 v_wb_gt = evolving_state_gt[:, 8:11]
 p_wb_gt = evolving_state_gt[:, 5:8]
 ts_gt = evolving_state_gt[:, 0] - evolving_state_gt[0, 0]

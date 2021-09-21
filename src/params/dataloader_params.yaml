@@ -1,5 +1,6 @@
 # Input
 bagfile: /home/rpg/Desktop/RosbagReal_10_48_03
+bagfile_sim: /home/rpg/Desktop/RosbagSimulated_10_48_03
 topic_imu: /alphasense_driver_ros/imu
 topic_odometry: /vicon/parrot  
 
