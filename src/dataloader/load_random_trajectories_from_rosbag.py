@@ -134,7 +134,7 @@ def perturbationIMUandBiases(config_fn, file, conf, traj_analysed, rosbags_num, 
                 #Save GT timestamps, pose (position + orientation) and velocity from simulation -> evolving state.txt
                     # Remove offset sync VICON - IMU: Imu + offset or Vicon - offset. 
                     # Offset: -0.01 secs
-                    ts_odom.append(msg.header.stamp.to_sec() + 0.03)
+                    ts_odom.append(msg.header.stamp.to_sec() + 0.01)
                     p_wb.append(np.array([msg.pose.position.x, msg.pose.position.y, msg.pose.position.z]))
                     q_wb.append(np.array([msg.pose.orientation.w, msg.pose.orientation.x,msg.pose.orientation.y,msg.pose.orientation.z]))
                     v_wb.append(np.array([0,0,0]))
@@ -145,7 +145,7 @@ def perturbationIMUandBiases(config_fn, file, conf, traj_analysed, rosbags_num, 
                     ts_odom_prev = ts_odom[-1]
                     # Remove offset sync VICON - IMU: Imu + offset or Vicon - offset. 
                     # Offset: -0.01 secs
-                    ts_odom.append(msg.header.stamp.to_sec() + 0.03)
+                    ts_odom.append(msg.header.stamp.to_sec() + 0.01)
                     p_wb_prev = p_wb[-1]
                     p_wb.append(np.array([msg.pose.position.x, msg.pose.position.y, msg.pose.position.z]))
                     q_wb.append(np.array([msg.pose.orientation.w, msg.pose.orientation.x,msg.pose.orientation.y,msg.pose.orientation.z]))
