@@ -222,11 +222,9 @@ def perturbationIMUandBiases(config_fn, file, conf, traj_analysed, rosbags_num, 
                 where = np.where(ts_imu == ts_odom[m])
                 hasVio[where] = 1
                 number_hasVio += 1
-        print("number_hasVio", number_hasVio)
 
         ##Structure your file
         tableIMU = np.hstack((ts_imu, a_raw, a_calib, w_raw, w_calib, hasVio))
-        print(hasVio.shape)
         fn = os.path.join(seq_dir, "imu_measurements.txt")
         np.savetxt(fn, tableIMU)
 
@@ -239,7 +237,6 @@ def perturbationIMUandBiases(config_fn, file, conf, traj_analysed, rosbags_num, 
 
         # Save biases values: bias.txt
         biasesValues = np.hstack((bias_acc, bias_w))
-        print(biasesValues)
        
         #check how we concatenate
         all_biases.append(np.asarray(biasesValues))

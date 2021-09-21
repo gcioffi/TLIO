@@ -10,7 +10,10 @@ Acquire the original rosbag during a real flown trajectory, recording the topics
 ### Adjust the real rosbag
 
 Use "Rosbag_Add_reference_frame.py" in src/scripts to add the right frame needed by RVIZ for the visualization of the original bag. In RVIZ, under "fixed frame", type "vicon".
-Play the original bag on your lapotp and record a copy of it, starting from the moment in which the drone is already in the starting position and trying to include a few seconds of hover in the copy bag. S top the copy bag when the drone is in its final position, removing the landing part present in the original rosbag. From now on, I will refer to the copy bag as real-flight bag. 
+
+Play the original bag on your lapotp and record a copy of it, starting from the moment in which the drone is already in the starting position and trying to include a few seconds of hover in the copy bag. Stop the copy bag when the drone is in its final position, removing the landing part present in the original rosbag. 
+
+From now on, I will refer to the copy bag as real-flight bag. 
 
 ### Load the trajectory 
 
@@ -23,19 +26,31 @@ The following files will be generated:
 
 In "evolving_state.txt", the VICON velocity will not be inserted for the moment and VICON/IMU are not time-synchronized. Thus, it is necessary to execute all the next steps in order to have a complete version of "evolving_state.txt". 
 
+In src/params/dataloader_params.yaml change bagfile and out_dir, according to the directory of your copy bag. 
+
 **Command to launch**
 
 python3 src/dataloader/load_real_flight_bag.py --config src/params/dataloader_params.yaml
 
 ### Synchronize Vicon - IMU
 
-Running "Sync_Vicon_IMU.py", a csv file will be output (LOG00001). Put this file and the real-flight bag in the VICON folder (Christian Pfeiffer) in order to get time offset between the Vicon and the Imu. 
-In particular, t_sync_vicon = t_vicon - offset.
+Go to the src/Vicon/data folder and copy your bag here. Then, in src/Vicon/src/main.py, line 318, insert the bag name without the extension '.bag'.
+
+Now, running "Sync_Vicon_IMU.py", a csv file will be output in src/Vicon/data. 
+After that, run the Vicon main to get time offset between the Vicon and the Imu in the real trajectory. 
+Remember: t_sync_vicon = t_vicon - offset.
+
 Go to src/scripts and type:
 
 **Command to launch**
 
 python3 Sync_Vicon_IMU.py
+
+Go to src/Vicon/src and type:
+
+**Command to launch**
+
+python main.py
 
 ### Load the synchronized trajectory 
 
