@@ -81,17 +81,32 @@ In src/scripts: python3 Replace_Evolving_State_and_Plot.py
 ### Interpolate data at the required frequency
 
 Use "Interpolate_Higher_Frequency.py" to get the data at the TLIO required frequency. 
+
 Just make sure that the directories in this script correspond to the directories in your workspace. 
+
+**Command to launch**
+
+In src/scripts: python3 Interpolate_Higher_Frequency.py
 
 ### Plot IMU Vicon and IMU simulated 
 
 Use "Plot_IMU_Vicon_vs_GT.py" to plot the IMU from the VICON and the IMU from the simulated bag. 
+
 Just make sure that the directories in this script correspond to the directories in your workspace and that you insert the time offset between simulated and real trajectory found in the previous step.
 
-### Modify HasVIO vector in evolving_state.txt
+**Command to launch**
+
+In src/scripts: python3 Plot_IMU_Vicon_vs_GT.py
+
+### Modify HasVIO vector in 'evolving_state.txt'
 
 Use "Transform_HasVio.py" to get more correspondences between IMU states and corresponding VIO states. 
+
 Just make sure that the directories in this script correspond to the directories in your workspace.
+
+**Command to launch**
+
+In src/scripts: python3 Transform_HasVio.py
 
 ### Generate hdf5
 

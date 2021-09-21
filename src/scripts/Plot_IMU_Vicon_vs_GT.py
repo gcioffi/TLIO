@@ -3,15 +3,23 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import scipy
 from scipy.signal import savgol_filter
+import os
+import yaml
 
 
-a_real = np.loadtxt("imu_measurements.txt")
+config_fn = os.path.abspath(os.getcwd()) + '/../params/dataloader_params.yaml' 
+with open(str(config_fn), 'r') as file:
+	    conf = yaml.load(file, Loader=yaml.FullLoader)
+folder_directory = conf["bagfile"]
+folder_directory_simulation = conf["bagfile_sim"]
+
+a_real = np.loadtxt(folder_directory + "/seq1/imu_measurements.txt")
 ts_real = a_real[:, 0]
 ts_real = ts_real - ts_real[0]
 a_real_raw = a_real[:, 1:4]
 w_real_raw = a_real[:, 7:10]
 
-a_gt = np.loadtxt("imu_measurements_sim.txt")
+a_gt = np.loadtxt(folder_directory_simulation + "/seq1/imu_measurements.txt")
 ts_gt = a_gt[:, 0]
 ts_gt = ts_gt - ts_gt[0]
 a_gt_sim = a_gt[:, 1:4]

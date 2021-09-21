@@ -1,13 +1,24 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import os
+import yaml
 
 #Check break condition - you may need to add the last elements in imu or evolving before breaking
 
-vio_states = np.loadtxt("evolving_state.txt")
+
+config_fn = os.path.abspath(os.getcwd()) + '/../params/dataloader_params.yaml' 
+with open(str(config_fn), 'r') as file:
+	    conf = yaml.load(file, Loader=yaml.FullLoader)
+folder_directory = conf["bagfile"]
+
+
+vio_states = np.loadtxt(folder_directory + "/seq1/evolving_state.txt")
 ts = vio_states[:, 0]
 pos = vio_states[:, 5:8]
-imu = np.loadtxt("imu_measurements.txt")
+
+imu = np.loadtxt(folder_directory + "/seq1/imu_measurements.txt")
 imu_ts = imu[:, 0]
+
 j = 0
 i = 0
 counter = 0
@@ -97,8 +108,9 @@ while i <= pos.shape[0] - 1 and j <= imu_ts.shape[0] - 1:
 
 vio_states_new = np.asarray(vio_states_new)
 imu_new = np.asarray(imu_new)
-print("interp", interp)
-np.savetxt("evolving_state_new.txt", vio_states_new)
-np.savetxt("imu_measurements_new.txt", imu_new)
+
+np.savetxt(folder_directory + "/seq1/evolving_state.txt", vio_states_new)
+np.savetxt(folder_directory + "/seq1/imu_measurements.txt", imu_new)
+
 print(vio_states_new.shape[0], vio_states.shape[0])
-print(imu_new.shape[0], imu.shape[0]) # 16 misure di IMU sono sbagliate
+print(imu_new.shape[0], imu.shape[0]) 
