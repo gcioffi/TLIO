@@ -100,7 +100,7 @@ In src/scripts: python3 Plot_IMU_Vicon_vs_GT.py
 
 ### Modify HasVIO vector in 'evolving_state.txt'
 
-Use "Transform_HasVio.py" to get more correspondences between IMU states and corresponding VIO states. 
+Use "Transform_HasVio.py" to get more correspondences between IMU states and corresponding VIO states. In line 8, insert the name of your bag (with extension).
 
 Just make sure that the directories in this script correspond to the directories in your workspace.
 

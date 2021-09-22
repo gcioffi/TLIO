@@ -5,12 +5,11 @@ import yaml
 
 #Check break condition - you may need to add the last elements in imu or evolving before breaking
 
-
+bag_name = "10_48_03.bag"
 config_fn = os.path.abspath(os.getcwd()) + '/../params/dataloader_params.yaml' 
 with open(str(config_fn), 'r') as file:
 	    conf = yaml.load(file, Loader=yaml.FullLoader)
 folder_directory = conf["bagfile"]
-
 
 vio_states = np.loadtxt(folder_directory + "/seq1/evolving_state.txt")
 ts = vio_states[:, 0]
@@ -114,3 +113,11 @@ np.savetxt(folder_directory + "/seq1/imu_measurements.txt", imu_new)
 
 print(vio_states_new.shape[0], vio_states.shape[0])
 print(imu_new.shape[0], imu.shape[0]) 
+
+os.remove(os.getcwd() + "/../Vicon/data/10_48_03_parrot.csv")
+os.remove(os.getcwd() + "/../Vicon/data/" + bag_name)
+os.remove(os.getcwd() + "/../Vicon/data/LOG00001.csv")
+os.remove(os.getcwd() + "/../Vicon/data/p.txt")
+os.remove(os.getcwd() + "/../Vicon/data/result.png")
+os.remove(os.getcwd() + "/../Vicon/data/ts.txt")
+os.remove(os.getcwd() + "/../Vicon/data/ViconVelocity.txt")
