@@ -315,7 +315,7 @@ def smoothSignal(
 
 # Path to data.
 PATH= os.getcwd() + '/../../'
-bag_name = '10_48_03'
+bag_name = '13_43_38'
 
 # Sampling rate.
 SR=100
