@@ -118,9 +118,11 @@ def position2velocity(
     curr_vz_smooth = smoothSignal(curr_vz, window_len=window_len,
         window=window)[window_len // 2:curr_pz.shape[0] + window_len // 2]
     # Restore original sampling
+    #Todo: original
     vx_smooth = np.interp(t, curr_t, curr_vx_smooth)
     vy_smooth = np.interp(t, curr_t, curr_vy_smooth)
     vz_smooth = np.interp(t, curr_t, curr_vz_smooth)
+
     # Combine the output into one array
     v_smooth = np.hstack((vx_smooth.reshape((-1, 1)),
         np.hstack((vy_smooth.reshape((-1, 1)), vz_smooth.reshape((-1, 1))))))
