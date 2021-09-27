@@ -1,6 +1,5 @@
 # Input
 bagfile: /home/rpg/Desktop/RosbagReal_13_43_38
-bagfile_sim: /home/rpg/Desktop/RosbagSimulated_13_43_38
 topic_imu: /alphasense_driver_ros/imu
 topic_odometry: /vicon/parrot  
 
@@ -10,12 +9,6 @@ out_dir: /home/rpg/Desktop/RosbagReal_13_43_38
 
 # Noise params
 
-stdImuNoise_acc_x: 0.50
-stdImuNoise_acc_y: 0.4
-stdImuNoise_acc_z: 0.6
-stdImuNoise_gyro_x: 0.01
-stdImuNoise_gyro_y: 0.06
-stdImuNoise_gyro_z: 0.03
 bias_acc: [0.002, 0.124, 0.103]
 bias_gyro: [0.002, -0.006, 0.0]
 stdBiasNoise_acc: 0.001

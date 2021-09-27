@@ -52,7 +52,7 @@ In src/Vicon/src, type: python main.py
 
 ### Load the synchronized trajectory 
 
-Subtract the offset value obtained before from ts_odom in "load_real_flight_bag_sync.py" (see lines 137 and 148) and run this script to load again the files loaded before but now synchronized. 
+Subtract the offset value obtained before from ts_odom in "load_real_flight_bag_sync.py" (see line 129) and run this script to load again the files loaded before but now synchronized. 
 
 **Command to launch**
 
