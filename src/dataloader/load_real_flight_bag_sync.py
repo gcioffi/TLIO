@@ -118,7 +118,7 @@ def perturbationIMUandBiases(config_fn, file, conf, traj_analysed, rosbags_num, 
                     dt_sqrt.append(dt_sqrt_)
 
             if topic == topic_odometry:
-                ts_odom.append(msg.header.stamp.to_sec())
+                ts_odom.append(msg.header.stamp.to_sec() - 0.03)
                 p_wb.append(np.array([msg.pose.position.x, msg.pose.position.y, msg.pose.position.z]))
                 q_wb.append(np.array([msg.pose.orientation.w, msg.pose.orientation.x,msg.pose.orientation.y,msg.pose.orientation.z]))
                 v_wb.append(np.array([0,0,0])) # Filled later
