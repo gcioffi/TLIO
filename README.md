@@ -2,14 +2,14 @@
 
 Acquire the original rosbag during a real flown trajectory, recording the topics:     
 
-- /alphasense_driver_ros/cam0 : sensor_msgs/Image        
-- /alphasense_driver_ros/cam1 : sensor_msgs/Image        
-- /alphasense_driver_ros/imu  : sensor_msgs/Imu          
-- /vicon/parrot   
+- */alphasense_driver_ros/cam0 : sensor_msgs/Image*        
+- */alphasense_driver_ros/cam1 : sensor_msgs/Image*      
+- */alphasense_driver_ros/imu  : sensor_msgs/Imu*          
+- */vicon/parrot*   
 
-### Adjust the real rosbag
+### Modify the real rosbag
 
-Use "Rosbag_Add_reference_frame.py" in src/scripts to add the right frame needed by RVIZ for the visualization of the original bag. In RVIZ, under "fixed frame", type "vicon".
+Use ```Rosbag_Add_reference_frame.py``` in src/scripts to add the right frame needed by RVIZ for the visualization of the original bag. In RVIZ, under *fixed frame*, type **vicon**.
 
 Play the original bag on your lapotp and record a copy of it, starting from the moment in which the drone is already in the starting position and trying to include a few seconds of hover in the copy bag. Stop the copy bag when the drone is in its final position, removing the landing part present in the original rosbag. 
 
