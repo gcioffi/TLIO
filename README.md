@@ -78,6 +78,27 @@ Go to src/scripts and type:
 
 In src/scripts: python3 Replace_Evolving_State_and_Plot.py
 
+
+### Rotate measurements IMU: from reality to simulated frame
+
+Estimate the relative rotation between the real and the simulated imu.
+The first thing to do is to transform the Vicon pose measurements from the center of the markers to the imu frame of the sevensense camera. 
+
+- Run handeye (https://github.com/ethz-asl/hand_eye_calibration/tree/master) to estimate the 6 DoF relative transformation between the Vicon markers (= hand) and the camera (= eye). See "How to run ASL handeye" for more details.
+- Use the script "from_vicon_to_imu.py" to get evolving_state.txt which now contains the poses and velocity of the imu frame of the sevensense camera.
+
+WARNING: This script contains hand-coded values (handeye matrix and cam-imu transformation).
+
+After that, it is necessary to estimate the rotation offset between the real and simulated imu.
+
+- Use the script "compare_sim_and_real_trajs.py" to plot sim and real trajectories before and after rotation alignment.
+This script takes as input the angle **theta** which is the rotation offset along the gravity between real and sim. It uses this theta to rotate the real imu to the sim imu frame. Use the plots before alignment to estimate **theta**.
+
+As a last point, we align the real and the simulated measurements. 
+**theta**=100 for the real trajectories. 
+
+- Use the script "align_imu_real_to_sim.py" with theta estimated at the previous step. This will save a new .txt containing the real imu measurements aligned to the sim ones.
+
 ### Interpolate data at the required frequency
 
 Use "Interpolate_Higher_Frequency.py" to get the data at the TLIO required frequency. 
@@ -88,10 +109,6 @@ Just make sure that the directories in this script correspond to the directories
 
 In src/scripts: python3 Interpolate_Higher_Frequency.py
 
-
-### Rotate measurements IMU: from reality to simulated frame
-
-Use Giovanni's code: toDo
 
 ### Plot IMU Vicon and IMU simulated 
 
