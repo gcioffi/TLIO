@@ -34,7 +34,7 @@ python3 src/dataloader/load_real_flight_bag.py --config src/params/dataloader_pa
 
 ### Synchronize Vicon - IMU
 
-Go to the src/Vicon/data folder and copy your bag here. Then, in src/Vicon/src/main.py, line 318, insert the bag name without the extension '.bag'.
+Go to the src/Vicon/data folder and copy your bag here. Then, in src/Vicon/src/main.py, line 320, insert the bag name without the extension '.bag'.
 
 Now, running "Sync_Vicon_IMU.py", a csv file will be output in src/Vicon/data. 
 After that, run the Vicon main to get time offset between the Vicon and the Imu in the real trajectory. 
