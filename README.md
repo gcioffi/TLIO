@@ -34,12 +34,13 @@ In *src/params/dataloader_params.yaml* change **bagfile** and **out_dir**, accor
 
 ### Synchronize Vicon - IMU
 
-Go to the *src/Vicon/data folder* and **copy** your bag here. Then, in ```src/Vicon/src/main.py```, *line 320*, insert the bag name without the extension *'.bag'*.
+Go to the *src/Vicon/data* folder and **copy** your bag here. Then, in ```src/Vicon/src/main.py```, *line 320*, insert the bag name without the extension *'.bag'*.
 
 Now, running ```Sync_Vicon_IMU.py```, a .csv file will be output in *src/Vicon/data*.
 
-After that, run the Vicon **main** to get time offset between the Vicon and the Imu in the real trajectory. 
-*Remember:* t_sync_vicon = t_vicon - offset.
+After that, run the Vicon **main** to get time offset between the Vicon and the Imu in the real trajectory.
+
+*Remember:* ***t_sync_vicon = t_vicon - offset***.
 
 
 
