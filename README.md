@@ -11,7 +11,7 @@ Acquire the original rosbag during a real flown trajectory, recording the topics
 
 Use ```Rosbag_Add_reference_frame.py``` in src/scripts to add the right frame needed by RVIZ for the visualization of the original bag. In RVIZ, under *fixed frame*, type **vicon**.
 
-Play the original bag on your lapotp and record a copy of it, starting from the moment in which the drone is already in the starting position and trying to include a few seconds of hover in the copy bag. Stop the copy bag when the drone is in its final position, removing the landing part present in the original rosbag. 
+Play the original bag on your lapotp and record a copy of it, starting from the moment in which the drone is already in the starting position and trying to include a few seconds of hover in the copy bag. Stop the copy bag only when the drone is in its final position, removing the landing part present in the original rosbag. 
 
 From now on, I will refer to the copy bag as real-flight bag. 
 
@@ -20,17 +20,17 @@ From now on, I will refer to the copy bag as real-flight bag.
 Use ```load_real_flight_bag.py``` to load the real-flight bag.
 The following files will be generated:
 
-- my_timestamps_p.txt (measurements at 400 Hz)
-- imu_measurements.txt (measurements at 800 Hz)
-- evolving_state.txt (measurements at 400 Hz)
+- *my_timestamps_p.txt* (measurements at 400 Hz)
+- *imu_measurements.txt* (measurements at 800 Hz)
+- *evolving_state.txt* (measurements at 400 Hz)
 
-In "evolving_state.txt", the VICON velocity will not be inserted for the moment and VICON/IMU are not time-synchronized. Thus, it is necessary to execute all the next steps in order to have a complete version of "evolving_state.txt". 
+In *evolving_state.txt*, the Vicon velocity will not be inserted for the moment and also VICON/IMU are not time-synchronized. Thus, it is necessary to execute all the next steps in order to have a complete version of *evolving_state.txt*. 
 
-In src/params/dataloader_params.yaml change bagfile and out_dir, according to the directory of your copy bag. 
+In src/params/dataloader_params.yaml change **bagfile** and **out_dir**, according to the directory of your copy bag. 
 
 **Command to launch**
 
-python3 src/dataloader/load_real_flight_bag.py --config src/params/dataloader_params.yaml
+```python3 src/dataloader/load_real_flight_bag.py --config src/params/dataloader_params.yaml```
 
 ### Synchronize Vicon - IMU
 
