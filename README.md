@@ -40,7 +40,7 @@ Now, running ```Sync_Vicon_IMU.py```, a .csv file will be output in *src/Vicon/d
 
 After that, run the Vicon **main** to get time offset between the Vicon and the Imu in the real trajectory.
 
-*Remember:* ***t_sync_vicon = t_vicon - offset***.
+*Remember: t_sync_vicon = t_vicon - offset*.
 
 
 
