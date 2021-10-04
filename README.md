@@ -40,11 +40,12 @@ Now, running ```Sync_Vicon_IMU.py```, a .csv file will be output in *src/Vicon/d
 
 After that, run the Vicon **main** to get time offset between the Vicon and the Imu in the real trajectory.
 
-*Remember: t_sync_vicon = t_vicon - offset*.
+Remember: *t_sync_vicon = t_vicon - offset*.
 
 
 
 **Command to launch**
+
 Go to *src/scripts* and type:
 
 ```python3 Sync_Vicon_IMU.py```
@@ -55,11 +56,11 @@ Go to *src/Vicon/src* and type:
 
 ### Load the synchronized trajectory 
 
-Subtract the offset value obtained before from ts_odom in "load_real_flight_bag_sync.py" (see line 121) and run this script to load again the files loaded before but now synchronized. 
+Using the offset value obtained, subtract it from *ts_odom* in ```load_real_flight_bag_sync.py``` (see *line 121*) and run this script to load again the same files as before but now synchronized. 
 
 **Command to launch**
 
-In TLIO: python3 src/dataloader/load_real_flight_bag_sync.py --config src/params/dataloader_params.yaml
+```python3 src/dataloader/load_real_flight_bag_sync.py --config src/params/dataloader_params.yaml```
 
 ### Load the simulated trajectory 
 

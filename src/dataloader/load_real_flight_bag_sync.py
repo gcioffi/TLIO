@@ -114,7 +114,7 @@ def perturbationIMUandBiases(config_fn, file, conf, traj_analysed, rosbags_num, 
                     dt_sqrt.append(dt_sqrt_)
 
             if topic == topic_odometry: # 400 Hz
-                ts_odom.append(msg.header.stamp.to_sec() - 0.03) # Subtract offset
+                ts_odom.append(msg.header.stamp.to_sec() - 0.03)
                 p_wb.append(np.array([msg.pose.position.x, msg.pose.position.y, msg.pose.position.z]))
                 q_wb.append(np.array([msg.pose.orientation.w, msg.pose.orientation.x, msg.pose.orientation.y, msg.pose.orientation.z]))
                 v_wb.append(np.array([0,0,0])) # Filled later
@@ -175,9 +175,7 @@ def perturbationIMUandBiases(config_fn, file, conf, traj_analysed, rosbags_num, 
         np.savetxt(fn, tableEvolvingState)
 
         # Save biases values: bias.txt
-        biasesValues = np.hstack((bias_acc, bias_w))
-        print(biasesValues)
-       
+        biasesValues = np.hstack((bias_acc, bias_w))       
         # Check how we concatenate
         all_biases.append(np.asarray(biasesValues))
         targetsBiases  = np.array(["Bias_acc_x", "Bias_acc_y", "Bias_acc_z", "Bias_w_x", "Bias_w_y", "Bias_w_z"])
