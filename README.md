@@ -139,30 +139,21 @@ Just make sure that the directories in this script correspond to the directories
 
 **Command to launch**
 
-In *src/scripts*
+In *src/scripts:*
 
 ```python3 Interpolate_Higher_Frequency.py```
 
+### Modify HasVIO vector in *evolving_state.txt*
 
-### Plot IMU Vicon and IMU simulated 
-
-Use "Plot_IMU_Vicon_vs_GT.py" to plot the IMU from the VICON and the IMU from the simulated bag. 
-
-Just make sure that the directories in this script correspond to the directories in your workspace and that you insert the time offset between simulated and real trajectory found in the previous step.
-
-**Command to launch**
-
-In src/scripts: python3 Plot_IMU_Vicon_vs_GT.py
-
-### Modify HasVIO vector in 'evolving_state.txt'
-
-Use "Transform_HasVio.py" to get more correspondences between IMU states and corresponding VIO states. In line 8, insert the name of your bag (with extension).
+Use ```Transform_HasVio.py``` to get more correspondences between IMU states and the corresponding VIO states. In *line 8*, insert the **name** of your bag (with extension).
 
 Just make sure that the directories in this script correspond to the directories in your workspace.
 
 **Command to launch**
 
-In src/scripts: python3 Transform_HasVio.py
+In *src/scripts*: 
+
+```python3 Transform_HasVio.py```
 
 ### Generate hdf5
 

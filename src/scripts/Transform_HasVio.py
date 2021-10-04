@@ -5,7 +5,7 @@ import yaml
 
 #Check break condition - you may need to add the last elements in imu or evolving before breaking
 
-bag_name = "10_48_03.bag"
+bag_name = "13_43_38.bag"
 config_fn = os.path.abspath(os.getcwd()) + '/../params/dataloader_params.yaml' 
 with open(str(config_fn), 'r') as file:
 	    conf = yaml.load(file, Loader=yaml.FullLoader)
