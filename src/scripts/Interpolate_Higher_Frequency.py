@@ -80,6 +80,7 @@ if __name__ == "__main__":
     imu_meas = np.loadtxt(folder_directory + "/seq1/imu_measurements.txt")
 
     # Interpolated Timestamps - from 400 Hz to 500 Hz
+    
     interpolated_line = interpolate_meas(image_ts)
     fn = folder_directory + "/seq1/my_timestamps_p.txt"
     np.savetxt(fn, interpolated_line)
@@ -88,6 +89,7 @@ if __name__ == "__main__":
     interpolated_line = interpolate_meas(vio_states)
     fn = folder_directory + "/seq1/evolving_state.txt"
     np.savetxt(fn, interpolated_line)
+    
 
     # Interpolated Imu Measurements - from 800 to 1000 Hz
     interpolated_line = interpolate_meas(imu_meas)
