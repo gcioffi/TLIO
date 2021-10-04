@@ -17,7 +17,7 @@ From now on, I will refer to the copy bag as real-flight bag.
 
 ### Load the trajectory 
 
-Use "load_real_flight_bag.py" to load the real-flight bag.
+Use ```load_real_flight_bag.py``` to load the real-flight bag.
 The following files will be generated:
 
 - my_timestamps_p.txt (measurements at 400 Hz)
@@ -85,19 +85,34 @@ Estimate the relative rotation between the real and the simulated imu.
 The first thing to do is to transform the Vicon pose measurements from the center of the markers to the imu frame of the sevensense camera. 
 
 - Run handeye (https://github.com/ethz-asl/hand_eye_calibration/tree/master) to estimate the 6 DoF relative transformation between the Vicon markers (= hand) and the camera (= eye). See "How to run ASL handeye" for more details.
+
 - Use the script "from_vicon_to_imu.py" to get evolving_state.txt which now contains the poses and velocity of the imu frame of the sevensense camera.
 
 WARNING: This script contains hand-coded values (handeye matrix and cam-imu transformation).
+
+**Command to launch**
+
+In src/real_to_sim/scripts: python3 from_vicon_to_imu.py --ev_state_fn /home/rpg/Desktop/RosbagReal_13_43_38/seq1/evolving_state.txt 
 
 After that, it is necessary to estimate the rotation offset between the real and simulated imu.
 
 - Use the script "compare_sim_and_real_trajs.py" to plot sim and real trajectories before and after rotation alignment.
 This script takes as input the angle **theta** which is the rotation offset along the gravity between real and sim. It uses this theta to rotate the real imu to the sim imu frame. Use the plots before alignment to estimate **theta**.
 
-As a last point, we align the real and the simulated measurements. 
-**theta**=100 for the real trajectories. 
+**Command to launch**
 
-- Use the script "align_imu_real_to_sim.py" with theta estimated at the previous step. This will save a new .txt containing the real imu measurements aligned to the sim ones.
+In src/real_to_sim/scripts: python3 compare_sim_and_real_trajs.py --real_ev_fn /home/rpg/Desktop/RosbagReal_13_43_38/seq1/evolving_state.txt --sim_ev_fn /home/rpg/Desktop/RosbagSimulated_13_43_38/seq1/evolving_state.txt  --t_offset -1 --theta 100
+
+As a last point, we align the real and the simulated measurements. 
+
+- Use the script "align_imu_real_to_sim.py" with theta estimated at the previous step. 
+
+This will save a new .txt containing the real imu measurements aligned to the sim ones.
+
+**Command to launch**
+
+In src/real_to_sim/scripts: python3 align_imu_real_to_sim.py --real_ev_fn /home/rpg/Desktop/RosbagReal_13_43_38/seq1/evolving_state.txt --sim_ev_fn /home/rpg/Desktop/RosbagSimulated_13_43_38/seq1/evolving_state.txt  --t_offset -1 --theta 100
+
 
 ### Interpolate data at the required frequency
 
