@@ -66,7 +66,7 @@ Using the offset value obtained, subtract it from *ts_odom* in ```load_real_flig
 
 Change **branch**, go to ```simulate_real_noise```. 
 
-In *src/params/dataloader_params.yaml* change ***bagfile** and **out_dir**, according to the directory of your copy-bag. 
+In *src/params/dataloader_params.yaml* change **bagfile** and **out_dir**, according to the directory of your copy-bag. 
 
 Run ```load_random_trajectories_from_rosbag```, loading the simulated bag of the real-flown trajectory. 
 
@@ -78,46 +78,57 @@ Use ```Replace_Evolving_State_and_Plot.py``` in *src/scripts*, in order to read 
 In addition, some plots about position and velocity GT vs. VICON will be generated.
 
 Just make sure that the directories in this script correspond to the directories in your workspace. It is also crucial to insert the **time-offset** between the simulated and the real trajectory in the plotting part, in order to have them aligned. 
-Go to *src/scripts* and type: 
+ 
 
 **Command to launch**
+
+Go to *src/scripts* and type:
 
 ```python3 Replace_Evolving_State_and_Plot.py```
 
 
-### Rotate measurements IMU: from reality to simulated frame
+### Rotate IMU: from reality to simulated frame
 
-Estimate the relative rotation between the real and the simulated imu.
-The first thing to do is to transform the Vicon pose measurements from the center of the markers to the imu frame of the sevensense camera. 
+Estimate the relative rotation between the *real* and the *simulated* Imu.
+The first thing to do is to **transform** the Vicon pose measurements from the center of the markers to the imu-frame of the sevensense camera. 
 
-- Run handeye (https://github.com/ethz-asl/hand_eye_calibration/tree/master) to estimate the 6 DoF relative transformation between the Vicon markers (= hand) and the camera (= eye). See "How to run ASL handeye" for more details.
+- Run handeye (https://github.com/ethz-asl/hand_eye_calibration/tree/master) to estimate the 6 DoF relative transformation between the Vicon markers (= hand) and the camera (= eye). See *"How to run ASL handeye"* for more details.
 
-- Use the script "from_vicon_to_imu.py" to get evolving_state.txt which now contains the poses and velocity of the imu frame of the sevensense camera.
+- Use the script ```from_vicon_to_imu.py``` to get *evolving_state.txt* which now contains the poses and velocity of the imu-frame of the sevensense camera.
 
-WARNING: This script contains hand-coded values (handeye matrix and cam-imu transformation).
-
-**Command to launch**
-
-In src/real_to_sim/scripts: python3 from_vicon_to_imu.py --ev_state_fn /home/rpg/Desktop/RosbagReal_13_43_38/seq1/evolving_state.txt 
-
-After that, it is necessary to estimate the rotation offset between the real and simulated imu.
-
-- Use the script "compare_sim_and_real_trajs.py" to plot sim and real trajectories before and after rotation alignment.
-This script takes as input the angle **theta** which is the rotation offset along the gravity between real and sim. It uses this theta to rotate the real imu to the sim imu frame. Use the plots before alignment to estimate **theta**.
+**WARNING**: This script contains hand-coded values (handeye matrix and cam-imu transformation).
 
 **Command to launch**
 
-In src/real_to_sim/scripts: python3 compare_sim_and_real_trajs.py --real_ev_fn /home/rpg/Desktop/RosbagReal_13_43_38/seq1/evolving_state.txt --sim_ev_fn /home/rpg/Desktop/RosbagSimulated_13_43_38/seq1/evolving_state.txt  --t_offset -1 --theta 100
+In *src/real_to_sim/scripts*
 
-As a last point, we align the real and the simulated measurements. 
+```python3 from_vicon_to_imu.py --ev_state_fn /home/rpg/Desktop/RosbagReal_13_43_38/seq1/evolving_state.txt```
 
-- Use the script "align_imu_real_to_sim.py" with theta estimated at the previous step. 
+After that, it is necessary to estimate the **rotation offset** between the real and the simulated imu.
 
-This will save a new .txt containing the real imu measurements aligned to the sim ones.
+- Use the script ```compare_sim_and_real_trajs.py``` to plot sim and real trajectories before and after rotation alignment.
+
+This script takes as input the angle **theta** which is the rotation offset along the gravity between real and sim. It uses this theta to rotate the real imu to the sim imu frame. 
+
+Use the plots before alignment to estimate **theta**.
 
 **Command to launch**
 
-In src/real_to_sim/scripts: python3 align_imu_real_to_sim.py --real_ev_fn /home/rpg/Desktop/RosbagReal_13_43_38/seq1/evolving_state.txt --sim_ev_fn /home/rpg/Desktop/RosbagSimulated_13_43_38/seq1/evolving_state.txt  --t_offset -1 --theta 100
+In *src/real_to_sim/scripts*
+
+```python3 compare_sim_and_real_trajs.py --real_ev_fn /home/rpg/Desktop/RosbagReal_13_43_38/seq1/evolving_state.txt --sim_ev_fn /home/rpg/Desktop/RosbagSimulated_13_43_38/seq1/evolving_state.txt  --t_offset -1 --theta 100```
+
+As a last point, we **align** the real and the simulated measurements. 
+
+- Use the script ```align_imu_real_to_sim.py``` with theta estimated at the previous step. 
+
+This will save a new *.txt* containing the real imu measurements aligned to the sim ones.
+
+**Command to launch**
+
+Go to *src/real_to_sim/scripts*
+
+```python3 align_imu_real_to_sim.py --real_ev_fn /home/rpg/Desktop/RosbagReal_13_43_38/seq1/evolving_state.txt --sim_ev_fn /home/rpg/Desktop/RosbagSimulated_13_43_38/seq1/evolving_state.txt  --t_offset -1 --theta 100```
 
 
 ### Interpolate data at the required frequency
