@@ -88,6 +88,11 @@ Just make sure that the directories in this script correspond to the directories
 
 In src/scripts: python3 Interpolate_Higher_Frequency.py
 
+
+### Rotate measurements IMU: from reality to simulated frame
+
+Use Giovanni's code: toDo
+
 ### Plot IMU Vicon and IMU simulated 
 
 Use "Plot_IMU_Vicon_vs_GT.py" to plot the IMU from the VICON and the IMU from the simulated bag. 
