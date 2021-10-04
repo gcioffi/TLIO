@@ -56,7 +56,7 @@ Go to *src/Vicon/src* and type:
 
 ### Load the synchronized trajectory 
 
-Using the offset value obtained, subtract it from *ts_odom* in ```load_real_flight_bag_sync.py``` (see *line 121*) and run this script to load again the same files as before but now synchronized. 
+Using the offset value obtained, subtract it from *ts_odom* in ```load_real_flight_bag_sync.py``` (see *line 117*) and run this script to load again the same files as before but now synchronized. 
 
 **Command to launch**
 
@@ -64,23 +64,25 @@ Using the offset value obtained, subtract it from *ts_odom* in ```load_real_flig
 
 ### Load the simulated trajectory 
 
-Change branch, go to "simulate_real_noise". 
+Change **branch**, go to ```simulate_real_noise```. 
 
-In src/params/dataloader_params.yaml change bagfile and out_dir, according to the directory of your copy bag. Run "load_random_trajectories_from_rosbag", loading the simulated bag of the real-flown trajectory. 
+In *src/params/dataloader_params.yaml* change ***bagfile** and **out_dir**, according to the directory of your copy-bag. 
 
-In this way, we can then compare the simulated vs. real trajectory tests of the traind model.  
+Run ```load_random_trajectories_from_rosbag```, loading the simulated bag of the real-flown trajectory. 
 
-### Add VICON velocity and plot
+In this way, we can then compare the simulated vs. the real trajectory tests of the traind model.  
 
-Use "Replace_Evolving_State_and_Plot.py" in src/scripts in order to read the VICON computed velocity in src/Vicon/data and insert the velocity values in the evolving_state.txt.
+### Add Vicon velocity and plot
+
+Use ```Replace_Evolving_State_and_Plot.py``` in *src/scripts*, in order to read the Vicon computed velocity in *src/Vicon/data* (referred to the center of the markers) and insert the velocity values in *evolving_state.txt*.
 In addition, some plots about position and velocity GT vs. VICON will be generated.
 
-Just make sure that the directories in this script correspond to the directories in your workspace. It is also crucial to insert the time offset between the simulated and the real trajectory in the plotting part, in order to have them aligned. 
-Go to src/scripts and type: 
+Just make sure that the directories in this script correspond to the directories in your workspace. It is also crucial to insert the **time-offset** between the simulated and the real trajectory in the plotting part, in order to have them aligned. 
+Go to *src/scripts* and type: 
 
 **Command to launch**
 
-In src/scripts: python3 Replace_Evolving_State_and_Plot.py
+```python3 Replace_Evolving_State_and_Plot.py```
 
 
 ### Rotate measurements IMU: from reality to simulated frame
