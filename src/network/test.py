@@ -59,7 +59,7 @@ def pose_integrate(args, dataset, preds):
     """
     Concatenate predicted velocity to reconstruct sequence trajectory
     """
-    dp_t = args.window_time #dp_t = 1.0
+    dp_t = args.window_time # dp_t = 1.0
     pred_vels = preds / dp_t # 402 x 3
 
     ind = np.array([i[1] for i in dataset.index_map], dtype=np.int)
@@ -71,7 +71,6 @@ def pose_integrate(args, dataset, preds):
         logging.info("Trajectory integration point is not centered.")
     ind_intg = ind + delta_int  # the indices of doing integral #402 idx
 
-    #ToDo: The mistake was here in ts = ... -> time should be brought back to useconds!
     ts = dataset.ts[0] * 1e6 
     dts = np.mean(ts[ind_intg[1:]] - ts[ind_intg[:-1]])
     pos_intg = np.zeros([pred_vels.shape[0] + 1, args.output_dim])

@@ -8,7 +8,7 @@ import yaml
 
 # Replace evolving state of the real trajectory where the velocity is null and insert the data coming from Vicon Sync script
 
-v_wb_real = np.loadtxt(os.getcwd() + "/../Vicon/data/ViconVelocity.txt")
+v_wb_real = np.loadtxt(os.getcwd() + "/../Vicon/data/ViconVelocity.txt") # velocity center of the markers in vicon world
 config_fn = os.path.abspath(os.getcwd()) + '/../params/dataloader_params.yaml' 
 with open(str(config_fn), 'r') as file:
 	    conf = yaml.load(file, Loader=yaml.FullLoader)

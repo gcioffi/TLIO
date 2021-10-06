@@ -111,7 +111,7 @@ def perturbationIMUandBiases(config_fn, file, conf, traj_analysed, rosbags_num, 
                     ts_imu.append(curr_ts_imu)
                     w_raw.append(curr_w_raw)
                     a_raw.append(curr_a_raw)
-                    dt_sqrt.append(dt_sqrt_)
+                    dt_sqrt.append(curr_ts_imu - prev_ts_imu)
 
             if topic == topic_odometry: # 400 Hz
                 ts_odom.append(msg.header.stamp.to_sec() - 0.03)

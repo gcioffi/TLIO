@@ -149,6 +149,8 @@ Use ```Transform_HasVio.py``` to get more correspondences between IMU states and
 
 Just make sure that the directories in this script correspond to the directories in your workspace.
 
+**Modify** *line 122* using your bag name in order to delete previous files. 
+
 **Command to launch**
 
 In *src/scripts*: 

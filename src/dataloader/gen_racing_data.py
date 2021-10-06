@@ -94,13 +94,14 @@ def save_hdf5(args):
         image_ts = np.loadtxt(osp.join(datapath, "my_timestamps_p.txt"))
         imu_meas = np.loadtxt(osp.join(datapath, "imu_measurements.txt"))
         vio_states = np.loadtxt(osp.join(datapath, "evolving_state.txt"))
+        list_idx_evolving_corresp = np.loadtxt(osp.join(datapath, "idx_evolving_corresp.txt"))
+        list_idx_imu_corresp = np.loadtxt(osp.join(datapath, "idx_imu_corresp.txt"))
    
 
         # find initial state, start from the 21st output from vio_state
         start_t = image_ts[20]
         imu_idx = np.searchsorted(imu_meas[:, 0], start_t)
         vio_idx = np.searchsorted(vio_states[:, 0], start_t)
-
 
         # get imu_data - raw and calibrated
         print("obtain raw and vio-calibrated IMU data")
@@ -140,6 +141,16 @@ def save_hdf5(args):
         #ToDO
         counter = 0
         #for i in progressbar.progressbar(range(1, N)):
+
+        '''
+        for k in range(idx_imu_corresp.shape[0]):
+            #print(idx_evolving_corresp[k])
+            print(vio_states[int(idx_evolving_corresp[k]), 0], imu_meas[int(idx_imu_corresp[k]), 0])
+
+        exit()
+        '''
+        print("N", N)
+    
         for i in range(1,N): 
             #ToDo
             counter = counter +1  
@@ -148,8 +159,7 @@ def save_hdf5(args):
             curr_t = imu_data[i, 0]
             past_t = imu_data[i - 1, 0]
             dt = (curr_t - past_t) * 1e-6  # s 
-           
-            
+                       
             last_state = state_data[i - 1, :]
             new_state = imu_integrate(gravity, last_state, imu_data_i, dt)
             state_data[i, :] = new_state
@@ -160,8 +170,22 @@ def save_hdf5(args):
 
             #Todo
             if has_vio == 1:
-              
-                vio_idx = np.searchsorted(vio_states[:, 0], imu_data[i, 0])
+                #print("i", i)
+
+                #vio_idx = np.searchsorted(vio_states[:, 0], imu_data[i, 0])
+                #vio_idx_arr = np.where(vio_states[:, 0] == imu_data[i, 0])
+                #if imu_data[i, 0] == vio_states[vio_idx_arr, 0]: print("error!")
+                #vio_idx = vio_idx_arr[0][0]
+                idx_in_list_imu_corresp = np.where(list_idx_imu_corresp.astype(int) == i + imu_idx) 
+                idx_in_list_imu_corresp = idx_in_list_imu_corresp[0][0].astype(int)
+                #print("Equal? : ", list_idx_imu_corresp[idx_in_list_imu_corresp], i)
+                idx_in_list_evolving_corresp = idx_in_list_imu_corresp
+                print("Equal Data? : ", vio_states[int(list_idx_evolving_corresp[idx_in_list_evolving_corresp]), 0], \
+                    imu_data[i, 0])
+                #print(vio_states[int(idx_evolving_corresp[k]), 0], imu_meas[int(idx_imu_corresp[k]), 0])
+                vio_idx = int(list_idx_evolving_corresp[idx_in_list_evolving_corresp])
+                
+             
                 r_vio = Rotation.from_quat(
                     [
                         vio_states[vio_idx, 2],
@@ -181,8 +205,11 @@ def save_hdf5(args):
                     vio_states[vio_idx, 10],
                 ]
                 vio_state = np.concatenate((r_vio.as_rotvec(), p_vio, v_vio), axis=0)
-                state_data[i, :] = vio_state
-
+                state_data[i, :] = vio_state 
+                
+        
+        
+    
         # adding timestamps in state_data
         state_data = np.concatenate(
             (np.expand_dims(imu_data[:, 0], axis=1), state_data), axis=1
@@ -245,18 +272,20 @@ def save_hdf5(args):
         elif seq_id >= n_train_seq + n_test_seq:
             val_list.append(seq_name)
     
+    
     #Todo
     #Plotting VIO
-    
-    '''fig1 = plt.figure(num="prediction vs gt")
+
+    fig1 = plt.figure(num="prediction vs gt")
     plt.plot(vio_p[:,0], vio_p[:,1])
     plt.plot(vio_states[:,5], vio_states[:,6])
     plt.axis("equal")
     plt.legend(["Predicted", "Ground truth"])
     plt.title("2D trajectory and ATE error against time")
-    fig1.savefig(osp.join(data_dir, "mygraph.png"))'''
+    fig1.savefig(osp.join(data_dir, "mygraph.png"))
     
-
+ 
+    
     # Save train.txt, val.txt, test.txt
     train_fn = osp.join(data_dir, 'train.txt')
     f_txt = open(train_fn, "w")
@@ -278,7 +307,7 @@ def save_hdf5(args):
         f_txt.write(fn_seq)
         f_txt.write("\n")
     f_txt.close()
-
+    
 
 if __name__ == "__main__":
 
