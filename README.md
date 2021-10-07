@@ -116,7 +116,7 @@ Use the plots before alignment to estimate **theta**.
 
 In *src/real_to_sim/scripts*
 
-```python3 compare_sim_and_real_trajs.py --real_ev_fn /home/rpg/Desktop/RosbagReal_13_43_38/seq1/evolving_state.txt --sim_ev_fn /home/rpg/Desktop/RosbagSimulated_13_43_38/seq1/evolving_state.txt  --toffset -0.7 --theta 100```
+```python3 compare_sim_and_real_trajs.py --real_ev_fn /home/rpg/Desktop/RosbagReal_13_43_38/seq1/evolving_state.txt --sim_ev_fn /home/rpg/Desktop/RosbagSimulated_13_43_38/seq1/evolving_state.txt  --toffset -1 --theta 100```
 
 As a last point, we **align** the real and the simulated measurements. 
 
@@ -128,7 +128,7 @@ This will save a new *.txt* containing the real imu measurements aligned to the 
 
 Go to *src/real_to_sim/scripts*
 
-```python3 align_imu_real_to_sim.py --real_imu_fn /home/rpg/Desktop/RosbagReal_13_43_38/seq1/imu_measurements.txt --sim_imu_fn /home/rpg/Desktop/RosbagSimulated_13_43_38/seq1/imu_measurements.txt  --toffset -2.9 --theta 100```
+```python3 align_imu_real_to_sim.py --real_imu_fn /home/rpg/Desktop/RosbagReal_13_43_38/seq1/imu_measurements.txt --sim_imu_fn /home/rpg/Desktop/RosbagSimulated_13_43_38/seq1/imu_measurements.txt  --toffset -1 --theta 100```
 
 
 ### Interpolate data at the required frequency
