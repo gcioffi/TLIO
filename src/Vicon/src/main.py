@@ -223,6 +223,7 @@ def rosbag2csv(
             # Reformat header and timestamps
             df = pd.read_csv(curr_outpath)
             # Convert time to seconds
+            # todo
             df['%time'] = df['%time'].values / 1000000000
             # Add time since start
             df['t'] = df['%time'].values - df['%time'].iloc[0]

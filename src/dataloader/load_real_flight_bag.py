@@ -60,7 +60,6 @@ def perturbationIMUandBiases(config_fn, file, conf, traj_analysed, rosbags_num, 
     v_wb = [] 
 
     dt_sqrt = []
-    dt_interp = 0.00125 # secs
 
     first_imu = True
 
@@ -70,45 +69,16 @@ def perturbationIMUandBiases(config_fn, file, conf, traj_analysed, rosbags_num, 
                 topic = "/" + topic
     
             if topic == topic_imu:
+
+                ts_imu.append(msg.header.stamp.to_sec())
+                w_raw.append(np.array([msg.angular_velocity.x, msg.angular_velocity.y, msg.angular_velocity.z]))
+                a_raw.append(np.array([msg.linear_acceleration.x, msg.linear_acceleration.y, msg.linear_acceleration.z]))
                 if first_imu:
-                    dt_sqrt_ = 0
-                    dt_sqrt.append(dt_sqrt_)
-                    # RAW IMU: 800 Hz   
-                    ts_imu.append(msg.header.stamp.to_sec())
-                    w_raw.append(np.array([msg.angular_velocity.x, msg.angular_velocity.y, msg.angular_velocity.z]))
-                    a_raw.append(np.array([msg.linear_acceleration.x, msg.linear_acceleration.y, msg.linear_acceleration.z]))
-                    first_imu = False
-
+                    dt_sqrt.append(0) 
                 else:
-                    prev_ts_imu = ts_imu[-1]
-                    prev_ts_fixed = prev_ts_imu
-                    curr_ts_imu = msg.header.stamp.to_sec()
-                    curr_w_raw = np.array([msg.angular_velocity.x, msg.angular_velocity.y, msg.angular_velocity.z])
-                    curr_a_raw = np.array([msg.linear_acceleration.x, msg.linear_acceleration.y, msg.linear_acceleration.z])
-                    prev_w_raw = w_raw[-1]
-                    prev_a_raw = a_raw[-1]
-                    
-                    # This is necessary in case some imu measurements are missing in the rosbag.
-                    while (prev_ts_imu + dt_interp) < (curr_ts_imu - 0.0001):
-                        dt = dt_interp
-                        dt_sqrt_ = math.sqrt(dt) # dt_sqrt sampled at 800 Hz
-                        t = prev_ts_imu + dt
-                   
-                        interp_w_raw = prev_w_raw + ((curr_w_raw - prev_w_raw) / (curr_ts_imu - prev_ts_fixed)) * (t - prev_ts_fixed)
-                        interp_a_raw = prev_a_raw + ((curr_a_raw - prev_a_raw) / (curr_ts_imu - prev_ts_fixed)) * (t - prev_ts_fixed)
-                        interp_ts_imu = prev_ts_imu + dt
-
-                        ts_imu.append(interp_ts_imu)
-                        w_raw.append(interp_w_raw)
-                        a_raw.append(interp_a_raw)
-                        dt_sqrt.append(dt_sqrt_)
-
-                        prev_ts_imu += dt_interp
-                        
-                    ts_imu.append(curr_ts_imu)
-                    w_raw.append(curr_w_raw)
-                    a_raw.append(curr_a_raw)
-                    dt_sqrt.append(dt_sqrt_)
+                    dt_sqrt.append(ts_imu[-1] - ts_imu[-2])
+                first_imu = False
+                
 
             if topic == topic_odometry: # 400 Hz
                 ts_odom.append(msg.header.stamp.to_sec())
