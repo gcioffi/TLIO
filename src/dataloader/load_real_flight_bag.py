@@ -42,9 +42,6 @@ def perturbationIMUandBiases(config_fn, file, conf, traj_analysed, rosbags_num, 
     bias_gyro_y = conf["bias_gyro"][1]
     bias_gyro_z = conf["bias_gyro"][2]
 
-    stdBiasNoise_acc = conf["stdBiasNoise_acc"]
-    stdBiasNoise_gyro = conf["stdBiasNoise_gyro"]
-
     print('Loading bag: %s' % bagfile)
     print('Reading topics:')
     print('- %s' % topic_imu)

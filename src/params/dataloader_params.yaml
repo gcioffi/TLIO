@@ -12,8 +12,7 @@ out_dir: /home/rpg/Desktop/RosbagReal_13_43_38
 
 bias_acc: [0.005, 0.125, 0.110]
 bias_gyro: [0.0027, -0.0056, 0.0]
-stdBiasNoise_acc: 0.001
-stdBiasNoise_gyro: 0.001
+
 
 
 

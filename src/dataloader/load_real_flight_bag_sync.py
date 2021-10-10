@@ -42,9 +42,6 @@ def perturbationIMUandBiases(config_fn, file, conf, traj_analysed, rosbags_num, 
     bias_gyro_y = conf["bias_gyro"][1]
     bias_gyro_z = conf["bias_gyro"][2]
 
-    stdBiasNoise_acc = conf["stdBiasNoise_acc"]
-    stdBiasNoise_gyro = conf["stdBiasNoise_gyro"]
-
     print('Loading bag: %s' % bagfile)
     print('Reading topics:')
     print('- %s' % topic_imu)
@@ -111,10 +108,10 @@ def perturbationIMUandBiases(config_fn, file, conf, traj_analysed, rosbags_num, 
                     ts_imu.append(curr_ts_imu)
                     w_raw.append(curr_w_raw)
                     a_raw.append(curr_a_raw)
-                    dt_sqrt.append(curr_ts_imu - prev_ts_imu)
+                    dt_sqrt.append(dt_sqrt_)
 
             if topic == topic_odometry: # 400 Hz
-                ts_odom.append(msg.header.stamp.to_sec() - 0.03)
+                ts_odom.append(msg.header.stamp.to_sec() + 0.11) # stamp - offset
                 p_wb.append(np.array([msg.pose.position.x, msg.pose.position.y, msg.pose.position.z]))
                 q_wb.append(np.array([msg.pose.orientation.w, msg.pose.orientation.x, msg.pose.orientation.y, msg.pose.orientation.z]))
                 v_wb.append(np.array([0,0,0])) # Filled later

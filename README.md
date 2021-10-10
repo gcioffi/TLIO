@@ -128,7 +128,7 @@ This will save a new *.txt* containing the real imu measurements aligned to the 
 
 Go to *src/real_to_sim/scripts*
 
-```python3 align_imu_real_to_sim.py --real_imu_fn /home/rpg/Desktop/RosbagReal_13_43_38/seq1/imu_measurements.txt --sim_imu_fn /home/rpg/Desktop/RosbagSimulated_13_43_38/seq1/imu_measurements.txt  --toffset -1.05 --theta 98```
+```python3 align_imu_real_to_sim.py --real_imu_fn /home/rpg/Desktop/RosbagReal_13_43_38/seq1/imu_measurements.txt --sim_imu_fn /home/rpg/Desktop/RosbagSimulated_13_43_38/seq1/imu_measurements.txt  --toffset 34.2 --theta 99```
 
 
 ### Interpolate data at the required frequency
