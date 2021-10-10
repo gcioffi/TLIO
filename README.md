@@ -116,7 +116,7 @@ Use the plots before alignment to estimate **theta**.
 
 In *src/real_to_sim/scripts*
 
-```python3 compare_sim_and_real_trajs.py --real_ev_fn /home/rpg/Desktop/RosbagReal_13_43_38/seq1/evolving_state.txt --sim_ev_fn /home/rpg/Desktop/RosbagSimulated_13_43_38/seq1/evolving_state.txt  --toffset -1.05 --theta 95```
+```python3 compare_sim_and_real_trajs.py --real_ev_fn /home/rpg/Desktop/RosbagReal_13_43_38/seq1/evolving_state.txt --sim_ev_fn /home/rpg/Desktop/RosbagSimulated_13_43_38/seq1/evolving_state.txt  --toffset 34.2 --theta 99```
 
 As a last point, we **align** the real and the simulated measurements. 
 
