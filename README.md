@@ -7,14 +7,6 @@ Acquire the original rosbag during a real flown trajectory, recording the topics
 - */alphasense_driver_ros/imu  : sensor_msgs/Imu*          
 - */vicon/parrot*   
 
-### Modify the real rosbag
-
-Use ```Rosbag_Add_reference_frame.py``` in *src/scripts* to add the right frame needed by RVIZ for the visualization of the original bag. In RVIZ, under *fixed frame*, type **vicon**.
-
-Play the original bag on your lapotp and record a copy of it, starting from the moment in which the drone is already in the starting position and trying to include a few seconds of hover in the copy bag. Stop the copy bag only when the drone is in its final position, removing the landing part present in the original rosbag. 
-
-From now on, I will refer to the copy bag as real-flight bag. 
-
 ### Load the trajectory 
 
 Use ```load_real_flight_bag.py``` to load the real-flight bag.
@@ -41,7 +33,6 @@ Now, running ```Sync_Vicon_IMU.py```, a .csv file will be output in *src/Vicon/d
 After that, run the Vicon **main** to get time offset between the Vicon and the Imu in the real trajectory.
 
 Remember: *t_sync_vicon = t_vicon - offset*.
-
 
 
 **Command to launch**
@@ -87,9 +78,8 @@ Go to *src/scripts* and type:
 ```python3 Replace_Evolving_State_and_Plot.py```
 
 
-### Rotate IMU: from reality to simulated frame
+### Transform Evovling State: from markers to IMU
 
-Estimate the relative rotation between the *real* and the *simulated* Imu.
 The first thing to do is to **transform** the Vicon pose measurements from the center of the markers to the imu-frame of the sevensense camera. 
 
 - Run handeye (https://github.com/ethz-asl/hand_eye_calibration/tree/master) to estimate the 6 DoF relative transformation between the Vicon markers (= hand) and the camera (= eye). See *"How to run ASL handeye"* for more details.
@@ -104,58 +94,77 @@ In *src/real_to_sim/scripts*
 
 ```python3 from_vicon_to_imu.py --ev_state_fn /home/rpg/Desktop/RosbagReal_13_43_38/seq1/evolving_state.txt```
 
-After that, it is necessary to estimate the **rotation offset** between the real and the simulated imu.
 
-- Use the script ```compare_sim_and_real_trajs.py``` to plot sim and real trajectories before and after rotation alignment.
+### Cut the data to remove landing and take off
 
-This script takes as input the angle **theta** which is the rotation offset along the gravity between *real* and *sim*. It uses this theta to rotate the real imu to the simulated imu frame. 
-
-Use the plots before alignment to estimate **theta**.
 
 **Command to launch**
 
 In *src/real_to_sim/scripts*
 
-```python3 compare_sim_and_real_trajs.py --real_ev_fn /home/rpg/Desktop/RosbagReal_13_43_38/seq1/evolving_state.txt --sim_ev_fn /home/rpg/Desktop/RosbagSimulated_13_43_38/seq1/evolving_state.txt  --toffset 34.2 --theta 99```
+```python3 cut_data.py```
 
-As a last point, we **align** the real and the simulated measurements. 
 
-- Use the script ```align_imu_real_to_sim.py``` with theta estimated at the previous step. 
+### Generate file needed by the simulator
 
-This will save a new *.txt* containing the real imu measurements aligned to the sim ones.
 
 **Command to launch**
 
-Go to *src/real_to_sim/scripts*
+In *src/real_to_sim/scripts*
 
-```python3 align_imu_real_to_sim.py --real_imu_fn /home/rpg/Desktop/RosbagReal_13_43_38/seq1/imu_measurements.txt --sim_imu_fn /home/rpg/Desktop/RosbagSimulated_13_43_38/seq1/imu_measurements.txt  --toffset 34.2 --theta 99```
+```python3 generate_traj_vicon_imu.py```
+
+
+### Generate data from the simulator
+
+
+**Command to launch**
+
+In *gvi-fusion/build*
+
+``` ./sim_imu_from_bspline ../experiments/sim_imu tracking_arena_2021-02-03-13-43-38.yaml```
+
+
+
+### Plot real vs simulated data
+
+
+**Command to launch**
+
+In *src/real_to_sim/scripts*
+
+``` python3 plot_meas_vs_sim.py ```
+
+
+### Generate imu_measurements.txt with simulated data
+
+
+**Command to launch**
+
+In *src/real_to_sim/scripts*
+
+``` python3 write_imu_measurements.py ```
 
 
 ### Interpolate data at the required frequency
 
-Use ```Interpolate_Higher_Frequency.py``` to get the data at the TLIO required frequency. 
-
-Just make sure that the directories in this script correspond to the directories in your workspace. 
-
 **Command to launch**
 
-In *src/scripts:*
+In *src/real_to_sim/scripts*
 
-```python3 Interpolate_Higher_Frequency.py```
+``` python3 interpolate.py ```
+
 
 ### Modify HasVIO vector in *evolving_state.txt*
 
-Use ```Transform_HasVio.py``` to get more correspondences between IMU states and the corresponding VIO states. In *line 8*, insert the **name** of your bag (with extension).
-
-Just make sure that the directories in this script correspond to the directories in your workspace.
-
-**Modify** *line 122* using your bag name in order to delete previous files. 
+Use ```transform_HasVio.py``` to get more correspondences between IMU states and the corresponding VIO states.
 
 **Command to launch**
 
-In *src/scripts*: 
+In *src/real_to_sim/scripts*
 
-```python3 Transform_HasVio.py```
+``` python3 transform_HasVio.py ```
+
 
 ### Generate hdf5
 

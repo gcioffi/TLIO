@@ -65,7 +65,6 @@ def perturbationIMUandBiases(config_fn, file, conf, traj_analysed, rosbags_num, 
                 topic = "/" + topic
     
             if topic == topic_imu:
-
                 ts_imu.append(msg.header.stamp.to_sec())
                 w_raw.append(np.array([msg.angular_velocity.x, msg.angular_velocity.y, msg.angular_velocity.z]))
                 a_raw.append(np.array([msg.linear_acceleration.x, msg.linear_acceleration.y, msg.linear_acceleration.z]))
