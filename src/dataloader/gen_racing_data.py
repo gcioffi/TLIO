@@ -106,7 +106,7 @@ def save_hdf5(args):
         # get imu_data - raw and calibrated
         print("obtain raw and vio-calibrated IMU data")
         imu_data = imu_meas[imu_idx:, :]
-        ts = imu_data[:, 0] * 1e-6  # 1e-6 * s
+        ts = imu_data[:, 0] * 1e-6  
         accel_raw = imu_data[:, 1:4]  # raw
         gyro_raw = imu_data[:, 7:10]
         accel = imu_data[:, 4:7]  # calibrated with vio calibration
@@ -158,7 +158,7 @@ def save_hdf5(args):
             imu_data_i = np.concatenate((imu_data[i, 4:7], imu_data[i, 10:13]), axis=0)
             curr_t = imu_data[i, 0]
             past_t = imu_data[i - 1, 0]
-            dt = (curr_t - past_t) * 1e-6  # s 
+            dt = (curr_t - past_t) * 1e-6  
                        
             last_state = state_data[i - 1, :]
             new_state = imu_integrate(gravity, last_state, imu_data_i, dt)

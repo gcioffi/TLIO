@@ -70,7 +70,7 @@ def perturbationIMUandBiases(config_fn, file, conf, traj_analysed, rosbags_num, 
     
             if topic == topic_imu:
 
-                ts_imu.append(msg.header.stamp.to_sec())
+                ts_imu.append(msg.header.stamp.to_sec() * 1e6)
                 w_raw.append(np.array([msg.angular_velocity.x, msg.angular_velocity.y, msg.angular_velocity.z]))
                 a_raw.append(np.array([msg.linear_acceleration.x, msg.linear_acceleration.y, msg.linear_acceleration.z]))
                 if first_imu:
@@ -81,7 +81,7 @@ def perturbationIMUandBiases(config_fn, file, conf, traj_analysed, rosbags_num, 
                 
 
             if topic == topic_odometry: # 400 Hz
-                ts_odom.append(msg.header.stamp.to_sec())
+                ts_odom.append(msg.header.stamp.to_sec() * 1e6)
                 p_wb.append(np.array([msg.pose.position.x, msg.pose.position.y, msg.pose.position.z]))
                 q_wb.append(np.array([msg.pose.orientation.w, msg.pose.orientation.x, msg.pose.orientation.y, msg.pose.orientation.z]))
                 v_wb.append(np.array([0,0,0])) # Filled later

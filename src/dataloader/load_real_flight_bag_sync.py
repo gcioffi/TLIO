@@ -59,19 +59,29 @@ def perturbationIMUandBiases(config_fn, file, conf, traj_analysed, rosbags_num, 
     p_wb = [] 
     v_wb = [] 
 
+    dt_sqrt = []
+
+    first_imu = True
+
     with rosbag.Bag(bagfile, 'r') as bag:       
         for (topic, msg, ts) in bag.read_messages():
             if topic[0] != '/':
                 topic = "/" + topic
     
             if topic == topic_imu:
-                ts_imu.append(msg.header.stamp.to_sec())
+
+                ts_imu.append(msg.header.stamp.to_sec() * 1e6)
                 w_raw.append(np.array([msg.angular_velocity.x, msg.angular_velocity.y, msg.angular_velocity.z]))
                 a_raw.append(np.array([msg.linear_acceleration.x, msg.linear_acceleration.y, msg.linear_acceleration.z]))
+                if first_imu:
+                    dt_sqrt.append(0) 
+                else:
+                    dt_sqrt.append(ts_imu[-1] - ts_imu[-2])
+                first_imu = False
                 
 
             if topic == topic_odometry: # 400 Hz
-                ts_odom.append(msg.header.stamp.to_sec() + 0.11)
+                ts_odom.append((msg.header.stamp.to_sec() + 0.11) * 1e6)
                 p_wb.append(np.array([msg.pose.position.x, msg.pose.position.y, msg.pose.position.z]))
                 q_wb.append(np.array([msg.pose.orientation.w, msg.pose.orientation.x, msg.pose.orientation.y, msg.pose.orientation.z]))
                 v_wb.append(np.array([0,0,0])) # Filled later
@@ -88,6 +98,9 @@ def perturbationIMUandBiases(config_fn, file, conf, traj_analysed, rosbags_num, 
         p_wb = np.asarray(p_wb)
         q_wb = np.asarray(q_wb)
         v_wb = np.asarray(v_wb)
+
+        dt_sqrt = np.asarray(dt_sqrt)
+        dt_sqrt = np.reshape(dt_sqrt, (dt_sqrt.shape[0],1)) 
 
         # IMU
         ts_imu = np.asarray(ts_imu)

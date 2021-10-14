@@ -14,7 +14,7 @@ my_timestamps_p = np.loadtxt(folder_directory + "/seq1/my_timestamps_p.txt")
 # Interpolate IMU at 1000 Hz
 noisy_ts_imu = []
 noisy_imu_measurements_interp = []
-dt_interp = 0.001
+dt_interp = 0.001 * 1e6
 
 for imu_idx in range(noisy_imu_measurements.shape[0]):
     if imu_idx == 0:
@@ -29,7 +29,7 @@ for imu_idx in range(noisy_imu_measurements.shape[0]):
         curr_noisy_imu_measurements = noisy_imu_measurements[imu_idx, :]
         prev_noisy_imu_measurements = np.array(noisy_imu_measurements_interp[-1])
 
-        while (prev_noisy_ts_imu + dt_interp) < (curr_noisy_ts_imu - 0.0001):
+        while (prev_noisy_ts_imu + dt_interp) < (curr_noisy_ts_imu - 0.0001*1e6):
             dt = dt_interp
             t = prev_noisy_ts_imu + dt
         
@@ -49,7 +49,7 @@ for imu_idx in range(noisy_imu_measurements.shape[0]):
 # Interpolate evolving at 500 Hz
 noisy_evolving_state_interp = []
 noisy_ts_odom = []
-dt_interp = 0.002
+dt_interp = 0.002 * 1e6
 
 for odom_idx in range(evolving_state.shape[0]):
     if odom_idx == 0:
@@ -64,7 +64,7 @@ for odom_idx in range(evolving_state.shape[0]):
         curr_evolving_state = evolving_state[odom_idx, :]
         prev_evolving_state = np.array(noisy_evolving_state_interp[-1])
 
-        while (prev_noisy_ts_odom + dt_interp) < (curr_noisy_ts_odom - 0.0001):
+        while (prev_noisy_ts_odom + dt_interp) < (curr_noisy_ts_odom - 0.0001 * 1e6):
             dt = dt_interp
             t = prev_noisy_ts_odom + dt
         

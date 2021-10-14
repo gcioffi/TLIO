@@ -71,7 +71,7 @@ def pose_integrate(args, dataset, preds):
         logging.info("Trajectory integration point is not centered.")
     ind_intg = ind + delta_int  # the indices of doing integral #402 idx
 
-    ts = dataset.ts[0] * 1e6 
+    ts = dataset.ts[0] 
     dts = np.mean(ts[ind_intg[1:]] - ts[ind_intg[:-1]])
     pos_intg = np.zeros([pred_vels.shape[0] + 1, args.output_dim])
     pos_intg[0] = dataset.gt_pos[0][ind_intg[0], :]
@@ -521,13 +521,13 @@ def net_test(args):
             seq_dataset = RacingSequenceDataset(
                 args.root_dir, [data], args, data_window_config, mode="test"
             )
-            seq_loader = DataLoader(seq_dataset, batch_size=1, shuffle=False)
+            seq_loader = DataLoader(seq_dataset, batch_size=1024, shuffle=False)
         except OSError as e:
             print(e)
             continue
 
         # Obtain trajectory
-        net_attr_dict = get_inference(network, seq_loader, device, epoch=1)
+        net_attr_dict = get_inference(network, seq_loader, device, epoch=50)
         traj_attr_dict = pose_integrate(args, seq_dataset, net_attr_dict["preds"])
         outdir = osp.join(args.out_dir, data)
         if osp.exists(outdir) is False:

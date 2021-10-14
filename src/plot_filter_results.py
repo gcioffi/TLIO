@@ -29,7 +29,7 @@ def run_evaluation(args):
         
         # Load data
         gt_states = np.loadtxt(os.path.join(data_dir, "evolving_state.txt"))
-        gt_ts = gt_states[:, 0] # sec
+        gt_ts = gt_states[:, 0] * 1e-6 # sec
         gt_p = gt_states[:, 5:8]
         gt_v = gt_states[:, 8:11]
         gt_rq = gt_states[:, 1:5]
@@ -71,6 +71,7 @@ def run_evaluation(args):
         accs = filter_states[:, 21:24]  # offline calib compensated, scale+bias
         gyrs = filter_states[:, 24:27]  # offline calib compensated, scale+bias
         ts = filter_states[:, 27]
+        print("ts in the filter", ts)
         sigma_r = np.sqrt(filter_states[:, 28:31]) * 180.0 / np.pi
         sigma_v = np.sqrt(filter_states[:, 31:34])
         sigma_p = np.sqrt(filter_states[:, 34:37])

@@ -60,16 +60,16 @@ if __name__ == "__main__":
     filter_group.add_argument("--update_freq", type=float, default=20.0)  # (Hz)
 
     filter_group.add_argument(
-        "--sigma_na", type=float, default=0.2
+        "--sigma_na", type=float, default=1e-3
     )  # accel noise  m/s^2
     filter_group.add_argument(
-        "--sigma_ng", type=float, default=0.1
+        "--sigma_ng", type=float, default=1e-4
     )  # gyro noise  rad/s
     filter_group.add_argument(
-        "--ita_ba", type=float, default=0.001
+        "--ita_ba", type=float, default=1e-4
     )  # accel bias noise  m/s^2/sqrt(s)
     filter_group.add_argument(
-        "--ita_bg", type=float, default=0.001
+        "--ita_bg", type=float, default=1e-6
     )  # gyro bias noise  rad/s/sqrt(s)
 
     filter_group.add_argument(

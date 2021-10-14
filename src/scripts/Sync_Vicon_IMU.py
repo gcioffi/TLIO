@@ -23,7 +23,7 @@ bag_directory = os.path.join(conf["bagfile"], bag_name)
 
 # Load imu_measurements
 imu = np.loadtxt(os.path.join(folder_directory, 'seq1', 'imu_measurements.txt'))
-ts_real = imu[:, 0]
+ts_real = imu[:, 0] * 1e-6 # seconds 
 ax_real = imu[:, 1]
 ay_real = imu[:, 2]
 az_real = imu[:, 3]
