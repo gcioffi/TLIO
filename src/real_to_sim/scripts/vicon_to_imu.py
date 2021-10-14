@@ -65,7 +65,7 @@ if __name__ == '__main__':
     t_offset_cb = 0.0018521255066710702
     
     # t_b = t_m + t_offset_mb
-    t_offset_mb = t_offset_mc + t_offset_cb
+    t_offset_mb = (t_offset_mc + t_offset_cb) * 1e6 # usecs
 
     markers_states = np.loadtxt(args.vicon_poses_fn)
 
@@ -89,6 +89,7 @@ if __name__ == '__main__':
         p_VB = T_VB.t.flatten()
 
         t_b = s[0] + t_offset_mb
+     
 
         imu_state = np.array([t_b,
             p_VB[0], p_VB[1], p_VB[2],

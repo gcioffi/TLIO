@@ -92,7 +92,7 @@ The first thing to do is to **transform** the Vicon pose measurements from the c
 
 In *src/real_to_sim/scripts*
 
-```python3 from_vicon_to_imu.py --ev_state_fn /home/rpg/Desktop/RosbagReal_13_43_38/seq1/evolving_state.txt```
+```python3 vicon_to_imu.py --vicon_poses_fn /home/rpg/Desktop/RosbagReal_13_43_38/seq1/evolving_state.txt```
 
 
 ### Cut the data to remove landing and take off
