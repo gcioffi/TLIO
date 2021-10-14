@@ -8,9 +8,8 @@ with open(str(config_fn), 'r') as file:
 	    conf = yaml.load(file, Loader=yaml.FullLoader)
 folder_directory = conf["bagfile"]
 
-# Check break condition - you may need to add the last elements in imu or evolving before breaking
 vio_states = np.loadtxt(folder_directory + "/seq1/noisy_evolving_state_interp.txt")
-ts = vio_states[:, 0] 
+ts = vio_states[:, 0] # usecs
 pos = vio_states[:, 5:8]
 
 imu = np.loadtxt(folder_directory + "/seq1/noisy_imu_measurements_interp.txt")

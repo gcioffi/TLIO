@@ -21,12 +21,12 @@ np.savetxt(folder_directory + "/seq1/evolving_state.txt", evolving_state) # Orig
 
 v_wb = evolving_state[:, 8:11] # related to imu ts at 400 Hz
 p_wb = evolving_state[:, 5:8] # related to imu ts at 400 Hz
-ts_real = evolving_state[:, 0] - evolving_state[0, 0]  # ts di evolving state real -> no problem to use ts_evolving or ts_imu: they are =
+ts_real = evolving_state[:, 0] - evolving_state[0, 0]  # usecs
 ts_real = ts_real * 1e-6 # secs
 evolving_state_sim = np.loadtxt(folder_directory_simulation + "/seq1/evolving_state.txt")
 v_wb_sim = evolving_state_sim[:, 8:11]
 p_wb_sim = evolving_state_sim[:, 5:8]
-ts_sim = evolving_state_sim[:, 0] - evolving_state_sim[0, 0]
+ts_sim = evolving_state_sim[:, 0] - evolving_state_sim[0, 0] # secs
 
 # Plot for visualization Vicon vs. Simulated
 v_wb_x = v_wb[:, 0]

@@ -36,7 +36,6 @@ if __name__ == "__main__":
         "--root_dir", type=str, default=None, help="Path to data directory"
     )
     io_groups.add_argument("--data_list", type=str, default=None) #to test.txt
-    #ToDo: what is this value "dataset_number"?
     io_groups.add_argument("--dataset_number", type=int, default=None)
     io_groups.add_argument("--model_path", type=str, default=None) #checkpoint
     io_groups.add_argument("--model_param_path", type=str, default=None, required=True) #parameter json file for this model
@@ -60,10 +59,10 @@ if __name__ == "__main__":
     filter_group.add_argument("--update_freq", type=float, default=20.0)  # (Hz)
 
     filter_group.add_argument(
-        "--sigma_na", type=float, default=1e-3
+        "--sigma_na", type=float, default=np.sqrt(1e-3)
     )  # accel noise  m/s^2
     filter_group.add_argument(
-        "--sigma_ng", type=float, default=1e-4
+        "--sigma_ng", type=float, default=np.sqrt(1e-4)
     )  # gyro noise  rad/s
     filter_group.add_argument(
         "--ita_ba", type=float, default=1e-4
@@ -167,7 +166,7 @@ if __name__ == "__main__":
         else:
             logging.info("Running in batch mode")
             # add metadata for logging
-            n_data = len(data_names) # ToDo: data_names number of sequences in test.txt
+            n_data = len(data_names) 
             for i, name in enumerate(data_names):
                 logging.info(f"Processing {i} / {n_data} dataset {name}")
                 try:

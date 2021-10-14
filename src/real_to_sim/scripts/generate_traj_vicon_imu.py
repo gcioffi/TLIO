@@ -16,7 +16,7 @@ folder_directory = conf["bagfile"]
 evolving_state = np.loadtxt(folder_directory + "/seq1/evolving_state.txt")
 
 # time, px, py, pz, qx, qy, qz, qw
-time = evolving_state[:, 0] * 1e-6
+time = evolving_state[:, 0] * 1e-6 # seconds 
 time = np.reshape(time, (time.shape[0], 1))
 p = evolving_state[:, 5:8]
 p = np.reshape(p, (p.shape[0], 3))

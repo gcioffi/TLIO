@@ -13,10 +13,10 @@ imu_measurements = np.loadtxt(folder_directory + "/seq1/imu_measurements.txt")
 sim_imu_measurements = np.loadtxt(folder_directory + "/seq1/2021-02-03-13-43-38_sim_imu_meas.txt")
 
 # Extract Time
-time = imu_measurements[:, 0] * 1e-6
+time = imu_measurements[:, 0] * 1e-6 # secs
 time = np.reshape(time, (time.shape[0],1))
 
-sim_time = sim_imu_measurements[:, 0]
+sim_time = sim_imu_measurements[:, 0] # secs
 sim_time = np.reshape(sim_time, (sim_time.shape[0],1))
 
 # Extract IMU

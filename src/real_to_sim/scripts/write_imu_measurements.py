@@ -12,7 +12,7 @@ flown_imu = np.loadtxt(folder_directory + "/seq1/imu_measurements.txt")
 np.savetxt(folder_directory + "/seq1/imu_measurements_flown.txt", flown_imu)
 
 sim_imu_measurements = np.loadtxt(folder_directory + "/seq1/2021-02-03-13-43-38_sim_imu_meas.txt")
-t_imu = sim_imu_measurements[:, 0] * 1e6
+t_imu = sim_imu_measurements[:, 0] * 1e6 # usecs
 t_imu = np.reshape(t_imu, (t_imu.shape[0],1))
 w = sim_imu_measurements[:, 1:4]
 a = sim_imu_measurements[:, 4:7]

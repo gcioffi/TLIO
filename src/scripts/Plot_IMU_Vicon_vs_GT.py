@@ -14,13 +14,13 @@ folder_directory = conf["bagfile"]
 folder_directory_simulation = conf["bagfile_sim"]
 
 a_real = np.loadtxt(folder_directory + "/seq1/imu_measurements.txt")
-ts_real = a_real[:, 0] * 1e-6
+ts_real = a_real[:, 0] * 1e-6 # secs
 ts_real = ts_real - ts_real[0]
 a_real_raw = a_real[:, 1:4]
 w_real_raw = a_real[:, 7:10]
 
 a_gt = np.loadtxt(folder_directory_simulation + "/seq1/imu_measurements.txt")
-ts_gt = a_gt[:, 0]
+ts_gt = a_gt[:, 0] # secs
 ts_gt = ts_gt - ts_gt[0]
 a_gt_sim = a_gt[:, 1:4]
 w_gt_sim = a_gt[:, 7:10]
