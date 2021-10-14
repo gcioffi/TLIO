@@ -123,13 +123,13 @@ imu_new = np.asarray(imu_new)
 idx_imu_corresp = np.array(idx_imu_corresp)
 idx_evolving_corresp = np.array(idx_evolving_corresp)
 
-''''
+
 # Debug
 print("In for loop!")
 print("Shape", idx_imu_corresp.shape[0])
 for k in range(idx_imu_corresp.shape[0]):
     print(imu_new[idx_imu_corresp[k], 0], vio_states_new[idx_evolving_corresp[k], 0])
-'''
+
 
 np.savetxt(folder_directory + "/seq1/noisy_evolving_state_interp.txt", vio_states_new)
 np.savetxt(folder_directory + "/seq1/noisy_imu_measurements_interp.txt", imu_new)

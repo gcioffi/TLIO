@@ -53,15 +53,7 @@ Using the offset value obtained, subtract it from *ts_odom* in ```load_real_flig
 
 ```python3 src/dataloader/load_real_flight_bag_sync.py --config src/params/dataloader_params.yaml```
 
-### Load the simulated trajectory 
 
-Change **branch**, go to ```simulate_real_noise```. 
-
-In *src/params/dataloader_params.yaml* change **bagfile** and **out_dir**, according to the directory of your copy-bag. 
-
-Run ```load_random_trajectories_from_rosbag```, loading the simulated bag of the real-flown trajectory. 
-
-In this way, we can then compare the simulated vs. the real trajectory tests of the traind model.  
 
 ### Add Vicon velocity and plot
 
@@ -122,10 +114,8 @@ In *src/real_to_sim/scripts*
 
 In *gvi-fusion/build*
 
-``` ./sim_imu_from_bspline ../experiments/sim_imu tracking_arena_2021-02-03-13-43-38.yaml```
-
-
-
+````./sim_imu_from_bspline ../experiments/sim_imu/tracking_arena_2021-02-03-13-43-38.yaml``
+ 
 ### Plot real vs simulated data
 
 
