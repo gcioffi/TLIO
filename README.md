@@ -24,6 +24,7 @@ In *src/params/dataloader_params.yaml* change **bagfile** and **out_dir**, accor
 
 ```python3 src/dataloader/load_real_flight_bag.py --config src/params/dataloader_params.yaml```
 
+
 ### Synchronize Vicon - IMU
 
 Go to the *src/Vicon/data* folder and **copy** your bag here. Then, in ```src/Vicon/src/main.py```, *line 320*, insert the bag name without the extension *'.bag'*.
@@ -52,7 +53,6 @@ Using the offset value obtained, subtract it from *ts_odom* in ```load_real_flig
 **Command to launch**
 
 ```python3 src/dataloader/load_real_flight_bag_sync.py --config src/params/dataloader_params.yaml```
-
 
 
 ### Add Vicon velocity and plot
