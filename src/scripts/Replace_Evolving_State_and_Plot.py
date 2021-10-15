@@ -59,7 +59,7 @@ plt.show()
 # Add the offset: 
 
 fig, axs = plt.subplots(3)
-fig.suptitle('Vicon vs. sim Position')
+fig.suptitle('Vicon')
 axs[0].plot(ts_real, p_wb_x, "r-", alpha=0.6, label = "x - VICON")
 #axs[0].plot(ts_sim + 34.2, p_wb_sim[:, 0], "b-", alpha=0.75, label = "x - SIM")
 axs[0].legend()

@@ -1,3 +1,5 @@
+### Using simulation AGIROS
+
 ### Acquire the real-flight rosbag
 
 Acquire the original rosbag during a real flown trajectory, recording the topics:     
@@ -63,16 +65,11 @@ In addition, some plots about position and velocity GT vs. VICON will be generat
 Just make sure that the directories in this script correspond to the directories in your workspace. It is also crucial to insert the **time-offset** between the simulated and the real trajectory in the plotting part, in order to have them aligned. 
  
 
-# Add plot simulated vs. Real
-
-
-
 **Command to launch**
 
 Go to *src/scripts* and type:
 
 ```python3 Replace_Evolving_State_and_Plot.py```
-
 
 ### Transform Evovling State: from markers to IMU
 
@@ -86,9 +83,9 @@ The first thing to do is to **transform** the Vicon pose measurements from the c
 
 **Command to launch**
 
-In *src/real_to_sim/scripts*
+In *src/scripts_rotation*
 
-```python3 vicon_to_imu.py --vicon_poses_fn /home/rpg/Desktop/RosbagReal_13_43_38/seq1/evolving_state.txt```
+```python3 from_vicon_to_imu.py --ev_state_fn /home/rpg/Desktop/RosbagReal_13_43_38/seq1/evolving_state.txt```
 
 
 ### Cut the data to remove landing and take off
@@ -99,6 +96,8 @@ In *src/real_to_sim/scripts*
 In *src/real_to_sim/scripts*
 
 ```python3 cut_data.py```
+
+(insert the time shift between real and simulated in this script).
 
 
 ### Generate file needed by the simulator
