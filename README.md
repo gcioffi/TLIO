@@ -63,6 +63,10 @@ In addition, some plots about position and velocity GT vs. VICON will be generat
 Just make sure that the directories in this script correspond to the directories in your workspace. It is also crucial to insert the **time-offset** between the simulated and the real trajectory in the plotting part, in order to have them aligned. 
  
 
+# Add plot simulated vs. Real
+
+
+
 **Command to launch**
 
 Go to *src/scripts* and type:

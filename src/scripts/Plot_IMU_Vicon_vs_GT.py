@@ -20,19 +20,10 @@ a_real_raw = a_real[:, 1:4]
 w_real_raw = a_real[:, 7:10]
 
 a_gt = np.loadtxt(folder_directory_simulation + "/seq1/imu_measurements.txt")
-ts_gt = a_gt[:, 0] # secs
+ts_gt = a_gt[:, 0] * 1e-6 # secs
 ts_gt = ts_gt - ts_gt[0]
 a_gt_sim = a_gt[:, 1:4]
 w_gt_sim = a_gt[:, 7:10]
-
-#Biases in IMU Frame from Dynamic-Calibration
-'''
-acc_bias_real = np.array([0.002, 0.124, 0.103])
-gyr_bias_real = np.array([0.002, -0.006, -0.0])
-
-acc_bias_sim = np.array([0.089, -0.033, 0.058])
-gyr_bias_sim = np.array([0.001, 0.006, 0.008 ])
-'''
 
 fig, axs = plt.subplots(3)
 fig.suptitle('Real vs. Simulated GT Linear Acceleration')
@@ -51,7 +42,7 @@ plt.show()
 # Simulated Gyro shifted by 1 sec for aligning
 fig, axs = plt.subplots(3)
 fig.suptitle('Real vs. Simulated GT Angular Velocity')
-axs[0].plot(ts_real, w_real_raw[:, 0], "r-", alpha=0.6, label = "X - Real")
+[0].plot(ts_real, w_real_raw[:, 0], "r-", alpha=0.6, label = "X - Real")
 axs[0].plot(ts_gt - 2.4, w_gt_sim[:, 0], "b-", alpha=0.75, label = "X - Simulated")
 axs[0].legend()
 axs[1].plot(ts_real, w_real_raw[:, 1], "r-", alpha=0.6, label = "Y - Real")
