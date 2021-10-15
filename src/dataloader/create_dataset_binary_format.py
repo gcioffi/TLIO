@@ -217,9 +217,9 @@ def save_hdf5(config):
             gyro_dcalibrated_s = f.create_dataset("gyro_dcalibrated", data=gyro)
             accel_raw_s = f.create_dataset("accel_raw", data=accel_raw)
             gyro_raw_s = f.create_dataset("gyro_raw", data=gyro_raw)
-            gt_q_wxyz_s = f.create_dataset("gt_q_wxyz", data=gt_q_wxyz)
-            gt_p_s = f.create_dataset("gt_p", data=gt_p)
-            gt_v_s = f.create_dataset("gt_v", data=gt_v)
+            gt_q_wxyz_s = f.create_dataset("vio_q_wxyz", data=gt_q_wxyz)
+            gt_p_s = f.create_dataset("vio_p", data=gt_p)
+            gt_v_s = f.create_dataset("vio_v", data=gt_v)
 
         if seq_id % 10 == 0:
             print('Processed seq: %d' % seq_id)
