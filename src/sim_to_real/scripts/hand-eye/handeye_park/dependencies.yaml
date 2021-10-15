@@ -1,0 +1,5 @@
+repositories:
+  Sophus:
+    type: git
+    url: git@github.com:strasdat/Sophus.git
+    version: master

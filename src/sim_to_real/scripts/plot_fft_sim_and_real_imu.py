@@ -50,11 +50,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--real_imu_fn", type=str)
     parser.add_argument("--sim_imu_fn", type=str)
-    parser.add_argument("--freq", type=float, help='freq of the signals in Hz')
     args = parser.parse_args()
     
     # read measurements
-    freq = args.freq
     real_imu_fn = args.real_imu_fn
     sim_imu_fn = args.sim_imu_fn
     real_imu = np.loadtxt(real_imu_fn)

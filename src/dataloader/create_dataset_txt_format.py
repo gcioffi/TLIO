@@ -13,6 +13,7 @@ def loadConfig(config_yaml):
     config['t_start'] = config_yaml['start_t']
     config['t_end'] = config_yaml['end_t']
     config['gt_freq'] = config_yaml['gt_freq']
+    config['use_filtered_imu'] = config_yaml['use_filtered_imu']
     return config
 
 
@@ -56,19 +57,6 @@ def createDataset(config):
         assert np.abs(t[0]-v[0]) < 0.002, \
         'Time traj sample (=%.4f) different from vel sample (=%.4f)' % (t[0], v[0])
 
-
-    # debug
-    '''print(vel.shape)
-                import matplotlib.pyplot as plt
-                plt.figure(0)
-                plt.plot(vel[:,1], label='x')
-                plt.plot(vel[:,2], label='y')
-                plt.plot(vel[:,3], label='z')
-                plt.legend()
-                plt.show()
-                assert False'''
-    # end
-
     # Get evolving state = [t (in microsec), q_wxyz (4), p (3), v (3)]
     evolving_state = []
     for (t,v) in zip(traj, vel):
@@ -79,13 +67,13 @@ def createDataset(config):
         evolving_state.append(state)
     evolving_state = np.asarray(evolving_state)
 
-    # debug
-    #n_seq = 5
-    # end
     for i in range(n_seq):
         seq_dir = os.path.join(dataset_dir, 'seq' + str(i+1))
         # load IMU meas
-        imu_fn = os.path.join(seq_dir, 'simulated_imu_meas.txt')
+        if config['use_filtered_imu']:
+            imu_fn = os.path.join(seq_dir, 'filtered_simulated_imu_meas.txt')
+        else:
+            imu_fn = os.path.join(seq_dir, 'simulated_imu_meas.txt')
         imu_meas = np.loadtxt(imu_fn)
 
         # find imu meas with ts corresponding to a traj meas
@@ -129,19 +117,8 @@ def createDataset(config):
         out_fn = os.path.join(seq_dir, 'evolving_state.txt')
         np.savetxt(out_fn, evolving_state)
 
-
-        # debug
-        '''if has_gt[cnt] == 1:
-                                                print('t[0]= %.12f, imu_meas[cnt,0]= %.12f' % (t[0], imu_meas[cnt, 0]))'''
-        # end
-
-        # debug
-        #print('Has vio contains %d elements' % np.sum(has_gt))
-        # end
-
         if i % 10 == 0:
             print('Processed seq: %d' % i)
-
 
 
 if __name__ == '__main__':

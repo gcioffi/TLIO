@@ -71,8 +71,9 @@ if __name__ == '__main__':
 
         n_seq = config['n_seq']
         imu_dir = config['imu_dir']
+        imu_freq = config['imu_freq']
 
-        butterworthFilter = ButterworthFilter()
+        butterworthFilter = ButterworthFilter(imu_freq)
 
         for i in range(n_seq):
             # read measurements
