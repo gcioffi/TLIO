@@ -65,7 +65,7 @@ if __name__ == '__main__':
     t_offset_cb = 0.0018521255066710702
     
     # t_b = t_m + t_offset_mb
-    t_offset_mb = (t_offset_mc + t_offset_cb) * 1e6 # usecs
+    t_offset_mb = (t_offset_mc + t_offset_cb) 
 
     markers_states = np.loadtxt(args.vicon_poses_fn)
 
