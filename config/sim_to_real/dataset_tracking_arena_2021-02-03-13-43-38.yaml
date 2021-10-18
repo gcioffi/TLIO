@@ -1,0 +1,23 @@
+dataset_dir: "/home/giovanni/gvi-fusion/results/imu_simulator/tracking_arena_2021-02-03-13-43-38"
+
+# Num. of seqs in the dataset to be created
+n_seq: 1000
+
+## Parameters
+# groundtruth
+start_t: 1627563902.778210878
+end_t: 1627563932.030523062
+gt_freq: 400 # Hz
+
+# imu
+imu_freq: 1000
+use_filtered_imu: true
+
+# Parameters for create_dataset_txt_format.py
+traj_fn: "/home/giovanni/TLIO/data/tracking_arena_data/29July21/tracking_arena_2021-02-03-13-43-38/2021-02-03-13-43-38_traj_vicon_imu.txt"
+
+# Parameters for create_dataset_binary_format.py
+# how to split the n_seq sequences
+perc_train: 80
+perc_val: 20
+perc_test: 0

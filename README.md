@@ -569,13 +569,13 @@ To low-pass using a butterworth filter
 
 or
 
-```python src/sim_to_real/scripts/apply_butterworth_filter.py --signal_fn path-to-txt --freq freq```
+```python src/sim_to_real/scripts/apply_butterworth_filter.py --signal_fn path-to-txt --freq freq --cutoff_freq 50 --config '' ```
 
 For example
 
 This will run on all the seq. specified in the config file. This is the command for creating a new dataset.
 
-```python src/sim_to_real/scripts/apply_butterworth_filter.py --config ./config/sim_to_real/tracking_arena_2021-02-03-13-43-38.yaml```
+```python src/sim_to_real/scripts/apply_butterworth_filter.py --config ./config/sim_to_real/dataset_tracking_arena_2021-02-03-13-43-38.yaml```
 
 or
 
@@ -599,8 +599,54 @@ To create the dataset run the following scripts
 
 For example 
 
-```python src/dataloader/create_dataset_txt_format.py --config ../../config/sim_to_real/tracking_arena_2021-02-03-13-43-38.yaml```
+```python src/dataloader/create_dataset_txt_format.py --config ../../config/sim_to_real/dataset_tracking_arena_2021-02-03-13-43-38.yaml```
 
-```python src/dataloader/create_dataset_binary_format.py --config ../../config/sim_to_real/tracking_arena_2021-02-03-13-43-38.yaml```
+```python src/dataloader/create_dataset_binary_format.py --config ../../config/sim_to_real/dataset_tracking_arena_2021-02-03-13-43-38.yaml```
 
 The first script will take about 10 min for 1000 sequences. The second will take about 30 min for 1000 sequences.
+
+## Create Test Sequence for real data
+
+### The following applies at the moment to the sequence 2021-02-03-13-43-38
+
+After extracting the imu measurement from the rosbag (see src/sim_to_real/bag_to_imu.py), we need to remove peaks in az.
+
+To do it, run
+
+```python src/sim_to_real/scripts/apply_handcrafted_filter.py --signal_fn path-to-txt --freq 400 --window_len_sec 1.0 --noise_std 0.02
+```
+
+For example
+
+```python src/sim_to_real/scripts/apply_handcrafted_filter.py --signal_fn ./data/tracking_arena_data/29July21/tracking_arena_2021-02-03-13-43-38/2021-02-03-13-43-38_imu_meas.txt --freq 400 --window_len_sec 1.0 --noise_std 0.02
+```
+
+Then low-pass using a butterworth filter
+
+```python src/sim_to_real/scripts/apply_butterworth_filter.py --signal_fn path-to-txt --freq 400 --cutoff_freq 50 --config ''
+```
+
+For example
+
+```python src/sim_to_real/scripts/apply_butterworth_filter.py --signal_fn ./data/tracking_arena_data/29July21/tracking_arena_2021-02-03-13-43-38/filtered_2021-02-03-13-43-38_imu_meas.txt --freq 400 --cutoff_freq 50 --config ''
+```
+
+We are now ready to write the measurements in the TLIO format.
+
+```python src/dataloader/create_sequence_txt_format.py --config_fn path-to-config
+```
+
+For example 
+
+```python src/dataloader/create_sequence_txt_format.py --config_fn config/sim_to_real/tracking_arena_2021-02-03-13-43-38.yaml 
+```
+
+and 
+
+```python src/dataloader/create_sequence_binary_format.py --config_fn path-to-config
+```
+
+For example 
+
+```python src/dataloader/create_sequence_binary_format.py --config_fn config/sim_to_real/tracking_arena_2021-02-03-13-43-38.yaml 
+```
