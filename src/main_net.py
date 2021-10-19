@@ -62,7 +62,7 @@ if __name__ == "__main__":
     parser.add_argument("--sample_freq", type=float, default=20.0)  # hz
 
     # ----- plotting and evaluation -----
-    add_bool_arg(parser, "save_plot", default=False)
+    add_bool_arg(parser, "save_plot", default=True)
     parser.add_argument("--rpe_window", type=float, default="2.0")  # s
 
     args = parser.parse_args()
