@@ -27,7 +27,7 @@ def loadConfig(config_yaml):
 
 
 class ButterworthFilter(object):
-    def __init__(self, freq = 1000, order = 4, cutoff_freq_hz = 50, ftype = 'lowpass'):
+    def __init__(self, freq = 1000, cutoff_freq_hz = 50, order = 4, ftype = 'lowpass'):
         self.sos = signal.butter(order, cutoff_freq_hz, ftype, fs=freq, output='sos')
 
     def apply(self, x):
@@ -39,13 +39,15 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--signal_fn", type=str)
     parser.add_argument("--freq", type=float, help='freq of the signal in Hz')
+    parser.add_argument("--cutoff_freq", type=float, help='freq of the signal in Hz')
     parser.add_argument("--config", type=str)
     args = parser.parse_args()
     
     if args.config == '':
         freq = args.freq
+        cutoff_freq = args.cutoff_freq
 
-        butterworthFilter = ButterworthFilter(freq)
+        butterworthFilter = ButterworthFilter(freq, cutoff_freq)
 
         # read measurements
         x_with_time = np.loadtxt(args.signal_fn)
