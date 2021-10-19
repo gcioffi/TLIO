@@ -80,7 +80,7 @@ class DataIO:
         )
         vio_states = np.loadtxt(
             osp.join(args.root_dir, dataset, "evolving_state.txt") )
-        # ts in evolving_state.txt are secs
+        # ts in evolving_state.txt are usecs
         self.vio_ts = vio_states[:, 0] * 1e-6
         self.vio_p = vio_states[:, 5:8]
         self.vio_v = vio_states[:, 8:11]
@@ -110,7 +110,7 @@ class DataIO:
 
         vio_my_ts = np.loadtxt(
             osp.join(args.root_dir, dataset, "my_timestamps_p.txt") )    
-        # ts in my_timestamps_p.txt are in sec
+        # ts in my_timestamps_p.txt are in usec
 
         self.vio_calib_ts = self.ts_all * 1e-6 
         

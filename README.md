@@ -523,8 +523,8 @@ topics:
 
 The first step is to get the IMU poses from the vicon trajectory.
 We run the [hand-eye](https://github.com/ethz-asl/hand_eye_calibration) to get the camera-markers time offset and relative transformation.
-Check src/real_to_sim/scripts for some useful scripts.
-Then, run the script real_to_sim/scripts/vicon_to_imu.py [WARNING: this scripts contains hand-coded cam-imu (from Kalibr) and cam-vicon (from handeye) calibrations] to transform (temporally and spatially) the vicon poses from the markers to the imu frame.
+Check src/sim_to_real/scripts for some useful scripts.
+Then, run the script sim_to_real/scripts/vicon_to_imu.py [WARNING: this scripts contains hand-coded cam-imu (from Kalibr) and cam-vicon (from handeye) calibrations] to transform (temporally and spatially) the vicon poses from the markers to the imu frame.
 
 ## IMU Simulator
 
@@ -613,40 +613,32 @@ After extracting the imu measurement from the rosbag (see src/sim_to_real/bag_to
 
 To do it, run
 
-```python src/sim_to_real/scripts/apply_handcrafted_filter.py --signal_fn path-to-txt --freq 400 --window_len_sec 1.0 --noise_std 0.02
-```
+```python src/sim_to_real/scripts/apply_handcrafted_filter.py --signal_fn path-to-txt --freq 400 --window_len_sec 1.0 --noise_std 0.02```
 
 For example
 
-```python src/sim_to_real/scripts/apply_handcrafted_filter.py --signal_fn ./data/tracking_arena_data/29July21/tracking_arena_2021-02-03-13-43-38/2021-02-03-13-43-38_imu_meas.txt --freq 400 --window_len_sec 1.0 --noise_std 0.02
-```
+```python src/sim_to_real/scripts/apply_handcrafted_filter.py --signal_fn ./data/tracking_arena_data/29July21/tracking_arena_2021-02-03-13-43-38/2021-02-03-13-43-38_imu_meas.txt --freq 400 --window_len_sec 1.0 --noise_std 0.02```
 
 Then low-pass using a butterworth filter
 
-```python src/sim_to_real/scripts/apply_butterworth_filter.py --signal_fn path-to-txt --freq 400 --cutoff_freq 50 --config ''
-```
+```python src/sim_to_real/scripts/apply_butterworth_filter.py --signal_fn path-to-txt --freq 400 --cutoff_freq 50 --config ''```
 
 For example
 
-```python src/sim_to_real/scripts/apply_butterworth_filter.py --signal_fn ./data/tracking_arena_data/29July21/tracking_arena_2021-02-03-13-43-38/filtered_2021-02-03-13-43-38_imu_meas.txt --freq 400 --cutoff_freq 50 --config ''
-```
+```python src/sim_to_real/scripts/apply_butterworth_filter.py --signal_fn ./data/tracking_arena_data/29July21/tracking_arena_2021-02-03-13-43-38/filtered_2021-02-03-13-43-38_imu_meas.txt --freq 400 --cutoff_freq 50 --config ''```
 
 We are now ready to write the measurements in the TLIO format.
 
-```python src/dataloader/create_sequence_txt_format.py --config_fn path-to-config
-```
+```python src/dataloader/create_sequence_txt_format.py --config_fn path-to-config```
 
 For example 
 
-```python src/dataloader/create_sequence_txt_format.py --config_fn config/sim_to_real/tracking_arena_2021-02-03-13-43-38.yaml 
-```
+```python src/dataloader/create_sequence_txt_format.py --config_fn config/sim_to_real/tracking_arena_2021-02-03-13-43-38.yaml ```
 
 and 
 
-```python src/dataloader/create_sequence_binary_format.py --config_fn path-to-config
-```
+```python src/dataloader/create_sequence_binary_format.py --config_fn path-to-config```
 
 For example 
 
-```python src/dataloader/create_sequence_binary_format.py --config_fn config/sim_to_real/tracking_arena_2021-02-03-13-43-38.yaml 
-```
+```python src/dataloader/create_sequence_binary_format.py --config_fn config/sim_to_real/tracking_arena_2021-02-03-13-43-38.yaml ```
