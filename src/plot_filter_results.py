@@ -72,6 +72,7 @@ def run_evaluation(args):
         gyrs = filter_states[:, 24:27]  # offline calib compensated, scale+bias
         ts = filter_states[:, 27]
         print("ts in the filter", ts)
+
         sigma_r = np.sqrt(filter_states[:, 28:31]) * 180.0 / np.pi
         sigma_v = np.sqrt(filter_states[:, 31:34])
         sigma_p = np.sqrt(filter_states[:, 34:37])

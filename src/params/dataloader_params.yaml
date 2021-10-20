@@ -1,13 +1,12 @@
 # Input
-bagfile: /home/rpg/Desktop/RosbagReal_13_43_38
+bagfile: /home/rpg/Desktop/TLIO/data/tracking_arena_2021-02-03-13-43-38_imu_400_Hz
 bagfile_sim: /home/rpg/Desktop/RosbagSimulated_13_43_38
 topic_imu: /alphasense_driver_ros/imu
 topic_odometry: /vicon/parrot  
 
 # Output
 n_trajectories: 1
-out_dir: /home/rpg/Desktop/RosbagReal_13_43_38
-
+out_dir: /home/rpg/Desktop/TLIO/data/tracking_arena_2021-02-03-13-43-38_imu_400_Hz
 # Noise params
 
 bias_acc: [0.005, 0.125, 0.110]
