@@ -295,10 +295,12 @@ class ImuTracker:
             self.callback_first_update(self)
         assert t_begin_us <= t_oldest_state_us
         if self.debug_callback_get_meas:
+            print("Using debug callback get meas")
             meas, meas_cov, success = self.debug_callback_get_meas(t_oldest_state_us, t_end_us)
             if not success:
                 return False
         else:  # using network for measurements
+            print("Using network for measurements")
             net_gyr_w, net_acc_w = self._get_imu_samples_for_network(
                 t_begin_us, t_oldest_state_us, t_end_us
             )
