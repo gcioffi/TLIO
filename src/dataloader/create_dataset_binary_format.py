@@ -25,6 +25,10 @@ from scipy.spatial.transform import Rotation
 from math_utils import mat_exp
 import yaml
 
+SMALL_EPS = 0.0001
+BIG_EPS = 0.002
+
+
 # @ToDo: move to a different script
 def loadConfig(config_yaml):
     config = {}
@@ -92,7 +96,6 @@ def save_hdf5(config):
         
         datapath = os.path.join(dataset_dir, seq_name)
        
-        image_ts = np.loadtxt(os.path.join(datapath, "my_timestamps_p.txt"))
         imu_meas = np.loadtxt(os.path.join(datapath, "imu_measurements.txt"))
         gt_states = np.loadtxt(os.path.join(datapath, "evolving_state.txt"))
 
@@ -100,21 +103,27 @@ def save_hdf5(config):
         imu_meas[:,0] *= 1e-6
         gt_states[:,0] *= 1e-6
 
-        # find initial ts where imu and vio states has same ts.
-        # this is found by checking has_vio
-        start_idx_imu = 0
-        start_time_imu = 0.0
-        for i, meas in enumerate(imu_meas):
-            if meas[-1] == 1:
-                start_idx_imu = i
-                start_time_imu = meas[0]
-                break
+        if np.abs(imu_meas[0,0] - gt_states[0,0]) > SMALL_EPS:
+            if seq_id == 0:
+                print('[WARNING] GT has not been sampled from the spline. Make sure this is really what you want !!')
+            # find initial ts where imu and vio states has same ts.
+            # this is found by checking has_vio
+            start_idx_imu = 0
+            start_time_imu = 0.0
+            for i, meas in enumerate(imu_meas):
+                if meas[-1] == 1:
+                    start_idx_imu = i
+                    start_time_imu = meas[0]
+                    break
 
-        start_idx_gt = 0
-        for i, meas in enumerate(gt_states):
-            if np.abs(meas[0] - start_time_imu) < 0.002:
-                start_idx_gt = i
-                break
+            start_idx_gt = 0
+            for i, meas in enumerate(gt_states):
+                if np.abs(meas[0] - start_time_imu) < BIG_EPS:
+                    start_idx_gt = i
+                    break
+        else:
+            start_idx_imu = 0
+            start_idx_gt = 0
 
         # get imu_data - raw and calibrated
         imu_data = imu_meas[start_idx_imu:, :]
@@ -124,76 +133,97 @@ def save_hdf5(config):
         accel = imu_data[:, 4:7]
         gyro = imu_data[:, 10:13]
 
-        # get state data at imu frequency by propagating states from evolving_state using imu meas
+        gt_data = gt_states[start_idx_gt:, :]
+
         N = imu_data.shape[0]
         state_data = np.zeros((N, 9))
 
-        r_init = Rotation.from_quat(
-            [
+        if np.abs(imu_meas[0,0] - gt_states[0,0]) > SMALL_EPS:
+            # get state data at imu frequency by propagating states from evolving_state using imu meas
+            r_init = Rotation.from_quat([
                 gt_states[start_idx_gt, 2],
                 gt_states[start_idx_gt, 3],
                 gt_states[start_idx_gt, 4],
                 gt_states[start_idx_gt, 1],
+            ])
+            p_init = [
+                gt_states[start_idx_gt, 5],
+                gt_states[start_idx_gt, 6],
+                gt_states[start_idx_gt, 7],
             ]
-        )
-        p_init = [
-            gt_states[start_idx_gt, 5],
-            gt_states[start_idx_gt, 6],
-            gt_states[start_idx_gt, 7],
-        ]
-        v_init = [
-            gt_states[start_idx_gt, 8],
-            gt_states[start_idx_gt, 9],
-            gt_states[start_idx_gt, 10],
-        ]
-        state_init = np.concatenate((r_init.as_rotvec(), p_init, v_init), axis=0)
-        state_data[0, :] = state_init
-    
-        idx_gt = start_idx_gt
-        for i in range(1, N):
-            # get calibrated imu data for integration
-            imu_data_i = np.concatenate((imu_data[i, 4:7], imu_data[i, 10:13]), axis=0)
-            curr_t = imu_data[i, 0]
-            past_t = imu_data[i - 1, 0]
-            dt = (curr_t - past_t)  # bring ts back to sec
+            v_init = [
+                gt_states[start_idx_gt, 8],
+                gt_states[start_idx_gt, 9],
+                gt_states[start_idx_gt, 10],
+            ]
+            state_init = np.concatenate((r_init.as_rotvec(), p_init, v_init), axis=0)
+            state_data[0, :] = state_init
 
-            # propagate
-            last_state = state_data[i - 1, :]
-            new_state = imu_integrate(gravity, last_state, imu_data_i, dt)
-            state_data[i, :] = new_state
+            idx_gt = start_idx_gt
+            for i in range(1, N):
+                # get calibrated imu data for integration
+                imu_data_i = np.concatenate((imu_data[i, 4:7], imu_data[i, 10:13]), axis=0)
+                curr_t = imu_data[i, 0]
+                past_t = imu_data[i - 1, 0]
+                dt = (curr_t - past_t)
 
-            # use gt if this state has gt measurement
-            has_vio = int(imu_data[i, 13])
-  
-            if has_vio == 1:
-                # search the corresponding gt
-                for idx, meas in enumerate(gt_states[idx_gt:]):
-                    if np.abs(imu_data[i,0] - meas[0]) < 0.002:
-                        idx_gt += idx
-                        break
+                # propagate
+                last_state = state_data[i - 1, :]
+                new_state = imu_integrate(gravity, last_state, imu_data_i, dt)
+                state_data[i, :] = new_state
 
-                assert (imu_data[i,0] - gt_states[idx_gt, 0]) < 0.002, \
-                'Time mismatch between imu (=%.4f) and gt (=%.4f)' % (imu_data[i, 0], gt_states[idx_gt, 0])
-                r_gt = Rotation.from_quat(
-                    [
-                        gt_states[idx_gt, 2],
-                        gt_states[idx_gt, 3],
-                        gt_states[idx_gt, 4],
-                        gt_states[idx_gt, 1],
+                # use gt if this state has gt measurement
+                has_vio = int(imu_data[i, 13])
+
+                if has_vio == 1:
+                    # search the corresponding gt
+                    for idx, meas in enumerate(gt_states[idx_gt:]):
+                        if np.abs(imu_data[i,0] - meas[0]) < BIG_EPS:
+                            idx_gt += idx
+                            break
+
+                    assert (imu_data[i,0] - gt_states[idx_gt, 0]) < BIG_EPS, \
+                    'Time mismatch between imu (=%.4f) and gt (=%.4f)' % (imu_data[i, 0], gt_states[idx_gt, 0])
+                    r_gt = Rotation.from_quat([
+                            gt_states[idx_gt, 2],
+                            gt_states[idx_gt, 3],
+                            gt_states[idx_gt, 4],
+                            gt_states[idx_gt, 1],
+                        ])
+                    p_gt = [
+                        gt_states[idx_gt, 5],
+                        gt_states[idx_gt, 6],
+                        gt_states[idx_gt, 7],
                     ]
-                )
-                p_gt = [
-                    gt_states[idx_gt, 5],
-                    gt_states[idx_gt, 6],
-                    gt_states[idx_gt, 7],
+                    v_gt = [
+                        gt_states[idx_gt, 8],
+                        gt_states[idx_gt, 9],
+                        gt_states[idx_gt, 10],
+                    ]
+                    gt_state = np.concatenate((r_gt.as_rotvec(), p_gt, v_gt), axis=0)
+                    state_data[i, :] = gt_state
+        else:
+            assert imu_data.shape[0] == gt_data.shape[0], \
+            'len imu (=%d) != len gt (=%d)' % (imu_data.shape[0], gt_data.shape[0])
+            for i in range(gt_data.shape[0]):
+                r = Rotation.from_quat([
+                    gt_states[i, 2], 
+                    gt_states[i, 3], 
+                    gt_states[i, 4], 
+                    gt_states[i, 1] 
+                    ])
+                p = [
+                    gt_states[i, 5],
+                    gt_states[i, 6],
+                    gt_states[i, 7]
                 ]
-                v_gt = [
-                    gt_states[idx_gt, 8],
-                    gt_states[idx_gt, 9],
-                    gt_states[idx_gt, 10],
+                v = [
+                    gt_states[i, 8],
+                    gt_states[i, 9],
+                    gt_states[i, 10]
                 ]
-                gt_state = np.concatenate((r_gt.as_rotvec(), p_gt, v_gt), axis=0)
-                state_data[i, :] = gt_state
+                state_i = np.concatenate((r.as_rotvec(), p, v), axis=0)
+                state_data[i, :] = state_i
     
         # adding timestamps in state_data
         state_data = np.concatenate(

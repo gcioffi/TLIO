@@ -22,7 +22,8 @@ import yaml
 def loadConfig(config_yaml):
     config = {}
     config['n_seq'] = config_yaml['n_seq']
-    config['imu_dir'] = config_yaml['imu_dir']
+    config['dataset_dir'] = config_yaml['dataset_dir']
+    config['imu_freq'] = config_yaml['imu_freq']
     return config
 
 
@@ -64,7 +65,7 @@ if __name__ == '__main__':
     
         outfn = os.path.join(os.path.dirname(args.signal_fn), 'filtered_' + os.path.basename(args.signal_fn))
         print('Saving filtered measurements to %s' % outfn)
-        np.savetxt(outfn, x_filtered, header='timestamp wx wy wz ax ay az')
+        np.savetxt(outfn, x_filtered, header='timestamp wx wy wz ax ay az', fmt='%f')
 
     else:
         f = open(args.config)
@@ -72,14 +73,14 @@ if __name__ == '__main__':
         f.close()
 
         n_seq = config['n_seq']
-        imu_dir = config['imu_dir']
+        dataset_dir = config['dataset_dir']
         imu_freq = config['imu_freq']
 
         butterworthFilter = ButterworthFilter(imu_freq)
 
         for i in range(n_seq):
             # read measurements
-            signal_fn = os.path.join(imu_dir, 'seq' + str(i+1) + '/simulated_imu_meas.txt')
+            signal_fn = os.path.join(dataset_dir, 'seq' + str(i+1) + '/simulated_imu_meas.txt')
             x_with_time = np.loadtxt(signal_fn)
 
             # low pass
@@ -94,7 +95,7 @@ if __name__ == '__main__':
         
             outfn = os.path.join(os.path.dirname(signal_fn), 'filtered_' + os.path.basename(signal_fn))
             #print('Saving filtered measurements to %s' % outfn)
-            np.savetxt(outfn, x_filtered, header='timestamp wx wy wz ax ay az')
+            np.savetxt(outfn, x_filtered, header='timestamp wx wy wz ax ay az', fmt='%f')
 
             if i % 10 == 0:
                 print('Processing sequence %d' % i)

@@ -108,6 +108,18 @@ if __name__ == '__main__':
 	if np.shape(sim_poses)[1] == 9:
 		sim_poses = sim_poses[:,1:]
 
+	# Manipulate real traj
+	print('[WARNING] Manipulating real traj. Make sure that this part of the code is up-to-date.')
+	# time align
+	real_poses[:,0] -= real_poses[0,0]
+	sim_poses[:,0] -= sim_poses[0,0]
+	# time shift
+	t_shift = 34.5
+	real_poses[:,0] -= t_shift
+	# remove negative times
+	real_poses = np.asarray([p for p in real_poses if p[0] >= 0.0])
+
+	# compute rotations
 	real_ori_zyx = getRotationEulerZYX(real_poses)
 	sim_ori_zyx = getRotationEulerZYX(sim_poses)
 
@@ -118,10 +130,8 @@ if __name__ == '__main__':
 	plt.figure('YZ View')
 	plotPosition2D(real_poses[:,2:4], sim_poses[:,2:4], 'y', 'z')
 	plt.figure('XYZ Time')
-	#plotPosition1D(real_poses[:,0] - real_poses[0,0], real_poses[:,1:4], sim_poses[:,0] - sim_poses[0,0], sim_poses[:,1:4])
 	plotPosition1D(real_poses[:,0], real_poses[:,1:4], sim_poses[:,0], sim_poses[:,1:4])
 	plt.figure('YPR Time')
-	#plotOrientation(real_poses[:,0] - real_poses[0,0], real_ori_zyx, sim_poses[:,0] - sim_poses[0,0], sim_ori_zyx)
 	plotOrientation(real_poses[:,0], real_ori_zyx, sim_poses[:,0], sim_ori_zyx)
 
 	plt.show()
