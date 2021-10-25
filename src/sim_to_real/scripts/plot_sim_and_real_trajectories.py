@@ -32,65 +32,68 @@ def getRotationEulerZYX(poses):
 	return ori_zyx
 
 
-def plotPosition2D(real_pos, sim_pos, labelx, labely):
-	plt.plot(real_pos[:,0], real_pos[:,1], label='real')
-	plt.plot(sim_pos[:,0], sim_pos[:,1], label='sim')
+def plotPosition2D(real_pos, sim_pos, labelx, labely, title):
+	plt.plot(real_pos[:,0], real_pos[:,1], label='Real')
+	plt.plot(sim_pos[:,0], sim_pos[:,1], label='Sim')
 	plt.grid()
-	plt.legend()
-	plt.xlabel(labelx)
-	plt.ylabel(labely)
+	plt.legend(fontsize=15)
+	plt.title(title, fontsize=20)
+	plt.xlabel(labelx, fontsize=15)
+	plt.ylabel(labely, fontsize=15)
 
 
-def plotPosition1D(t_real, real_pos, t_sim, sim_pos):
+def plotPosition1D(t_real, real_pos, t_sim, sim_pos, title):
 	plt.subplot(311)
-	plt.plot(t_real, real_pos[:, 0], label='real')
-	plt.plot(t_sim, sim_pos[:, 0], label='sim')
+	plt.plot(t_real, real_pos[:, 0], label='Real')
+	plt.plot(t_sim, sim_pos[:, 0], label='Sim')
 	plt.grid()
-	plt.legend()
-	plt.xlabel('t')
-	plt.ylabel('x')
+	plt.legend(fontsize=15)
+	plt.title(title, fontsize=20)
+	plt.xlabel('t [s]', fontsize=15)
+	plt.ylabel('x [m]', fontsize=15)
 
 	plt.subplot(312)
-	plt.plot(t_real, real_pos[:, 1], label='real')
-	plt.plot(t_sim, sim_pos[:, 1], label='sim')
+	plt.plot(t_real, real_pos[:, 1], label='Real')
+	plt.plot(t_sim, sim_pos[:, 1], label='Sim')
 	plt.grid()
-	plt.legend()
-	plt.xlabel('t')
-	plt.ylabel('y')
+	plt.legend(fontsize=15)
+	plt.xlabel('t [s]', fontsize=15)
+	plt.ylabel('y [m]', fontsize=15)
 
 	plt.subplot(313)
-	plt.plot(t_real, real_pos[:, 2], label='real')
-	plt.plot(t_sim, sim_pos[:, 2], label='sim')
+	plt.plot(t_real, real_pos[:, 2], label='Real')
+	plt.plot(t_sim, sim_pos[:, 2], label='Sim')
 	plt.grid()
-	plt.legend()
-	plt.xlabel('t')
-	plt.ylabel('z')
+	plt.legend(fontsize=15)
+	plt.xlabel('t [s]', fontsize=15)
+	plt.ylabel('z [m]', fontsize=15)
 
 
-def plotOrientation(t_real, real_ori_zyx, t_sim, sim_ori_zyx):
+def plotOrientation(t_real, real_ori_zyx, t_sim, sim_ori_zyx, title):
 	plt.subplot(311)
-	plt.plot(t_real, real_ori_zyx[:, 0], label='real')
-	plt.plot(t_sim, sim_ori_zyx[:, 0], label='sim')
+	plt.plot(t_real, real_ori_zyx[:, 0], label='Real')
+	plt.plot(t_sim, sim_ori_zyx[:, 0], label='Sim')
 	plt.grid()
-	plt.legend()
-	plt.xlabel('t')
-	plt.ylabel('yaw')
+	plt.title(title, fontsize=20)
+	plt.legend(fontsize=15)
+	plt.xlabel('t [s]', fontsize=15)
+	plt.ylabel('yaw [°]', fontsize=15)
 
 	plt.subplot(312)
-	plt.plot(t_real, real_ori_zyx[:, 1], label='real')
-	plt.plot(t_sim, sim_ori_zyx[:, 1], label='sim')
+	plt.plot(t_real, real_ori_zyx[:, 1], label='Real')
+	plt.plot(t_sim, sim_ori_zyx[:, 1], label='Sim')
 	plt.grid()
-	plt.legend()
-	plt.xlabel('t')
-	plt.ylabel('pitch')
+	plt.legend(fontsize=15)
+	plt.xlabel('t [s]', fontsize=15)
+	plt.ylabel('pitch [°]', fontsize=15)
 
 	plt.subplot(313)
-	plt.plot(t_real, real_ori_zyx[:, 2], label='real')
-	plt.plot(t_sim, sim_ori_zyx[:, 2], label='sim')
+	plt.plot(t_real, real_ori_zyx[:, 2], label='Real')
+	plt.plot(t_sim, sim_ori_zyx[:, 2], label='Sim')
 	plt.grid()
-	plt.legend()
-	plt.xlabel('t')
-	plt.ylabel('roll')
+	plt.legend(fontsize=15)
+	plt.xlabel('t [s]', fontsize=15)
+	plt.ylabel('roll [°]', fontsize=15)
 
 
 if __name__ == '__main__':
@@ -114,7 +117,7 @@ if __name__ == '__main__':
 	real_poses[:,0] -= real_poses[0,0]
 	sim_poses[:,0] -= sim_poses[0,0]
 	# time shift
-	t_shift = 34.5
+	t_shift = 36.25
 	real_poses[:,0] -= t_shift
 	# remove negative times
 	real_poses = np.asarray([p for p in real_poses if p[0] >= 0.0])
@@ -124,15 +127,15 @@ if __name__ == '__main__':
 	sim_ori_zyx = getRotationEulerZYX(sim_poses)
 
 	plt.figure('XY View')
-	plotPosition2D(real_poses[:,1:3], sim_poses[:,1:3], 'x', 'y')
+	plotPosition2D(real_poses[:,1:3], sim_poses[:,1:3], 'x [m]', 'y [m]', "View X-Y")
 	plt.figure('XZ View')
-	plotPosition2D(real_poses[:,[1,3]], sim_poses[:,[1,3]], 'x', 'z')
+	plotPosition2D(real_poses[:,[1,3]], sim_poses[:,[1,3]], 'x [m]', 'z [m]', "View X-Z")
 	plt.figure('YZ View')
-	plotPosition2D(real_poses[:,2:4], sim_poses[:,2:4], 'y', 'z')
+	plotPosition2D(real_poses[:,2:4], sim_poses[:,2:4], 'y [m]', 'z [m]', "View Y-Z")
 	plt.figure('XYZ Time')
-	plotPosition1D(real_poses[:,0], real_poses[:,1:4], sim_poses[:,0], sim_poses[:,1:4])
+	plotPosition1D(real_poses[:,0], real_poses[:,1:4], sim_poses[:,0], sim_poses[:,1:4], "Position")
 	plt.figure('YPR Time')
-	plotOrientation(real_poses[:,0], real_ori_zyx, sim_poses[:,0], sim_ori_zyx)
+	plotOrientation(real_poses[:,0], real_ori_zyx, sim_poses[:,0], sim_ori_zyx, "Orientation")
 
 	plt.show()
 
