@@ -99,7 +99,16 @@ if __name__ == '__main__':
 
     imu_states = np.asarray(imu_states)
 
+    # debug
+    #imu_states = np.hstack((imu_states[:,0].reshape((-1,1)), markers_states[:,1:]))
+    # end
+
     outfn = os.path.join(os.path.dirname(args.vicon_poses_fn), os.path.basename(args.vicon_poses_fn[:-4] + '_imu.txt'))
+
+    # debug
+    #outfn = 'data/tracking_arena_data/29July21/tracking_arena_2021-02-03-13-43-38/2021-02-03-13-43-38_traj_vicon_time_aligned.txt'
+    # end
+
     print('Saving to %s' % outfn)
     np.savetxt(outfn, imu_states)
 

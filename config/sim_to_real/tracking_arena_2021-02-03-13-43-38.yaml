@@ -1,14 +1,13 @@
-traj_fn: "/home/giovanni/gvi-fusion/results/imu_simulator/tracking_arena_2021-02-03-13-43-38/trajectory.txt"
-#traj_fn: "/home/giovanni/TLIO/data/tracking_arena_data/29July21/tracking_arena_2021-02-03-13-43-38/2021-02-03-13-43-38_traj_vicon_imu.txt"
-vel_fn: "/home/giovanni/gvi-fusion/results/imu_simulator/tracking_arena_2021-02-03-13-43-38/velocity.txt"
-sequence_dir: "/home/giovanni/TLIO/data/tracking_arena_data/29July21/tracking_arena_2021-02-03-13-43-38/test"
-#imu_fn: "filtered_filtered_2021-02-03-13-43-38_imu_meas.txt"
-imu_fn: "filtered_simulated_imu_meas.txt"
+#traj_fn: "/home/giovanni/gvi-fusion/results/imu_simulator/tracking_arena_2021-02-03-13-43-38/trajectory.txt"
+traj_fn: "/home/giovanni/TLIO/data/tracking_arena_data/29July21/tracking_arena_2021-02-03-13-43-38/real_markers/trajectory.txt"
+#vel_fn: "/home/giovanni/gvi-fusion/results/imu_simulator/tracking_arena_2021-02-03-13-43-38/velocity.txt"
+vel_fn: "/home/giovanni/TLIO/data/tracking_arena_data/29July21/tracking_arena_2021-02-03-13-43-38/real_markers/velocity.txt"
+sequence_dir: "/home/giovanni/TLIO/data/tracking_arena_data/29July21/tracking_arena_2021-02-03-13-43-38/real_markers"
+imu_fn: "filtered_filtered_2021-02-03-13-43-38_imu_meas.txt"
+#imu_fn: "filtered_simulated_imu_meas.txt"
 
 ## Parameters
 # groundtruth
-start_t: 1627563902.778210878
-end_t: 1627563932.030523062
 gt_freq: 400 # Hz
 
 # imu
