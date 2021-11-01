@@ -1,7 +1,7 @@
 dataset_dir: "/home/giovanni/gvi-fusion/results/imu_simulator/sim_lemniscate"
 
 # Num. of seqs in the dataset to be created
-n_seq: 10
+n_seq: 4573
 
 ## Parameters
 # groundtruth

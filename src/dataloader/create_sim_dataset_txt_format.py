@@ -70,7 +70,7 @@ def createDataset(config):
         assert vel.shape[0] == traj.shape[0], \
         'Number of velocity (=%d) and trajectory (=%d) measurements do not match!' % (vel.shape[0], traj.shape[0])
         # make sure traj and vel ts are the same
-        for i, (t,v) in enumerate(zip(traj, vel)): 
+        for _, (t,v) in enumerate(zip(traj, vel)): 
             assert np.abs(t[0]-v[0]) < SMALL_EPS, \
             'Time traj sample (=%.4f) different from vel sample (=%.4f)' % (t[0], v[0])
 
