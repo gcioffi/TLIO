@@ -1,4 +1,4 @@
-dataset_dir: "/home/giovanni/gvi-fusion/results/imu_simulator/sim_lemniscate_1000hz"
+dataset_dir: "/home/rpg_staff/giovanni/gvi-fusion/results/imu_simulator/sim_lemniscate_1000hz"
 
 # Num. of seqs in the dataset to be created
 n_seq: 4573
