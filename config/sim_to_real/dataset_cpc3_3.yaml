@@ -1,4 +1,4 @@
-dataset_dir: "/home/rpg_staff/giovanni/gvi-fusion/results/imu_simulator"
+dataset_dir: "/home/rpg_staff/giovanni/gvi-fusion/results/imu_simulator/cpc3_3"
 
 # Num. of seqs in the dataset to be created
 n_seq: 1000
