@@ -1,0 +1,22 @@
+dataset_dir: "/home/giovanni/gvi-fusion/results/imu_simulator/sim_lemniscate_1000hz"
+
+# Num. of seqs in the dataset to be created
+n_seq: 4573
+
+## Parameters
+# groundtruth
+gt_freq: 1000.0 # Hz
+
+# imu
+imu_freq: 1000.0
+use_filtered_imu: false
+
+# Parameters for create_dataset_txt_format.py
+traj_fn: "trajectory.txt"
+vel_fn: "velocity.txt"
+
+# Parameters for create_dataset_binary_format.py
+# how to split the n_seq sequences
+perc_train: 75
+perc_val: 20
+perc_test: 5
