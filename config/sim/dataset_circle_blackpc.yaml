@@ -1,7 +1,7 @@
 dataset_dir: "/home/rpg_staff/giovanni/gvi-fusion/results/imu_simulator/sim_circle_blackpc"
 
 # Num. of seqs in the dataset to be created
-n_seq: 5000
+n_seq: 1000
 
 ## Parameters
 # groundtruth
