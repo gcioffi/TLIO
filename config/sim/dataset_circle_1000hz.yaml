@@ -1,14 +1,14 @@
-dataset_dir: "/home/rpg_staff/giovanni/gvi-fusion/results/imu_simulator/sim_circle_blackpc"
+dataset_dir: "/home/rpg_staff/giovanni/gvi-fusion/results/imu_simulator/sim_circle_1000hz"
 
 # Num. of seqs in the dataset to be created
-n_seq: 1000
+n_seq: 5000
 
 ## Parameters
 # groundtruth
-gt_freq: 400 # Hz
+gt_freq: 1000.0 # Hz
 
 # imu
-imu_freq: 400
+imu_freq: 1000.0
 use_filtered_imu: false
 
 # Parameters for create_dataset_txt_format.py
