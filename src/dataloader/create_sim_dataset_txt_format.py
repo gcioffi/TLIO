@@ -19,16 +19,16 @@ def loadConfig(config_yaml):
     config['gt_freq'] = config_yaml['gt_freq']
     config['imu_freq'] = config_yaml['imu_freq']
     config['use_filtered_imu'] = config_yaml['use_filtered_imu']
-    config['first_seq_id'] = config_yaml['first_seq_id']
+    config['id_first_seq'] = config_yaml['id_first_seq']
     return config
 
 
 def createDataset(config):
     dataset_dir = config['dataset_dir']
     n_seq = config['n_seq']
-    first_seq_id = config['first_seq_id']
+    id_first_seq = config['id_first_seq']
 
-    for i in range(first_seq_id, first_seq_id+n_seq, 1):
+    for i in range(id_first_seq, id_first_seq+n_seq, 1):
         seq_dir = os.path.join(dataset_dir, 'seq' + str(i))
 
         # load
