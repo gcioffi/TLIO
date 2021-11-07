@@ -17,12 +17,14 @@ if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
 	parser.add_argument("--in_dir", type=str)
 	parser.add_argument("--n_seq", type=int)
+	parser.add_argument("--first_seq_id", default=0, type=int)
 	args = parser.parse_args()
 
 	in_dir = args.in_dir
 	n_seq = args.n_seq
+	first_seq_id = args.first_seq_id
 
-	for i in range(n_seq):
+	for i in range(first_seq_id, first_seq_id+n_seq, 1):
 		csv_fn = os.path.join(in_dir, 'csv/%s.csv' % str(i+1))
 		# read data
 		with open(csv_fn, 'r') as csvfile:
