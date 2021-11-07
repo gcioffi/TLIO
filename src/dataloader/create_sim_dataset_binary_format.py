@@ -36,12 +36,14 @@ def loadConfig(config_yaml):
     config['perc_train'] = config_yaml['perc_train']
     config['perc_val'] = config_yaml['perc_val']
     config['perc_test'] = config_yaml['perc_test']
+    config['first_seq_id'] = config_yaml['first_seq_id']
     return config
 
 
 def save_hdf5(config):
     dataset_dir = config['dataset_dir']
     n_seq = config['n_seq']
+    first_seq_id = config['first_seq_id']
 
     # save train.txt, val.txt, test.txt
     perc_train = config['perc_train'] / 100
@@ -57,8 +59,8 @@ def save_hdf5(config):
 
     gravity = np.array([0, 0, -9.81])
     
-    for seq_id in range(n_seq):
-        seq_name = 'seq' + str(seq_id+1)
+    for i in range(first_seq_id, first_seq_id+n_seq, 1):
+        seq_name = 'seq' + str(seq_id)
 
         if 0 <= seq_id < n_train_seq:
             train_list.append(seq_name)
