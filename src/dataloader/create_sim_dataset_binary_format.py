@@ -59,7 +59,7 @@ def save_hdf5(config):
 
     gravity = np.array([0, 0, -9.81])
     
-    for i in range(id_first_seq, id_first_seq+n_seq, 1):
+    for seq_id in range(id_first_seq, id_first_seq+n_seq, 1):
         seq_name = 'seq' + str(seq_id)
 
         if 0 <= seq_id < n_train_seq:
