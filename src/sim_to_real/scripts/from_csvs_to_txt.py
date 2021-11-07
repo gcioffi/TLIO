@@ -25,7 +25,7 @@ if __name__ == '__main__':
 	first_seq_id = args.first_seq_id
 
 	for i in range(first_seq_id, first_seq_id+n_seq, 1):
-		csv_fn = os.path.join(in_dir, 'csv/%s.csv' % str(i+1))
+		csv_fn = os.path.join(in_dir, 'csv/%s.csv' % str(i))
 		# read data
 		with open(csv_fn, 'r') as csvfile:
 			traj_reader = csv.reader(csvfile, delimiter=',', quotechar='|')
@@ -33,7 +33,7 @@ if __name__ == '__main__':
 			traj = traj_array.astype(float)
 
 		# write to txt
-		out_filename = os.path.join(in_dir, 'txt/%s.txt' % str(i+1))
+		out_filename = os.path.join(in_dir, 'txt/%s.txt' % str(i))
 		f = open(out_filename, 'w')
 		f.write('# timestamp tx ty tz qx qy qz qw\n')
 		for t in traj:
@@ -41,5 +41,5 @@ if __name__ == '__main__':
 				(t[0], t[1], t[2], t[3], t[5], t[6], t[7], t[4]))
 
 		if (i % 100) == 0:
-			print('Processed %d-th .csv file.' % (i+1))
+			print('Processed %d-th .csv file.' % (i))
 
