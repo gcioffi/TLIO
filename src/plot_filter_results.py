@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.spatial.transform import Rotation
 import scripts.tlio.plots as custom_plots
+from utils.argparse_utils import add_bool_arg
 
 
 def get_datalist(list_path):
@@ -108,6 +109,10 @@ def run_evaluation(args):
         err_ang = np.asarray(err_ang)
         err_R_xyz = np.asarray(err_R_xyz)
 
+        # debug
+        # IPython.embed()
+        # end
+
         # plots
         fig1 = plt.figure(num="Compared Filter vs Groundtruth")
         custom_plots.plotFilterVsGtPosXY(filter_p, gt_p)
@@ -127,14 +132,58 @@ def run_evaluation(args):
         fig5 = plt.figure(num="Error euler angles")
         custom_plots.plotRotErrEulerXYZ(matched_ts, err_R_xyz)
 
-        plt.show()
+        outdir = os.path.join(args.filter_dir, data_fn)
 
+        # save plots
+        if args.save_plot:
+            fig1.savefig(os.path.join(outdir, "filter_vs_gt.png"))
+            fig2.savefig(os.path.join(outdir, "acc_bias.png"))
+            fig3.savefig(os.path.join(outdir, "gyro_bias.png"))
+            fig4.savefig(os.path.join(outdir, "err_norm_rot_angle.png"))
+            fig5.savefig(os.path.join(outdir, "err_norm_euler_angles.png"))
+            fig1.clear()
+            fig2.clear()
+            fig3.clear()
+            fig4.clear()
+            fig5.clear()
+        else:
+            plt.show()
 
+        # save trajectory
+        filter_freq = 1.0 / (ts[1]-ts[0])
+        sampling_freq = 30.0
+        sampling_step = int(filter_freq/ sampling_freq)
+        outfn = os.path.join(outdir, 'stamped_traj_estimate.txt')
+        stamped_traj = []
+        for i in range(0, ts.shape[0], sampling_step):
+            stamped_traj.append(
+                np.array([
+                    ts[i], 
+                    filter_p[i,0], filter_p[i,1], filter_p[i,2],
+                    rs[i].as_quat()[0], rs[i].as_quat()[1], rs[i].as_quat()[2], rs[i].as_quat()[3]
+                ])
+            )
+
+        np.savetxt(outfn, np.asarray(stamped_traj), header='ts x y z qx qy qz qw', fmt='%.6f')
+
+        outfn = os.path.join(outdir, 'stamped_groundtruth.txt')
+        stamped_traj = []
+        for i in range(0, gt_ts.shape[0], sampling_step):
+            stamped_traj.append(
+                np.array([
+                    gt_ts[i], 
+                    gt_p[i,0], gt_p[i,1], gt_p[i,2],
+                    gt_rq[i,1], gt_rq[i,2], gt_rq[i,3], gt_rq[i,0],
+                ])
+            )
+        np.savetxt(outfn, np.asarray(stamped_traj), header='ts x y z qx qy qz qw', fmt='%.6f')
+        
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--data_dir", type=str)
     parser.add_argument("--data_list", type=str, default="test.txt")
     parser.add_argument("--filter_dir", type=str)
+    add_bool_arg(parser, "save_plot", default=True)
     args = parser.parse_args()
     print(vars(args))
     run_evaluation(args)
