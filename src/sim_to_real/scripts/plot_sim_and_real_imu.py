@@ -104,8 +104,8 @@ if __name__ == '__main__':
     # Visualize
     title = 'Compare sim-real IMU measurements'
     plt.figure(title)
-    #plotImu([real_imu[:, 0], real_imu[:,4:7], real_imu[:,1:4]], [sim_imu[:,0], sim_imu[:,4:7], sim_imu[:,1:4]])
-    plotImu([real_imu[:, 0] - real_imu[0, 0], real_imu[:,4:7], real_imu[:,1:4]], [sim_imu[:,0] - sim_imu[0,0], sim_imu[:,4:7], sim_imu[:,1:4]])
+    plotImu([real_imu[:, 0], real_imu[:,4:7], real_imu[:,1:4]], [sim_imu[:,0], sim_imu[:,4:7], sim_imu[:,1:4]])
+    #plotImu([real_imu[:, 0] - real_imu[0, 0], real_imu[:,4:7], real_imu[:,1:4]], [sim_imu[:,0] - sim_imu[0,0], sim_imu[:,4:7], sim_imu[:,1:4]])
 
     plt.show()
 

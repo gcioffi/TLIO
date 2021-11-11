@@ -163,6 +163,9 @@ class ImuTrackerRunner:
         for i in progressbar.progressbar(range(n_data), redirect_stdout=True):
             # obtain next raw IMU measurement from data loader
             ts, acc_raw, gyr_raw = self.input.get_datai(i)
+            # Skip too early IMU measurements
+            if ts < self.input.vio_ts[0]:
+                continue
             t_us = int(ts * 1e6)
             # cheat a bit with filter state in case for debugging
             if args.debug_using_vio_ba:

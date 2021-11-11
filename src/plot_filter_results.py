@@ -72,7 +72,6 @@ def run_evaluation(args):
         accs = filter_states[:, 21:24]  # offline calib compensated, scale+bias
         gyrs = filter_states[:, 24:27]  # offline calib compensated, scale+bias
         ts = filter_states[:, 27]
-        print("ts in the filter", ts)
 
         sigma_r = np.sqrt(filter_states[:, 28:31]) * 180.0 / np.pi
         sigma_v = np.sqrt(filter_states[:, 31:34])
@@ -92,8 +91,8 @@ def run_evaluation(args):
         err_ang = []
         err_R_xyz = []
         for idx_f, t in enumerate(ts):
-            if round(t, 3) in gt_ts:
-                idx_gt = np.where(gt_ts == round(t, 3))[0][0]
+            if round(t, 6) in gt_ts:
+                idx_gt = np.where(gt_ts == round(t, 6))[0][0]
 
                 gt_r = vio_r[idx_gt]
                 filter_r = rs[idx_f] 
