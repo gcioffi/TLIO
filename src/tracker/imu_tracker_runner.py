@@ -135,7 +135,17 @@ class ImuTrackerRunner:
         if self.log_output_buffer.shape[0] > 100:
             np.savetxt(self.f_state, self.log_output_buffer, delimiter=",")
             self.log_output_buffer = None
+        '''
+        p_exp = p
+        p_file = open("/home/rpg/Desktop/position.txt","a")
+        p_file.write(str(ts)  + " " +  str(p_exp[0][0]) + " " + str(p_exp[1][0]) + " " + str(p_exp[2][0]) + "\n")
+        p_file.close()
 
+        v_exp = v
+        v_file = open("/home/rpg/Desktop/velocity.txt","a")
+        v_file.write(str(ts)  + " " +  str(v_exp[0][0]) + " " + str(v_exp[1][0]) + " " + str(v_exp[2][0]) + "\n")
+        v_file.close()
+        '''
     def run_tracker(self, args):
         # initialize debug callbacks
         def initialize_with_vio_at_first_update(this):
