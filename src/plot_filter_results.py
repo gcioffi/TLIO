@@ -108,10 +108,6 @@ def run_evaluation(args):
         err_ang = np.asarray(err_ang)
         err_R_xyz = np.asarray(err_R_xyz)
 
-        # debug
-        # IPython.embed()
-        # end
-
         # plots
         fig1 = plt.figure(num="Compared Filter vs Groundtruth")
         custom_plots.plotFilterVsGtPosXY(filter_p, gt_p)
