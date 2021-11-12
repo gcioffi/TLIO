@@ -112,7 +112,7 @@ if __name__ == '__main__':
 		sim_poses = sim_poses[:,1:]
 
 	# Manipulate real traj
-	print('[WARNING] Manipulating real traj. Make sure that this part of the code is up-to-date.')
+	'''print('[WARNING] Manipulating real traj. Make sure that this part of the code is up-to-date.')
 	# time align
 	real_poses[:,0] -= real_poses[0,0]
 	sim_poses[:,0] -= sim_poses[0,0]
@@ -120,7 +120,7 @@ if __name__ == '__main__':
 	t_shift = 36.25
 	real_poses[:,0] -= t_shift
 	# remove negative times
-	real_poses = np.asarray([p for p in real_poses if p[0] >= 0.0])
+	real_poses = np.asarray([p for p in real_poses if p[0] >= 0.0])'''
 
 	# compute rotations
 	real_ori_zyx = getRotationEulerZYX(real_poses)

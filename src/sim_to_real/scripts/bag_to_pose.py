@@ -29,8 +29,14 @@ def extract(bagfile, pose_topic, topic_type, out_filename):
                         (msg.header.stamp.to_sec(),
                          msg.point.x, msg.point.y, msg.point.z,
                          0, 0, 0, 1))
+            elif topic_type == 'QuadState':
+                # Agiros Message QuadState
+                f.write('%.12f %.12f %.12f %.12f %.12f %.12f %.12f %.12f\n' % 
+                        (msg.header.stamp.to_sec(),
+                         msg.pose.position.x, msg.pose.position.y, msg.pose.position.z,
+                         msg.pose.orientation.x, msg.pose.orientation.y, msg.pose.orientation.z, msg.pose.orientation.w))
             else:
-                assert False, print("unknown message type!!!!")
+                assert False, "unknown message type!!!!"
             n += 1
     print('wrote ' + str(n) + ' pose messages to the file: ' + out_filename)
           

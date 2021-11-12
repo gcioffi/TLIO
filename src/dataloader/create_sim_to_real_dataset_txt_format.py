@@ -27,10 +27,10 @@ def createDataset(config):
     n_seq = config['n_seq']
 
     # load trajectory
-    traj_fn = config['traj_fn']
+    traj_fn = os.path.join(dataset_dir, config['traj_fn']) 
     traj = np.loadtxt(traj_fn)
     # load velocity
-    vel_fn = config['vel_fn']
+    vel_fn = os.path.join(dataset_dir, config['vel_fn'])
     vel = np.loadtxt(vel_fn)
 
     # load imu times (they're the same for all seqs)

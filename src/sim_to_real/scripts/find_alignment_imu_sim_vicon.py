@@ -198,18 +198,22 @@ if __name__ == '__main__':
     sim_imu = np.loadtxt(sim_imu_fn)
 
     real_imu_t = real_imu[:,0]
-    real_imu_t -= real_imu_t[0]
+    #real_imu_t -= real_imu_t[0] 
+    #real_imu_t += 266.675000
 
     sim_imu_t = sim_imu[:,0]
-    sim_imu_t -= sim_imu_t[0]
 
     # real_imu_t = sim_imu_t + t_offset_sim_real
     t_offset_sim_real = args.toffset # [s]
+    #t_offset_sim_real = - 0.5
     print('==== Using t_offset_sim_real = %.1f ====' % t_offset_sim_real)
     real_imu_t -= t_offset_sim_real
 
-    #real_imu_t = np.array([t for t in real_imu_t if t > 0])
-    #N = real_imu_t.shape[0]
+    real_imu_t = np.array([t for t in real_imu_t if t > 0])
+    N = real_imu_t.shape[0]
+    real_imu = real_imu[(real_imu.shape[0]-N):]
+
+    real_imu[:,0] = real_imu_t
     
     # Visualize
     title = 'IMU calib before alignment'
@@ -227,4 +231,52 @@ if __name__ == '__main__':
     plotImu([real_imu_t, aligned_real_imu_acc, aligned_real_imu_gyro], 
     	[sim_imu_t, sim_imu[:, 4:], sim_imu[:, 1:4]])
     plt.show()
+
+    # save
+    '''out_dir = '/home/giovanni/TLIO/data/tracking_arena_data/29July21/tracking_arena_2021-02-03-13-43-38/real_markers'
+    traj = np.loadtxt(out_dir + '/trajectory.txt')
+    vel = np.loadtxt(out_dir + '/velocity.txt') 
+
+    traj[:,0] = real_imu_t
+    vel[:,0] = real_imu_t
+
+    np.savetxt(out_dir + '/trajectory.txt', traj, fmt='%.6f')
+    np.savetxt(out_dir + '/velocity.txt', vel, fmt='%.6f')
+    np.savetxt(out_dir + '/filtered_filtered_2021-02-03-13-43-38_imu_meas.txt', real_imu, fmt='%.6f')'''
+
+
+    # debug
+    '''traj_I = np.loadtxt('/home/giovanni/TLIO/data/tracking_arena_data/29July21/tracking_arena_2021-02-03-13-43-38/real_imu/trajectory.txt')
+    traj_B = np.loadtxt('/home/giovanni/gvi-fusion/results/imu_simulator/tracking_arena_2021-02-03-13-43-38/sim_imu_from_vicon_traj/trajectory.txt')
+
+    aligned_real_imu_acc_debug = []
+    I_r_IB = -1.0 * np.dot(T_MB.R.T, T_MB.t.flatten())
+    for i, I_a in enumerate(real_imu[:,4:]):
+    	pose_i = traj_I[i]
+    	assert np.abs(pose_i[0] - real_imu[i,0]) < 0.0001, 'pose_i[0] = %.6f, real_imu[i,0] = %.6f' % (pose_i[0], real_imu[i,0])
+    	R_WI = Quaternion(np.array([pose_i[7], pose_i[4], pose_i[5], pose_i[6]])).rotation_matrix
+    	W_a = np.dot(R_WI, I_a)
+    	I_w = real_imu[i, 1:4]
+    	W_w = np.dot(R_WI, I_w)
+    	W_r_IB = np.dot(R_WI, I_r_IB)
+
+    	W_a_B = W_a + np.cross(W_w, np.cross(W_w, W_r_IB))
+    	assert len(W_a_B.shape) == 1
+    	assert W_a_B.shape[0] == 3
+
+    	pose_b = traj_B[i]
+    	#assert np.abs(pose_b[0] - real_imu[i,0]) < 0.0001, 'pose_b[0] = %.6f, real_imu[i,0] = %.6f' % (pose_b[0], real_imu[i,0])
+    	R_WB = Quaternion(np.array([pose_b[7], pose_b[4], pose_b[5], pose_b[6]])).rotation_matrix
+    	B_a = np.dot(R_WB.T, W_a_B)
+
+    	aligned_real_imu_acc_debug.append(B_a)
+    aligned_real_imu_acc_debug = np.asarray(aligned_real_imu_acc_debug)
+
+
+    title = 'Debug IMU calib after alignment'
+    plt.figure(title)
+    plotImu([real_imu_t, aligned_real_imu_acc_debug, aligned_real_imu_gyro], 
+    	[sim_imu_t, sim_imu[:, 4:], sim_imu[:, 1:4]])
+   	plt.show()'''
+    # end
 

@@ -468,7 +468,8 @@ class ImuMSCKF:
            meas_cov [3 x 3] : covariance of measurement matrix 
         """
 
-        #meas_cov = np.diag(np.array([0.001, 0.001, 0.001]))
+        #meas_cov = np.diag(np.array([1.0, 1.0, 1.0]))
+        meas_cov *= 20.
 
         if not self.converged and self.check_filter_convergence():
             logging.info("Filter is now assumed to have converged")

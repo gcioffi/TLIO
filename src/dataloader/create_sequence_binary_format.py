@@ -209,13 +209,6 @@ def save_hdf5(config):
     gt_q_wxyz = np.concatenate(
         [np.expand_dims(gt_q[:, 3], axis=1), gt_q[:, 0:3]], axis=1
     )
-
-    # debug
-    import matplotlib.pyplot as plt
-    plt.figure(0)
-    plt.plot(gt_p[:,0], gt_p[:,1])
-    plt.show()
-    # end 
     
     # save .hdf5
     with h5py.File(os.path.join(sequence_dir, "data.hdf5"), "w") as f:
