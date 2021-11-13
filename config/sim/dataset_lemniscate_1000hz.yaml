@@ -1,7 +1,8 @@
 dataset_dir: "/home/rpg_staff/giovanni/gvi-fusion/results/imu_simulator/sim_lemniscate_1000hz"
 
 # Num. of seqs in the dataset to be created
-n_seq: 4573
+id_first_seq: 1
+n_seq: 5000
 
 ## Parameters
 # groundtruth

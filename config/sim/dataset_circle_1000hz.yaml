@@ -1,6 +1,7 @@
 dataset_dir: "/home/rpg_staff/giovanni/gvi-fusion/results/imu_simulator/sim_circle_1000hz"
 
 # Num. of seqs in the dataset to be created
+id_first_seq: 1
 n_seq: 5000
 
 ## Parameters
