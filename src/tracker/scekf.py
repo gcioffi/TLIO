@@ -553,7 +553,7 @@ class ImuMSCKF:
         assert (
             self.Sigma.shape[0] == H.shape[1]
         ), "state covariance and matrix H does not match shape!"
-
+        
         if self.mahalanobis_factor > 0:
             # Mahalanobis gating test
             S_temp = np.linalg.multi_dot([H, self.Sigma, H.T]) + self.R
