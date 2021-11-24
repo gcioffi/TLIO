@@ -468,8 +468,8 @@ class ImuMSCKF:
            meas_cov [3 x 3] : covariance of measurement matrix 
         """
 
-        #meas_cov = np.diag(np.array([1, 1, 1])) * 3.5# 10 circle
-        meas_cov *=1e5 #3.5 lemni
+        meas_cov = np.diag(np.array([1, 1, 1])) * 1.5# 10 circle
+        #meas_cov *=1.8 #3.5 lemni
 
 
 
