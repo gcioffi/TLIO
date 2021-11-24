@@ -468,8 +468,8 @@ class ImuMSCKF:
            meas_cov [3 x 3] : covariance of measurement matrix 
         """
 
-        #meas_cov = np.diag(np.array([1, 1, 1])) * 2#2 circle
-        meas_cov *= 3.5 #3.5 lemni
+        meas_cov = np.diag(np.array([1, 1, 1])) * 10#2 circle
+        #meas_cov *= 10 #3.5 lemni
 
 
 
@@ -544,7 +544,7 @@ class ImuMSCKF:
         H[:, (6 * begin_idx) : (6 * begin_idx + 3)] = np.linalg.multi_dot(
             [Ri_z.T, hat(self.state.si_ps[end_idx] - self.state.si_ps[begin_idx]), Hz]
         )
-
+        return
         # check for singularity, if has singularity drop the update
         if abs(np.cos(ri_y)) < 1e-5:
             logging.warning(f"Singularity in H matrix, dropping update")
