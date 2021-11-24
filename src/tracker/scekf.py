@@ -469,7 +469,7 @@ class ImuMSCKF:
         """
 
         #meas_cov = np.diag(np.array([1, 1, 1])) * 3.5# 10 circle
-        meas_cov *= 3 #3.5 lemni
+        meas_cov *=1e5 #3.5 lemni
 
 
 
