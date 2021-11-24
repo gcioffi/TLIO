@@ -549,7 +549,7 @@ class ImuMSCKF:
         if abs(np.cos(ri_y)) < 1e-5:
             logging.warning(f"Singularity in H matrix, dropping update")
             return
-
+        
         assert (
             self.Sigma.shape[0] == H.shape[1]
         ), "state covariance and matrix H does not match shape!"
