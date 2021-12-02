@@ -70,10 +70,113 @@ The files used for TLIO are:
 - imu_measurements.txt
 - evolving_state.txt
 
+## Generate Dataset: GVI Sim-to-Real
+Here, we describe how to generate a new dataset starting from a .rosbag recorded in the Flying-Arena.
+We assume that the .rosbag contains vicon and alphasense data.
+
+Example output of rosbag info:
+
+topics:      
+/alphasense_driver_ros/cam0    1074 msgs    : sensor_msgs/Image        
+/alphasense_driver_ros/cam1    1074 msgs    : sensor_msgs/Image        
+/alphasense_driver_ros/imu    14285 msgs    : sensor_msgs/Imu          
+/vicon/parrot                 14308 msgs    : geometry_msgs/PoseStamped
+
+### Handeye
+
+The first step is to get the IMU poses from the vicon trajectory.
+We run the [hand-eye](https://github.com/ethz-asl/hand_eye_calibration) to get the camera-markers time offset and relative transformation.
+Check src/sim_to_real/scripts for some useful scripts.
+Then, run the script sim_to_real/scripts/vicon_to_imu.py [WARNING: this scripts contains hand-coded cam-imu (from Kalibr) and cam-vicon (from handeye) calibrations] to transform (temporally and spatially) the vicon poses from the markers to the imu frame.
+
+
+## IMU Simulator
+
+We are now ready to generate simulated IMU measurements starting from the real flown trajectory [@ToDo: Extend to simulated trajectory].
+We use the code [here](https://github.com/uzh-rpg/gvi-fusion/tree/sim_imu).
+
+To fit a Bspline to the desired trajectory
+
+```./fit_trajectory path-to-config```
+
+For example
+
+```./fit_trajectory ../experiments/imu_simulator/tracking_arena_2021-02-03-13-43-38.yaml```
+
+To check that the fitting has been successful
+
+```python src/sim_to_real/scripts/plot_sim_and_real_trajectories.py --real_fn path-to-txt --sim_fn path-to-txt```
+
+For example
+
+```python src/sim_to_real/scripts/plot_sim_and_real_trajectories.py --real_fn 2021-02-03-13-43-38_traj_vicon_imu.txt --sim_fn trajectory.txt```
+
+To simulate IMU measurements:
+
+```./simulate_imu path-to-config```
+
+For example
+
+```./simulate_imu ../experiments/imu_simulator/tracking_arena_2021-02-03-13-43-38.yaml```
+
+An example of config file is [here](https://github.com/uzh-rpg/gvi-fusion/blob/sim_imu/experiments/imu_simulator/tracking_arena_2021-02-03-13-43-38.yaml)
+
+Note that the current implementation requires that the spline order is given at compilation time. Check [here](https://github.com/uzh-rpg/gvi-fusion/blob/sim_imu/src/imu_simulator/fit_trajectory.cpp#L64) and [here](https://github.com/uzh-rpg/gvi-fusion/blob/sim_imu/src/imu_simulator/simulate_imu.cpp#L89).
+
+
+## Create Dataset
+
+We low-pass filter real and sim IMU to remove noise coming from the platform (e.g.motors).
+
+To low-pass using a butterworth filter
+
+```python src/sim_to_real/scripts/apply_butterworth_filter.py --config path-to-config```
+
+or
+
+```python src/sim_to_real/scripts/apply_butterworth_filter.py --signal_fn path-to-txt --freq freq --cutoff_freq 50 --config '' ```
+
+For example
+
+This will run on all the seq. specified in the config file. This is the command for creating a new dataset.
+
+```python src/sim_to_real/scripts/apply_butterworth_filter.py --config ./config/sim_to_real/dataset_tracking_arena_2021-02-03-13-43-38.yaml```
+
+or
+
+this will run on the single data contained in the .txt file
+
+```python src/sim_to_real/scripts/apply_butterworth_filter.py --signal_fn 2021-02-03-13-43-38_imu_meas.txt --freq 400```
+
+After filtering, we check that the sim and real IMU match using
+
+```python src/sim_to_real/scripts/plot_sim_and_real_imu.py --real_imu_fn path-to-txt --sim_imu_fn path-to-txt```
+
+and
+
+```python src/sim_to_real/scripts/plot_fft_sim_and_real_imu.py --real_imu_fn path-to-txt --sim_imu_fn path-to-txt```
+
+To create the dataset run the following scripts
+
+```python src/dataloader/create_dataset_txt_format.py --config path-to-config```
+
+```python src/dataloader/create_dataset_binary_format.py --config path-to-config```
+
+For example 
+
+```python src/dataloader/create_dataset_txt_format.py --config ../../config/sim_to_real/dataset_tracking_arena_2021-02-03-13-43-38.yaml```
+
+```python src/dataloader/create_dataset_binary_format.py --config ../../config/sim_to_real/dataset_tracking_arena_2021-02-03-13-43-38.yaml```
+
+The first script will take about 10 min for 1000 sequences. The second will take about 30 min for 1000 sequences.
+
+
 ## Training
 
 **Command to launch:**
-python3 src/main_net.py --mode train --root_dir data/folder_data --train_list data/folder_data/train.txt --val_list data/folder_data/val.txt --out_dir results/folder_results --imu_freq 1000 --imu_base_freq 1000 --window_time 0.5 --epochs 100 --batch_size 64
+
+
+```python3 src/main_net.py --mode train --root_dir data/folder_data --train_list data/folder_data/train.txt --val_list data/folder_data/val.txt --out_dir results/folder_results --imu_freq 1000 --imu_base_freq 1000 --window_time 0.5 --epochs 100 --batch_size 64```
 
 
 ## Test using AGIROS
@@ -176,12 +279,14 @@ In *src/sim_to_real/scripts*
 ### Rotate imu measurements
 
 If the dataset has sequences simulated using Agiros, the IMU measurements should be rotated from the real frame to the simulated frame.
-This is usedto find theta given t_offset.
+This is used to find theta given t_offset.
+
+
 **Command to launch**
 
-In *src/scripts_rotation*
+In *src/scripts_rotation*:
 
-python3 align_imu_real_to_sim.py --real_imu_fn /home/rpg/Desktop/RosbagReal_13_43_38/seq1/imu_measurements.txt --sim_imu_fn /home/rpg/Desktop/RosbagSimulated_13_43_38/seq1/imu_measurements.txt --toffset 0 --theta 100
+```python3 align_imu_real_to_sim.py --real_imu_fn /home/rpg/Desktop/RosbagReal_13_43_38/seq1/imu_measurements.txt --sim_imu_fn /home/rpg/Desktop/RosbagSimulated_13_43_38/seq1/imu_measurements.txt --toffset 0 --theta 100```
 
 ### Interpolate data at the required frequency
 
@@ -210,31 +315,66 @@ When launching this script, a data directory --data_dir should be specified: TLI
 
 **Command to launch**
 
-python3 src/dataloader/gen_racing_data.py --data_dir data/folder_data
+```python3 src/dataloader/gen_racing_data.py --data_dir data/folder_data```
 
 
 ### Test through hdf5
 
 **Command to launch**
-python3 src/main_net.py --mode test --root_dir data/folder_data/ --test_list data/folder_data/test.txt --model_path results/folder_results/checkpoints/checkpoint_126.pt --out_dir results/folder_results/results/network/ --save_plot --window_time 0.5 --imu_freq 1000 --imu_base_freq 1000 --sample_freq 20
+```python3 src/main_net.py --mode test --root_dir data/folder_data/ --test_list data/folder_data/test.txt --model_path results/folder_results/checkpoints/checkpoint_126.pt --out_dir results/folder_results/results/network/ --save_plot --window_time 0.5 --imu_freq 1000 --imu_base_freq 1000 --sample_freq 20```
 
 
 ## Test using GVI
 
+### Create Test Sequence for real data
 
+The following applies at the moment to the sequence 2021-02-03-13-43-38.
+After extracting the imu measurement from the rosbag (see src/sim_to_real/bag_to_imu.py), we need to remove peaks in az.
+
+To do it, run
+
+```python src/sim_to_real/scripts/apply_handcrafted_filter.py --signal_fn path-to-txt --freq 400 --window_len_sec 1.0 --noise_std 0.02```
+
+For example
+
+```python src/sim_to_real/scripts/apply_handcrafted_filter.py --signal_fn ./data/tracking_arena_data/29July21/tracking_arena_2021-02-03-13-43-38/2021-02-03-13-43-38_imu_meas.txt --freq 400 --window_len_sec 1.0 --noise_std 0.02```
+
+Then low-pass using a butterworth filter
+
+```python src/sim_to_real/scripts/apply_butterworth_filter.py --signal_fn path-to-txt --freq 400 --cutoff_freq 50 --config ''```
+
+For example
+
+```python src/sim_to_real/scripts/apply_butterworth_filter.py --signal_fn ./data/tracking_arena_data/29July21/tracking_arena_2021-02-03-13-43-38/filtered_2021-02-03-13-43-38_imu_meas.txt --freq 400 --cutoff_freq 50 --config ''```
+
+We are now ready to write the measurements in the TLIO format.
+
+```python src/dataloader/create_sequence_txt_format.py --config_fn path-to-config```
+
+For example 
+
+```python src/dataloader/create_sequence_txt_format.py --config_fn config/sim_to_real/tracking_arena_2021-02-03-13-43-38.yaml ```
+
+and 
+
+```python src/dataloader/create_sequence_binary_format.py --config_fn path-to-config```
+
+For example 
+
+```python src/dataloader/create_sequence_binary_format.py --config_fn config/sim_to_real/tracking_arena_2021-02-03-13-43-38.yaml ```
 
 
 ## Run Filter and Plot
 
 **Command to launch**
 
-python3 src/main_filter.py --root_dir data/folder_data --data_list data/folder_data/test.txt --model_path results/folder_results/checkpoints/checkpoint_126.pt --model_param_path results/folder_results/parameters.json --out_dir results/folder_results/results/filter/ --update_freq 20 --initialize_with_offline_calib --erase_old_log
+```python3 src/main_filter.py --root_dir data/folder_data --data_list data/folder_data/test.txt --model_path results/folder_results/checkpoints/checkpoint_126.pt --model_param_path results/folder_results/parameters.json --out_dir results/folder_results/results/filter/ --update_freq 20 --initialize_with_offline_calib --erase_old_log```
 
 To plot, go to TLIO/src and launch:
 
 **Command to launch:**
 
-python3 plot_filter_results.py --data_dir ../data/folder_data --data_list ../data/folder_data/test.txt --filter_dir ../results/folder_results/results/filter/
+```python3 plot_filter_results.py --data_dir ../data/folder_data --data_list ../data/folder_data/test.txt --filter_dir ../results/folder_results/results/filter/```
 
 
 
