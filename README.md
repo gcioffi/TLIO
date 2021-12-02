@@ -27,6 +27,8 @@ https://app.gitbook.com/@rpg-uzh/s/rpg-uzh/computers-storage-and-printers/worksh
 
 In this case, it is:
 - /data/storage/user/TLIO
+
+
 Never store results in the HOME directory! 
 
 **Create soft link between TLIO code in HOME and your results folder**
@@ -63,7 +65,7 @@ Run the following on your local terminal:
 
 
 ## Generate Dataset
-This could be generated using gvi as explained in the next section (recomended option) or extracting the TLIO needed files using the information from rosbags recorded during flights simulated in Gazebo, namely Agiros and the realted reference trajectory in .csv. 
+This could be generated using gvi as explained in the next section (recommended option) or extracting the TLIO needed files using the information from recorded rosbags. This are created during flights simulated in Gazebo using Agiros and the realted reference trajectories in .csv. 
 The files used for TLIO are:
 
 - my_timestamps_p.txt
@@ -362,6 +364,11 @@ and
 For example 
 
 ```python src/dataloader/create_sequence_binary_format.py --config_fn config/sim_to_real/tracking_arena_2021-02-03-13-43-38.yaml ```
+
+### Test through hdf5
+
+**Command to launch**
+```python3 src/main_net.py --mode test --root_dir data/folder_data/ --test_list data/folder_data/test.txt --model_path results/folder_results/checkpoints/checkpoint_126.pt --out_dir results/folder_results/results/network/ --save_plot --window_time 0.5 --imu_freq 1000 --imu_base_freq 1000 --sample_freq 20```
 
 
 ## Run Filter and Plot
