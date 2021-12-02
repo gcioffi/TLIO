@@ -70,6 +70,11 @@ The files used for TLIO are:
 - imu_measurements.txt
 - evolving_state.txt
 
+## Training
+
+**Command to launch:**
+python3 src/main_net.py --mode train --root_dir data/folder_data --train_list data/folder_data/train.txt --val_list data/folder_data/val.txt --out_dir results/folder_results --imu_freq 1000 --imu_base_freq 1000 --window_time 0.5 --epochs 100 --batch_size 64
+
 
 ## Test using AGIROS
 
@@ -205,6 +210,31 @@ When launching this script, a data directory --data_dir should be specified: TLI
 
 **Command to launch**
 
-python3 src/dataloader/gen_racing_data.py --data_dir data/...("your_dataset_directory")...
+python3 src/dataloader/gen_racing_data.py --data_dir data/folder_data
+
+
+### Test through hdf5
+
+**Command to launch**
+python3 src/main_net.py --mode test --root_dir data/folder_data/ --test_list data/folder_data/test.txt --model_path results/folder_results/checkpoints/checkpoint_126.pt --out_dir results/folder_results/results/network/ --save_plot --window_time 0.5 --imu_freq 1000 --imu_base_freq 1000 --sample_freq 20
+
+
+## Test using GVI
+
+
+
+
+## Run Filter and Plot
+
+**Command to launch**
+
+python3 src/main_filter.py --root_dir data/folder_data --data_list data/folder_data/test.txt --model_path results/folder_results/checkpoints/checkpoint_126.pt --model_param_path results/folder_results/parameters.json --out_dir results/folder_results/results/filter/ --update_freq 20 --initialize_with_offline_calib --erase_old_log
+
+To plot, go to TLIO/src and launch:
+
+**Command to launch:**
+
+python3 plot_filter_results.py --data_dir ../data/folder_data --data_list ../data/folder_data/test.txt --filter_dir ../results/folder_results/results/filter/
+
 
 
