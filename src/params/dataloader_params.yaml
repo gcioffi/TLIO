@@ -7,8 +7,8 @@ topic_odometry: /vicon/parrot
 # Output
 n_trajectories: 1
 out_dir: /home/rpg/Desktop/TLIO/data/tracking_arena_2021-02-03-13-43-38_imu_400_Hz
-# Noise params
 
+# Biases
 bias_acc: [0, 0, 0]
 bias_gyro: [0, 0, 0]
 

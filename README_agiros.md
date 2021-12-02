@@ -90,9 +90,9 @@ Check src/sim_to_real/scripts for some useful scripts.
 Then, run the script sim_to_real/scripts/vicon_to_imu.py [WARNING: this scripts contains hand-coded cam-imu (from Kalibr) and cam-vicon (from handeye) calibrations] to transform (temporally and spatially) the vicon poses from the markers to the imu frame.
 
 
-## IMU Simulator
+### IMU Simulator
 
-We are now ready to generate simulated IMU measurements starting from the real flown trajectory [@ToDo: Extend to simulated trajectory].
+We are now ready to generate simulated IMU measurements starting from the real flown trajectory.
 We use the code [here](https://github.com/uzh-rpg/gvi-fusion/tree/sim_imu).
 
 To fit a Bspline to the desired trajectory
@@ -124,7 +124,7 @@ An example of config file is [here](https://github.com/uzh-rpg/gvi-fusion/blob/s
 Note that the current implementation requires that the spline order is given at compilation time. Check [here](https://github.com/uzh-rpg/gvi-fusion/blob/sim_imu/src/imu_simulator/fit_trajectory.cpp#L64) and [here](https://github.com/uzh-rpg/gvi-fusion/blob/sim_imu/src/imu_simulator/simulate_imu.cpp#L89).
 
 
-## Create Dataset
+### Create Dataset
 
 We low-pass filter real and sim IMU to remove noise coming from the platform (e.g.motors).
 
@@ -324,7 +324,7 @@ When launching this script, a data directory --data_dir should be specified: TLI
 ```python3 src/main_net.py --mode test --root_dir data/folder_data/ --test_list data/folder_data/test.txt --model_path results/folder_results/checkpoints/checkpoint_126.pt --out_dir results/folder_results/results/network/ --save_plot --window_time 0.5 --imu_freq 1000 --imu_base_freq 1000 --sample_freq 20```
 
 
-## Test using GVI
+## Test using GVI (recommended)
 
 ### Create Test Sequence for real data
 
