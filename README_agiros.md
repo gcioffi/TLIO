@@ -3,14 +3,14 @@ Plase, find the TLIO Readme at: https://github.com/CathIAS/TLIO/blob/master/READ
 
 
 ## SNAGA: Introduction
+
+**Useful links**
 - Machine learning hardware
 https://app.gitbook.com/@rpg-uzh/s/rpg-uzh/computers-storage-and-printers/machine-learning-computer
 - Work on SNAGA
 https://app.gitbook.com/@rpg-uzh/s/rpg-uzh/computers-storage-and-printers/workshop-pcs-and-snaga
 - Work on SNAGA from HOME
 https://app.gitbook.com/@rpg-uzh/s/rpg-uzh/computers-storage-and-printers/workshop-pcs-and-snaga
-
-## SNAGA: key concepts
 
 **Connect to SNAGA**
 
