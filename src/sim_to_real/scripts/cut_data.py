@@ -20,6 +20,7 @@ my_timestamps_p = np.loadtxt(folder_directory + "/seq1/my_timestamps_p.txt")
 evolving_state = np.loadtxt(folder_directory + "/seq1/evolving_state.txt")
 
 t_imu = imu_measurements[:, 0] * 1e-6 # seconds
+# Insert here time beginning - end
 idx_imu_begin = find_nearest(t_imu, t_imu[0] + 34.2) # cut of rosbag to have 2 secs of hover 
 idx_imu_end = find_nearest(t_imu, t_imu[0] + 67.8)
 t_odom = my_timestamps_p * 1e-6 # seconds

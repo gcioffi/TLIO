@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import os
 import yaml
 
-'''
+
 def interpolate_meas(data):
     counter = 0
     interpolated_line = []
@@ -95,4 +95,3 @@ if __name__ == "__main__":
     interpolated_line = interpolate_meas(imu_meas)
     fn = folder_directory + "/seq1/imu_measurements.txt"
     np.savetxt(fn, interpolated_line)
-'''

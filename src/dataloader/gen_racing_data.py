@@ -324,4 +324,3 @@ if __name__ == "__main__":
     save_hdf5(args)
 
 
-#Question: imu_integrate does not take values in world frame. Is this an issue? t should be in sec?
