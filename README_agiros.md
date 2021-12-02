@@ -1,8 +1,8 @@
-### TLIO Readme
+## TLIO Readme
 Plase, find the TLIO Readme at: https://github.com/CathIAS/TLIO/blob/master/README.md
 
 
-### SNAGA: Introduction
+## SNAGA: Introduction
 - Machine learning hardware
 https://app.gitbook.com/@rpg-uzh/s/rpg-uzh/computers-storage-and-printers/machine-learning-computer
 - Work on SNAGA
@@ -10,7 +10,7 @@ https://app.gitbook.com/@rpg-uzh/s/rpg-uzh/computers-storage-and-printers/worksh
 - Work on SNAGA from HOME
 https://app.gitbook.com/@rpg-uzh/s/rpg-uzh/computers-storage-and-printers/workshop-pcs-and-snaga
 
-### SNAGA: key concepts
+## SNAGA: key concepts
 
 **Connect to SNAGA**
 
@@ -62,8 +62,8 @@ Run the following on your local terminal:
 - exit
 
 
-### Generate Dataset
-This could be generated using gvi as explained in the next section (recomended option) or extracting the TLOI needed files using the information from rosbags recorded during flights simulated in Gazebo using Agiros and the realted reference trajectory csv. 
+## Generate Dataset
+This could be generated using gvi as explained in the next section (recomended option) or extracting the TLIO needed files using the information from rosbags recorded during flights simulated in Gazebo, namely Agiros and the realted reference trajectory in .csv. 
 The files used for TLIO are:
 
 - my_timestamps_p.txt
@@ -71,9 +71,9 @@ The files used for TLIO are:
 - evolving_state.txt
 
 
-### Test using AGIROS
+## Test using AGIROS
 
-## Acquire the real-flight rosbag
+### Acquire the real-flight rosbag
 
 Acquire the original rosbag during a real flown trajectory, recording the topics:     
 
