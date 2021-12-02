@@ -80,7 +80,7 @@ Acquire the original rosbag during a real flown trajectory, recording the topics
 - */alphasense_driver_ros/imu  : sensor_msgs/Imu*          
 - */vicon/parrot*   
 
-## Load the trajectory 
+### Load the trajectory 
 
 Use ```load_real_flight_bag.py``` to load the real-flight bag.
 The following files will be generated:
@@ -98,7 +98,7 @@ In *src/params/dataloader_params.yaml* change **bagfile** and **out_dir**, accor
 ```python3 src/dataloader/load_real_flight_bag.py --config src/params/dataloader_params.yaml```
 
 
-## Synchronize Vicon - IMU
+### Synchronize Vicon - IMU
 
 Go to the *src/Vicon/data* folder and **copy** your bag here. Then, in ```src/Vicon/src/main.py```, *line 321*, insert the bag name without the extension *'.bag'*.
 
@@ -119,7 +119,7 @@ Go to *src/Vicon/src* and type:
 
 ```python main.py```
 
-## Load the synchronized trajectory 
+### Load the synchronized trajectory 
 
 Using the offset value obtained, subtract it from *ts_odom* in ```load_real_flight_bag_sync.py``` (see *line 85*) and run this script to load again the same files as before but now synchronized. 
 
@@ -128,7 +128,7 @@ Using the offset value obtained, subtract it from *ts_odom* in ```load_real_flig
 ```python3 src/dataloader/load_real_flight_bag_sync.py --config src/params/dataloader_params.yaml```
 
 
-## Add Vicon velocity 
+### Add Vicon velocity 
 
 Use ```Replace_Evolving_State_and_Plot.py``` in *src/scripts*, in order to read the Vicon computed velocity in *src/Vicon/data* (referred to the center of the markers) and insert the velocity values in *evolving_state.txt*.
 In addition, some plots about position and velocity GT vs. VICON could be generated.
@@ -141,7 +141,7 @@ Go to *src/scripts* and type:
 
 ```python3 Replace_Evolving_State_and_Plot.py```
 
-## Transform Evovling State: from markers to IMU
+### Transform Evovling State: from markers to IMU
 
 The first thing to do is to **transform** the Vicon pose measurements from the center of the markers to the imu-frame of the sevensense camera. 
 
@@ -158,7 +158,7 @@ In *src/scripts_rotation*
 ```python3 from_vicon_to_imu.py --ev_state_fn /home/rpg/Desktop/RosbagReal_13_43_38/seq1/evolving_state.txt```
 
 
-## Cut the data to remove landing and take off
+### Cut the data to remove landing and take off
 
 **Command to launch**
 
@@ -168,7 +168,7 @@ In *src/sim_to_real/scripts*
 
 (insert beginning and end-time at line 23).
 
-## Rotate imu measurements
+### Rotate imu measurements
 
 If the dataset has sequences simulated using Agiros, the IMU measurements should be rotated from the real frame to the simulated frame.
 This is usedto find theta given t_offset.
@@ -178,7 +178,7 @@ In *src/scripts_rotation*
 
 python3 align_imu_real_to_sim.py --real_imu_fn /home/rpg/Desktop/RosbagReal_13_43_38/seq1/imu_measurements.txt --sim_imu_fn /home/rpg/Desktop/RosbagSimulated_13_43_38/seq1/imu_measurements.txt --toffset 0 --theta 100
 
-## Interpolate data at the required frequency
+### Interpolate data at the required frequency
 
 **Command to launch**
 
@@ -187,7 +187,7 @@ In *src/real_to_sim/scripts*
 ``` python3 interpolate.py ```
 
 
-## Modify HasVIO vector in *evolving_state.txt*
+### Modify HasVIO vector in *evolving_state.txt*
 
 Use ```transform_HasVio.py``` to get more correspondences between IMU states and the corresponding VIO states.
 
@@ -198,7 +198,7 @@ In *src/sim_to_real/scripts*
 ``` python3 transform_HasVio.py ```
 
 
-## Generate hdf5
+### Generate hdf5
 
 Launching "gen_racing_data.py", it is possible to get the hdf5 file needed for the training step and the train.txt, test.txt and val.txt files.
 When launching this script, a data directory --data_dir should be specified: TLIO/data/Dataset. 
