@@ -63,7 +63,13 @@ Run the following on your local terminal:
 
 
 ### Generate Dataset
-Generate the Dataset running agiros and acquiring multiple bags.
+This could be generated using gvi as explained in the next section (recomended option) or extracting the TLOI needed files using the information from rosbags recorded during flights simulated in Gazebo using Agiros and the realted reference trajectory csv. 
+The files used for TLIO are:
+
+- my_timestamps_p.txt
+- imu_measurements.txt
+- evolving_state.txt
+
 
 ### Test using AGIROS
 
@@ -122,14 +128,13 @@ Using the offset value obtained, subtract it from *ts_odom* in ```load_real_flig
 ```python3 src/dataloader/load_real_flight_bag_sync.py --config src/params/dataloader_params.yaml```
 
 
-## Add Vicon velocity and plot
+## Add Vicon velocity 
 
 Use ```Replace_Evolving_State_and_Plot.py``` in *src/scripts*, in order to read the Vicon computed velocity in *src/Vicon/data* (referred to the center of the markers) and insert the velocity values in *evolving_state.txt*.
-In addition, some plots about position and velocity GT vs. VICON will be generated.
+In addition, some plots about position and velocity GT vs. VICON could be generated.
 
 Just make sure that the directories in this script correspond to the directories in your workspace. It is also crucial to insert the **time-offset** between a simulated trajectory in the dataset and the real one in the plotting part to have them aligned. 
  
-
 **Command to launch**
 
 Go to *src/scripts* and type:
@@ -165,13 +170,13 @@ In *src/sim_to_real/scripts*
 
 ## Rotate imu measurements
 
-If the dataset has sequences simulated using Agiros, the IMU measurements should be rotated from the real frame to the simulated frame:
+If the dataset has sequences simulated using Agiros, the IMU measurements should be rotated from the real frame to the simulated frame.
+This is usedto find theta given t_offset.
 **Command to launch**
 
 In *src/scripts_rotation*
 
 python3 align_imu_real_to_sim.py --real_imu_fn /home/rpg/Desktop/RosbagReal_13_43_38/seq1/imu_measurements.txt --sim_imu_fn /home/rpg/Desktop/RosbagSimulated_13_43_38/seq1/imu_measurements.txt --toffset 0 --theta 100
-
 
 ## Interpolate data at the required frequency
 
