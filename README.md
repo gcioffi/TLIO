@@ -203,7 +203,7 @@ In *evolving_state.txt*, the Vicon velocity will not be inserted for the moment 
 
 In *src/params/dataloader_params.yaml* change **bagfile** and **out_dir**, according to the directory of your copy bag. 
 
-**Command to launch**
+**---> Command to launch**
 
 ```python3 src/dataloader/load_real_flight_bag.py --config src/params/dataloader_params.yaml```
 
@@ -219,7 +219,7 @@ After that, run the Vicon **main** to get time offset between the Vicon and the 
 Remember: *t_sync_vicon = t_vicon - offset*.
 
 
-**Command to launch**
+**---> Command to launch**
 
 Go to *src/scripts* and type:
 
@@ -233,7 +233,7 @@ Go to *src/Vicon/src* and type:
 
 Using the offset value obtained, subtract it from *ts_odom* in ```load_real_flight_bag_sync.py``` (see *line 85*) and run this script to load again the same files as before but now synchronized. 
 
-**Command to launch**
+**---> Command to launch**
 
 ```python3 src/dataloader/load_real_flight_bag_sync.py --config src/params/dataloader_params.yaml```
 
@@ -245,7 +245,7 @@ In addition, some plots about position and velocity GT vs. VICON could be genera
 
 Just make sure that the directories in this script correspond to the directories in your workspace. It is also crucial to insert the **time-offset** between a simulated trajectory in the dataset and the real one in the plotting part to have them aligned. 
  
-**Command to launch**
+**---> Command to launch**
 
 Go to *src/scripts* and type:
 
@@ -261,7 +261,7 @@ The first thing to do is to **transform** the Vicon pose measurements from the c
 
 **WARNING**: This script contains hand-coded values (handeye matrix and cam-imu transformation).
 
-**Command to launch**
+**---> Command to launch**
 
 In *src/scripts_rotation*
 
@@ -270,7 +270,7 @@ In *src/scripts_rotation*
 
 **Cut the data to remove landing and take off**
 
-**Command to launch**
+**---> Command to launch**
 
 In *src/sim_to_real/scripts*
 
@@ -284,7 +284,7 @@ If the dataset has sequences simulated using Agiros, the IMU measurements should
 This is used to find theta given t_offset.
 
 
-**Command to launch**
+**---> Command to launch**
 
 In *src/scripts_rotation*:
 
@@ -292,7 +292,7 @@ In *src/scripts_rotation*:
 
 **Interpolate data at the required frequency**
 
-**Command to launch**
+**---> Command to launch**
 
 In *src/real_to_sim/scripts*
 
@@ -303,7 +303,7 @@ In *src/real_to_sim/scripts*
 
 Use ```transform_HasVio.py``` to get more correspondences between IMU states and the corresponding VIO states.
 
-**Command to launch**
+**---> Command to launch**
 
 In *src/sim_to_real/scripts*
 
@@ -315,7 +315,7 @@ In *src/sim_to_real/scripts*
 Launching "gen_racing_data.py", it is possible to get the hdf5 file needed for the training step and the train.txt, test.txt and val.txt files.
 When launching this script, a data directory --data_dir should be specified.
 
-**Command to launch**
+**---> Command to launch**
 
 ```python3 src/dataloader/gen_racing_data.py --data_dir data/folder_data```
 
@@ -324,7 +324,7 @@ When launching this script, a data directory --data_dir should be specified.
 
 You can test the network model through:
 
-**Command to launch**
+**---> Command to launch**
 
 
 ```python3 src/main_net.py --mode test --root_dir data/folder_data/ --test_list data/folder_data/test.txt --model_path results/folder_results/checkpoints/checkpoint_126.pt --out_dir results/folder_results/results/network/ --save_plot --window_time 0.5 --imu_freq 1000 --imu_base_freq 1000 --sample_freq 20```
@@ -373,7 +373,7 @@ For example:
 
 You can test the network model through:
 
-**Command to launch**
+**---> Command to launch**
 
 
 ```python3 src/main_net.py --mode test --root_dir data/folder_data/ --test_list data/folder_data/test.txt --model_path results/folder_results/checkpoints/checkpoint_126.pt --out_dir results/folder_results/results/network/ --save_plot --window_time 0.5 --imu_freq 1000 --imu_base_freq 1000 --sample_freq 20```
@@ -384,7 +384,7 @@ You can test the network model through:
 This is used for running the EKF filter with a certain network inference frequency:
 
 
-**Command to launch**
+**---> Command to launch**
 
 ```python3 src/main_filter.py --root_dir data/folder_data --data_list data/folder_data/test.txt --model_path results/folder_results/checkpoints/checkpoint_126.pt --model_param_path results/folder_results/parameters.json --out_dir results/folder_results/results/filter/ --update_freq 20 --initialize_with_offline_calib --erase_old_log```
 
