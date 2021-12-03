@@ -19,8 +19,8 @@ evolving_state = np.loadtxt(folder_directory + "/seq1/evolving_state.txt") # Ori
 evolving_state[:, 8:11] = v_wb_real
 np.savetxt(folder_directory + "/seq1/evolving_state.txt", evolving_state) # Original with Vicon velocity smoothed
 
-v_wb = evolving_state[:, 8:11] # related to imu ts at 400 Hz
-p_wb = evolving_state[:, 5:8] # related to imu ts at 400 Hz
+v_wb = evolving_state[:, 8:11] 
+p_wb = evolving_state[:, 5:8]
 ts_real = evolving_state[:, 0] - evolving_state[0, 0]  # usecs
 ts_real = ts_real * 1e-6 # secs
 

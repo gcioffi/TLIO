@@ -28,7 +28,7 @@ def to_keys(text):
 
 def perturbationIMUandBiases(config_fn, file, conf, traj_analysed, rosbags_num, all_biases):
 
-    #Load yaml config file where the std deviation of bias, bias noise and IMU noise are defined
+    # Load yaml config file 
     bagfile = os.path.join(conf["bagfile"], file)
     topic_imu = conf["topic_imu"]
     topic_odometry = conf["topic_odometry"]
@@ -80,11 +80,11 @@ def perturbationIMUandBiases(config_fn, file, conf, traj_analysed, rosbags_num, 
                 first_imu = False
                 
 
-            if topic == topic_odometry: # 400 Hz
+            if topic == topic_odometry: 
                 ts_odom.append(msg.header.stamp.to_sec() * 1e6)
                 p_wb.append(np.array([msg.pose.position.x, msg.pose.position.y, msg.pose.position.z]))
                 q_wb.append(np.array([msg.pose.orientation.w, msg.pose.orientation.x, msg.pose.orientation.y, msg.pose.orientation.z]))
-                v_wb.append(np.array([0,0,0])) # Filled later
+                v_wb.append(np.array([0,0,0])) # Filled later from Vicon data
 
     bag.close()
 

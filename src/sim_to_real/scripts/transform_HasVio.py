@@ -9,11 +9,11 @@ with open(str(config_fn), 'r') as file:
 	    conf = yaml.load(file, Loader=yaml.FullLoader)
 folder_directory = conf["bagfile"]
 
-vio_states = np.loadtxt(folder_directory + "/seq3/evolving_state.txt")
+vio_states = np.loadtxt(folder_directory + "/seq1/evolving_state.txt")
 ts = vio_states[:, 0] # usecs
 pos = vio_states[:, 5:8]
 
-imu = np.loadtxt(folder_directory + "/seq3/imu_measurements.txt")
+imu = np.loadtxt(folder_directory + "/seq1/imu_measurements.txt")
 imu_ts = imu[:, 0] 
 
 j = 0
@@ -132,10 +132,10 @@ for k in range(idx_imu_corresp.shape[0]):
     print(imu_new[idx_imu_corresp[k], 0], vio_states_new[idx_evolving_corresp[k], 0])
 
 
-np.savetxt(folder_directory + "/seq3/noisy_evolving_state_interp.txt", vio_states_new)
-np.savetxt(folder_directory + "/seq3/noisy_imu_measurements_interp.txt", imu_new)
-np.savetxt(folder_directory + "/seq3/idx_imu_corresp.txt", idx_imu_corresp)
-np.savetxt(folder_directory + "/seq3/idx_evolving_corresp.txt", idx_evolving_corresp)
+np.savetxt(folder_directory + "/seq1/evolving_state.txt", vio_states_new)
+np.savetxt(folder_directory + "/seq1/imu_measurements.txt", imu_new)
+np.savetxt(folder_directory + "/seq1/idx_imu_corresp.txt", idx_imu_corresp)
+np.savetxt(folder_directory + "/seq1/idx_evolving_corresp.txt", idx_evolving_corresp)
 
 print("Shape VIO -> new: ", vio_states_new.shape[0], " old: ", vio_states.shape[0])
 print("Shape IMU -> new: ", imu_new.shape[0], "old: ", imu.shape[0]) 

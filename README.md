@@ -212,7 +212,7 @@ In *src/params/dataloader_params.yaml* change **bagfile** and **out_dir**, accor
 
 Go to the *src/Vicon/data* folder and **copy** your bag here. Then, in ```src/Vicon/src/main.py```, *line 321*, insert the bag name without the extension *'.bag'*.
 
-Now, running ```Sync_Vicon_IMU.py```, a .csv file will be output in *src/Vicon/data*.
+Now, running ```Sync_Vicon_IMU.py```, after changing the name of the bag in *line 7*, a .csv file will be output in *src/Vicon/data*.
 
 After that, run the Vicon **main** to get time offset between the Vicon and the Imu in the real trajectory.
 
@@ -294,7 +294,7 @@ In *src/scripts_rotation*:
 
 **---> Command to launch**
 
-In *src/real_to_sim/scripts*
+In *src/sim_to_real/scripts*
 
 ``` python3 interpolate.py ```
 

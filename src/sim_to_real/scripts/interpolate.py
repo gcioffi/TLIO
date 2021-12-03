@@ -46,10 +46,10 @@ for imu_idx in range(noisy_imu_measurements.shape[0]):
         noisy_ts_imu.append(curr_noisy_ts_imu)
         noisy_imu_measurements_interp.append(np.array(curr_noisy_imu_measurements))
 
-# Interpolate evolving at 500 Hz
+# Interpolate evolving at 1000 Hz
 noisy_evolving_state_interp = []
 noisy_ts_odom = []
-dt_interp = 0.002 * 1e6
+dt_interp = 0.001 * 1e6
 
 for odom_idx in range(evolving_state.shape[0]):
     if odom_idx == 0:
@@ -85,6 +85,6 @@ noisy_imu_measurements_interp = np.array(noisy_imu_measurements_interp)
 noisy_evolving_state_interp = np.array(noisy_evolving_state_interp)
 noisy_ts_odom = np.array(noisy_ts_odom)
 
-np.savetxt(folder_directory + "/seq1/noisy_evolving_state_interp.txt", noisy_evolving_state_interp)
-np.savetxt(folder_directory + "/seq1/noisy_imu_measurements_interp.txt", noisy_imu_measurements_interp)
-np.savetxt(folder_directory + "/seq1/noisy_my_timestamps_p_interp.txt", noisy_ts_odom)
+np.savetxt(folder_directory + "/seq1/noisy_evolving_state.txt", noisy_evolving_state_interp)
+np.savetxt(folder_directory + "/seq1/noisy_imu_measurements.txt", noisy_imu_measurements_interp)
+np.savetxt(folder_directory + "/seq1/noisy_my_timestamps_p.txt", noisy_ts_odom)
