@@ -74,14 +74,14 @@ topics:
 /alphasense_driver_ros/imu    14285 msgs    : sensor_msgs/Imu          
 /vicon/parrot                 14308 msgs    : geometry_msgs/PoseStamped
 
-### Handeye
+**Handeye**
 
 The first step is to get the IMU poses from the vicon trajectory.
 We run the [hand-eye](https://github.com/ethz-asl/hand_eye_calibration) to get the camera-markers time offset and relative transformation.
 Check src/sim_to_real/scripts for some useful scripts.
 Then, run the script sim_to_real/scripts/vicon_to_imu.py [WARNING: this scripts contains hand-coded cam-imu (from Kalibr) and cam-vicon (from handeye) calibrations] to transform (temporally and spatially) the vicon poses from the markers to the imu frame.
 
-### Spline Fitting
+**Spline Fitting**
  
 We are now ready to generate simulated IMU measurements starting from the real flown trajectory.
 We use the code [here](https://github.com/uzh-rpg/gvi-fusion/tree/sim_imu).
@@ -102,7 +102,7 @@ For example:
 
 ```python src/sim_to_real/scripts/plot_sim_and_real_trajectories.py --real_fn 2021-02-03-13-43-38_traj_vicon_imu.txt --sim_fn trajectory.txt```
 
-### IMU Simulation
+**IMU Simulation**
 
 To simulate IMU measurements:
 
@@ -117,7 +117,7 @@ An example of config file is [here](https://github.com/uzh-rpg/gvi-fusion/blob/s
 Note that the current implementation requires that the spline order is given at compilation time. Check [here](https://github.com/uzh-rpg/gvi-fusion/blob/sim_imu/src/imu_simulator/fit_trajectory.cpp#L64) and [here](https://github.com/uzh-rpg/gvi-fusion/blob/sim_imu/src/imu_simulator/simulate_imu.cpp#L89).
 
 
-### Dataset Generation
+**Dataset Generation**
 
 We low-pass filter real and sim IMU to remove noise coming from the platform (e.g.motors). This is not necessary if the controller on the platform already filters the IMU measurements.
 
@@ -183,14 +183,14 @@ The training step could be carried out using the following command,specifying th
 
 ## Test using AGIROS (not recommended)
 
-### Acquire the real-flight rosbag
+**Acquire the real-flight rosbag**
 
 Acquire the original rosbag during a real flown trajectory, recording the topics:     
 
 - */alphasense_driver_ros/imu  : sensor_msgs/Imu*          
 - */vicon/parrot*   
 
-### Load the trajectory 
+**Load the trajectory** 
 
 Use ```load_real_flight_bag.py``` to load the real-flight bag.
 The following files will be generated:
@@ -208,7 +208,7 @@ In *src/params/dataloader_params.yaml* change **bagfile** and **out_dir**, accor
 ```python3 src/dataloader/load_real_flight_bag.py --config src/params/dataloader_params.yaml```
 
 
-### Synchronize Vicon - IMU
+**Synchronize Vicon - IMU**
 
 Go to the *src/Vicon/data* folder and **copy** your bag here. Then, in ```src/Vicon/src/main.py```, *line 321*, insert the bag name without the extension *'.bag'*.
 
@@ -229,7 +229,7 @@ Go to *src/Vicon/src* and type:
 
 ```python main.py```
 
-### Load the synchronized trajectory 
+**Load the synchronized trajectory** 
 
 Using the offset value obtained, subtract it from *ts_odom* in ```load_real_flight_bag_sync.py``` (see *line 85*) and run this script to load again the same files as before but now synchronized. 
 
@@ -238,7 +238,7 @@ Using the offset value obtained, subtract it from *ts_odom* in ```load_real_flig
 ```python3 src/dataloader/load_real_flight_bag_sync.py --config src/params/dataloader_params.yaml```
 
 
-### Add Vicon velocity 
+**Add Vicon velocity** 
 
 Use ```Replace_Evolving_State_and_Plot.py``` in *src/scripts*, in order to read the Vicon computed velocity in *src/Vicon/data* (referred to the center of the markers) and insert the velocity values in *evolving_state.txt*.
 In addition, some plots about position and velocity GT vs. VICON could be generated.
@@ -251,7 +251,7 @@ Go to *src/scripts* and type:
 
 ```python3 Replace_Evolving_State_and_Plot.py```
 
-### Transform Evolving State: from Markers to IMU
+**Transform Evolving State: from Markers to IMU**
 
 The first thing to do is to **transform** the Vicon pose measurements from the center of the markers to the imu-frame of the sevensense camera. 
 
@@ -268,7 +268,7 @@ In *src/scripts_rotation*
 ```python3 from_vicon_to_imu.py --ev_state_fn /home/rpg/Desktop/RosbagReal_13_43_38/seq1/evolving_state.txt```
 
 
-### Cut the data to remove landing and take off
+**Cut the data to remove landing and take off**
 
 **Command to launch**
 
@@ -278,7 +278,7 @@ In *src/sim_to_real/scripts*
 
 (insert beginning and end-time at line 23).
 
-### Rotate imu measurements
+**Rotate imu measurements**
 
 If the dataset has sequences simulated using Agiros, the IMU measurements should be rotated from the real frame to the simulated frame.
 This is used to find theta given t_offset.
@@ -290,7 +290,7 @@ In *src/scripts_rotation*:
 
 ```python3 align_imu_real_to_sim.py --real_imu_fn /home/rpg/Desktop/RosbagReal_13_43_38/seq1/imu_measurements.txt --sim_imu_fn /home/rpg/Desktop/RosbagSimulated_13_43_38/seq1/imu_measurements.txt --toffset 0 --theta 100```
 
-### Interpolate data at the required frequency
+**Interpolate data at the required frequency**
 
 **Command to launch**
 
@@ -299,7 +299,7 @@ In *src/real_to_sim/scripts*
 ``` python3 interpolate.py ```
 
 
-### Modify HasVIO vector in *evolving_state.txt*
+**Modify HasVIO vector in *evolving_state.txt***
 
 Use ```transform_HasVio.py``` to get more correspondences between IMU states and the corresponding VIO states.
 
@@ -310,7 +310,7 @@ In *src/sim_to_real/scripts*
 ``` python3 transform_HasVio.py ```
 
 
-### Generate hdf5
+**Generate hdf5**
 
 Launching "gen_racing_data.py", it is possible to get the hdf5 file needed for the training step and the train.txt, test.txt and val.txt files.
 When launching this script, a data directory --data_dir should be specified.
@@ -320,7 +320,7 @@ When launching this script, a data directory --data_dir should be specified.
 ```python3 src/dataloader/gen_racing_data.py --data_dir data/folder_data```
 
 
-### Test through hdf5
+**Test through hdf5**
 
 You can test the network model through:
 
@@ -332,7 +332,7 @@ You can test the network model through:
 
 ## Test using GVI (recommended)
 
-### Create Test Sequence for real data
+**Create Test Sequence for real data**
 
 The following applies at the moment to the sequence 2021-02-03-13-43-38.
 After extracting the imu measurement from the rosbag (see src/sim_to_real/bag_to_imu.py), we need to remove peaks in az.
@@ -369,7 +369,7 @@ For example:
 
 ```python src/dataloader/create_sequence_binary_format.py --config_fn config/sim_to_real/tracking_arena_2021-02-03-13-43-38.yaml ```
 
-### Test through hdf5
+**Test through hdf5**
 
 You can test the network model through:
 
