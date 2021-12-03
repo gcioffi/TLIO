@@ -390,7 +390,7 @@ This is used for running the EKF filter with a certain network inference frequen
 
 In order to generate some useful plots, go to TLIO/src and launch:
 
-**Command to launch:**
+**---> Command to launch:**
 
 ```python3 plot_filter_results.py --data_dir ../data/folder_data --data_list ../data/folder_data/test.txt --filter_dir ../results/folder_results/results/filter/```
 
