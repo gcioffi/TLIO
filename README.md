@@ -54,7 +54,7 @@ Run the following on your local terminal:
 - exit
 
 
-### Generate Dataset: GVI Sim-to-Real
+### IMU Simulator - Dataset from Real Flight IMU
 
 This could be generated using gvi as explained here, or, less efficiently, filling the TLIO needed files using the information from recorded rosbags (namely, IMU and ground-truth odometry topics). These are created during flights simulated in Gazebo using Agiros and the realted reference trajectories in .csv. 
 The files used for TLIO are:
@@ -62,7 +62,6 @@ The files used for TLIO are:
 - my_timestamps_p.txt
 - imu_measurements.txt
 - evolving_state.txt
-
 
 Here, we describe how to generate a new dataset starting from a .rosbag recorded in the Flying-Arena.
 We assume that the .rosbag contains vicon and alphasense data (namely, ground-truth and IMU).
@@ -83,7 +82,6 @@ Check src/sim_to_real/scripts for some useful scripts.
 Then, run the script sim_to_real/scripts/vicon_to_imu.py [WARNING: this scripts contains hand-coded cam-imu (from Kalibr) and cam-vicon (from handeye) calibrations] to transform (temporally and spatially) the vicon poses from the markers to the imu frame.
 
 
-### IMU Simulator - Dataset from Real Flight IMU
  
 We are now ready to generate simulated IMU measurements starting from the real flown trajectory.
 We use the code [here](https://github.com/uzh-rpg/gvi-fusion/tree/sim_imu).
