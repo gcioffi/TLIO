@@ -56,7 +56,7 @@ Run the following on your local terminal:
 
 ## IMU Simulator - Dataset from Real Flight IMU
 
-The dataset for training and validation could be generated using gvi as explained here, or, less efficiently, filling the TLIO needed files using the information from recorded rosbags (namely, IMU and ground-truth odometry topics). The latter could be recorded during flights simulated in Gazebo using Agiros and the realted reference trajectories in .csv. 
+The dataset for training and validation could be generated using gvi from a real flown trajectory, as explained here, or, less efficiently, filling the TLIO needed files using the information from recorded rosbags in simulation (namely, IMU and ground-truth odometry topics). The latter could be recorded during flights simulated in Gazebo using Agiros and the realted reference trajectories in .csv. 
 The files used for TLIO are:
 
 - my_timestamps_p.txt
@@ -133,9 +133,7 @@ For example, this will run on all the seq. specified in the config file. This is
 
 ```python src/sim_to_real/scripts/apply_butterworth_filter.py --config ./config/sim_to_real/dataset_tracking_arena_2021-02-03-13-43-38.yaml```
 
-or
-
-this will run on the single data contained in the .txt file:
+or this will run on the single data contained in the .txt file:
 
 ```python src/sim_to_real/scripts/apply_butterworth_filter.py --signal_fn 2021-02-03-13-43-38_imu_meas.txt --freq 400```
 
@@ -164,7 +162,7 @@ The first script will take about 10 min for 1000 sequences. The second will take
 
 
 ## IMU Simulator - Dataset from Reference Trajectories .csv
-We could also launch the IMU Simulator fitting the splines to the reference pose in the trajectories .csv directly, instead of using the Vicon data. 
+We could also launch the IMU Simulator introduced in the previous Section fitting the splines to the reference pose in the trajectories .csv directly, instead of using the Vicon data. 
 However, after having generated the simulated IMU measurements with the Simulator, we should run:
 
 https://github.com/gcioffi/TLIO/blob/sim_to_real/src/scripts/sim_rotors_drag/add_rotor_drag.ipynb
@@ -173,6 +171,9 @@ in order to add the contribution of the aerodynamic effects, as rotor drags, on 
 
 
 ## Training
+
+The training step could be carried out using the following command,specifying the time of the window, the IMU frequency, the number of epochs and, eventually, the batch size. 
+
 
 **Command to launch:**
 
@@ -250,7 +251,7 @@ Go to *src/scripts* and type:
 
 ```python3 Replace_Evolving_State_and_Plot.py```
 
-### Transform Evovling State: from markers to IMU
+### Transform Evolving State: from Markers to IMU
 
 The first thing to do is to **transform** the Vicon pose measurements from the center of the markers to the imu-frame of the sevensense camera. 
 
@@ -321,6 +322,8 @@ When launching this script, a data directory --data_dir should be specified.
 
 ### Test through hdf5
 
+You can test the network model through:
+
 **Command to launch**
 
 
@@ -334,19 +337,19 @@ When launching this script, a data directory --data_dir should be specified.
 The following applies at the moment to the sequence 2021-02-03-13-43-38.
 After extracting the imu measurement from the rosbag (see src/sim_to_real/bag_to_imu.py), we need to remove peaks in az.
 
-To do it, run
+To do it, run:
 
 ```python src/sim_to_real/scripts/apply_handcrafted_filter.py --signal_fn path-to-txt --freq 400 --window_len_sec 1.0 --noise_std 0.02```
 
-For example
+For example:
 
 ```python src/sim_to_real/scripts/apply_handcrafted_filter.py --signal_fn ./data/tracking_arena_data/29July21/tracking_arena_2021-02-03-13-43-38/2021-02-03-13-43-38_imu_meas.txt --freq 400 --window_len_sec 1.0 --noise_std 0.02```
 
-Then low-pass using a butterworth filter
+Then, if needed, low-pass using a butterworth filter:
 
 ```python src/sim_to_real/scripts/apply_butterworth_filter.py --signal_fn path-to-txt --freq 400 --cutoff_freq 50 --config ''```
 
-For example
+For example:
 
 ```python src/sim_to_real/scripts/apply_butterworth_filter.py --signal_fn ./data/tracking_arena_data/29July21/tracking_arena_2021-02-03-13-43-38/filtered_2021-02-03-13-43-38_imu_meas.txt --freq 400 --cutoff_freq 50 --config ''```
 
@@ -354,19 +357,21 @@ We are now ready to write the measurements in the TLIO format.
 
 ```python src/dataloader/create_sequence_txt_format.py --config_fn path-to-config```
 
-For example 
+For example:
 
 ```python src/dataloader/create_sequence_txt_format.py --config_fn config/sim_to_real/tracking_arena_2021-02-03-13-43-38.yaml ```
 
-and 
+and:
 
 ```python src/dataloader/create_sequence_binary_format.py --config_fn path-to-config```
 
-For example 
+For example:
 
 ```python src/dataloader/create_sequence_binary_format.py --config_fn config/sim_to_real/tracking_arena_2021-02-03-13-43-38.yaml ```
 
 ### Test through hdf5
+
+You can test the network model through:
 
 **Command to launch**
 
