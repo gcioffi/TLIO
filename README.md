@@ -54,7 +54,7 @@ Run the following on your local terminal:
 - exit
 
 
-### IMU Simulator - Dataset from Real Flight IMU
+## IMU Simulator - Dataset from Real Flight IMU
 
 This could be generated using gvi as explained here, or, less efficiently, filling the TLIO needed files using the information from recorded rosbags (namely, IMU and ground-truth odometry topics). These are created during flights simulated in Gazebo using Agiros and the realted reference trajectories in .csv. 
 The files used for TLIO are:
@@ -115,7 +115,7 @@ An example of config file is [here](https://github.com/uzh-rpg/gvi-fusion/blob/s
 Note that the current implementation requires that the spline order is given at compilation time. Check [here](https://github.com/uzh-rpg/gvi-fusion/blob/sim_imu/src/imu_simulator/fit_trajectory.cpp#L64) and [here](https://github.com/uzh-rpg/gvi-fusion/blob/sim_imu/src/imu_simulator/simulate_imu.cpp#L89).
 
 
-## Dataset
+### Dataset Generation
 
 We low-pass filter real and sim IMU to remove noise coming from the platform (e.g.motors).
 
@@ -163,7 +163,7 @@ The first script will take about 10 min for 1000 sequences. The second will take
 
 
 
-### IMU Simulator - Dataset from Reference Trajectories .csv
+## IMU Simulator - Dataset from Reference Trajectories .csv
 We could also launch the IMU Simulator fitting the splines to the reference pose in the trajectories .csv directly, instead of using the Vicon data. 
 However, after having generated the simulated IMU measurements with the Simulator, we should run:
 
@@ -172,7 +172,7 @@ https://github.com/gcioffi/TLIO/blob/sim_to_real/src/scripts/sim_rotors_drag/add
 in order to add the contribution of the aerodynamic effects, as rotor drags, on the IMU values. 
 
 
-### Training
+## Training
 
 **Command to launch:**
 
@@ -180,7 +180,7 @@ in order to add the contribution of the aerodynamic effects, as rotor drags, on 
 ```python3 src/main_net.py --mode train --root_dir data/folder_data --train_list data/folder_data/train.txt --val_list data/folder_data/val.txt --out_dir results/folder_results --imu_freq 1000 --imu_base_freq 1000 --window_time 0.5 --epochs 100 --batch_size 64```
 
 
-## Test using AGIROS
+## Test using AGIROS (not recommended)
 
 ### Acquire the real-flight rosbag
 
