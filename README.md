@@ -54,15 +54,16 @@ Run the following on your local terminal:
 - exit
 
 
-## Generate Dataset
-This could be generated using gvi as explained in the next Section (recommended option) or filling the TLIO needed files using the information from recorded rosbags (namely, IMU and ground-truth odometry topics). These are created during flights simulated in Gazebo using Agiros and the realted reference trajectories in .csv. 
+### Generate Dataset: GVI Sim-to-Real
+
+This could be generated using gvi as explained here, or, less efficiently, filling the TLIO needed files using the information from recorded rosbags (namely, IMU and ground-truth odometry topics). These are created during flights simulated in Gazebo using Agiros and the realted reference trajectories in .csv. 
 The files used for TLIO are:
 
 - my_timestamps_p.txt
 - imu_measurements.txt
 - evolving_state.txt
 
-## Generate Dataset: GVI Sim-to-Real
+
 Here, we describe how to generate a new dataset starting from a .rosbag recorded in the Flying-Arena.
 We assume that the .rosbag contains vicon and alphasense data (namely, ground-truth and IMU).
 
