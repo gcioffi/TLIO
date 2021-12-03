@@ -56,15 +56,15 @@ Run the following on your local terminal:
 
 ## IMU Simulator - Dataset from Real Flight IMU
 
-This could be generated using gvi as explained here, or, less efficiently, filling the TLIO needed files using the information from recorded rosbags (namely, IMU and ground-truth odometry topics). These are created during flights simulated in Gazebo using Agiros and the realted reference trajectories in .csv. 
+The dataset for training and validation could be generated using gvi as explained here, or, less efficiently, filling the TLIO needed files using the information from recorded rosbags (namely, IMU and ground-truth odometry topics). The latter could be recorded during flights simulated in Gazebo using Agiros and the realted reference trajectories in .csv. 
 The files used for TLIO are:
 
 - my_timestamps_p.txt
 - imu_measurements.txt
 - evolving_state.txt
 
-Here, we describe how to generate a new dataset starting from a .rosbag recorded in the Flying-Arena.
-We assume that the .rosbag contains vicon and alphasense data (namely, ground-truth and IMU).
+Here, we describe how to generate a new dataset starting from a real flight .rosbag recorded in the Flying-Arena.
+We assume that the .rosbag contains vicon and alphasense data (namely, ground-truth pose and IMU).
 
 Example output of rosbag info:
 
@@ -81,32 +81,34 @@ We run the [hand-eye](https://github.com/ethz-asl/hand_eye_calibration) to get t
 Check src/sim_to_real/scripts for some useful scripts.
 Then, run the script sim_to_real/scripts/vicon_to_imu.py [WARNING: this scripts contains hand-coded cam-imu (from Kalibr) and cam-vicon (from handeye) calibrations] to transform (temporally and spatially) the vicon poses from the markers to the imu frame.
 
-
+### Spline Fitting
  
 We are now ready to generate simulated IMU measurements starting from the real flown trajectory.
 We use the code [here](https://github.com/uzh-rpg/gvi-fusion/tree/sim_imu).
 
-To fit a Bspline to the desired trajectory
+First, we fit a Bspline to the desired trajectory:
 
 ```./fit_trajectory path-to-config```
 
-For example
+For example:
 
 ```./fit_trajectory ../experiments/imu_simulator/tracking_arena_2021-02-03-13-43-38.yaml```
 
-To check that the fitting has been successful
+To check that the fitting has been successful:
 
 ```python src/sim_to_real/scripts/plot_sim_and_real_trajectories.py --real_fn path-to-txt --sim_fn path-to-txt```
 
-For example
+For example:
 
 ```python src/sim_to_real/scripts/plot_sim_and_real_trajectories.py --real_fn 2021-02-03-13-43-38_traj_vicon_imu.txt --sim_fn trajectory.txt```
+
+### IMU Simulation
 
 To simulate IMU measurements:
 
 ```./simulate_imu path-to-config```
 
-For example
+For example:
 
 ```./simulate_imu ../experiments/imu_simulator/tracking_arena_2021-02-03-13-43-38.yaml```
 
