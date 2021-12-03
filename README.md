@@ -119,9 +119,9 @@ Note that the current implementation requires that the spline order is given at 
 
 ### Dataset Generation
 
-We low-pass filter real and sim IMU to remove noise coming from the platform (e.g.motors).
+We low-pass filter real and sim IMU to remove noise coming from the platform (e.g.motors). This is not necessary if the controller on the platform already filters the IMU measurements.
 
-To low-pass using a butterworth filter
+To low-pass using a butterworth filter:
 
 ```python src/sim_to_real/scripts/apply_butterworth_filter.py --config path-to-config```
 
@@ -129,33 +129,31 @@ or
 
 ```python src/sim_to_real/scripts/apply_butterworth_filter.py --signal_fn path-to-txt --freq freq --cutoff_freq 50 --config '' ```
 
-For example
-
-This will run on all the seq. specified in the config file. This is the command for creating a new dataset.
+For example, this will run on all the seq. specified in the config file. This is the command for creating a new dataset.
 
 ```python src/sim_to_real/scripts/apply_butterworth_filter.py --config ./config/sim_to_real/dataset_tracking_arena_2021-02-03-13-43-38.yaml```
 
 or
 
-this will run on the single data contained in the .txt file
+this will run on the single data contained in the .txt file:
 
 ```python src/sim_to_real/scripts/apply_butterworth_filter.py --signal_fn 2021-02-03-13-43-38_imu_meas.txt --freq 400```
 
-After filtering, we check that the sim and real IMU match using
+After filtering, we check that the sim and real IMU match using:
 
 ```python src/sim_to_real/scripts/plot_sim_and_real_imu.py --real_imu_fn path-to-txt --sim_imu_fn path-to-txt```
 
-and
+and:
 
 ```python src/sim_to_real/scripts/plot_fft_sim_and_real_imu.py --real_imu_fn path-to-txt --sim_imu_fn path-to-txt```
 
-To create the dataset run the following scripts
+To create the dataset run the following scripts.
 
 ```python src/dataloader/create_dataset_txt_format.py --config path-to-config```
 
 ```python src/dataloader/create_dataset_binary_format.py --config path-to-config```
 
-For example 
+For example:
 
 ```python src/dataloader/create_dataset_txt_format.py --config ../../config/sim_to_real/dataset_tracking_arena_2021-02-03-13-43-38.yaml```
 
