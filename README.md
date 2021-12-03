@@ -16,13 +16,6 @@ https://app.gitbook.com/@rpg-uzh/s/rpg-uzh/computers-storage-and-printers/worksh
 
 - ssh user@snaga.ifi.uzh.ch
 
-**Create a virtual environment on SNAGA**
-
-- conda deactivate
-- conda activate
-- conda create --name TLIO
-- conda activate TLIO
-
 **Create a directory to store results and files**
 
 In this case, it is:
@@ -55,17 +48,14 @@ Run the following on your local terminal:
 
 - gpustat
 - export CUDA_VISIBLE_DEVICES=X ---> where X is the number of a free gpu
-- screen 
-- press enter
-"Screen" is needed to avoid killing the script if and when connection is lost.
 
-**Exit SCREEN and SNAGA**
+**Exit SNAGA**
 
 - exit
 
 
 ## Generate Dataset
-This could be generated using gvi as explained in the next section (recommended option) or extracting the TLIO needed files using the information from recorded rosbags. This are created during flights simulated in Gazebo using Agiros and the realted reference trajectories in .csv. 
+This could be generated using gvi as explained in the next Section (recommended option) or filling the TLIO needed files using the information from recorded rosbags (namely, IMU and ground-truth odometry topics). These are created during flights simulated in Gazebo using Agiros and the realted reference trajectories in .csv. 
 The files used for TLIO are:
 
 - my_timestamps_p.txt
@@ -74,7 +64,7 @@ The files used for TLIO are:
 
 ## Generate Dataset: GVI Sim-to-Real
 Here, we describe how to generate a new dataset starting from a .rosbag recorded in the Flying-Arena.
-We assume that the .rosbag contains vicon and alphasense data.
+We assume that the .rosbag contains vicon and alphasense data (namely, ground-truth and IMU).
 
 Example output of rosbag info:
 
@@ -92,8 +82,8 @@ Check src/sim_to_real/scripts for some useful scripts.
 Then, run the script sim_to_real/scripts/vicon_to_imu.py [WARNING: this scripts contains hand-coded cam-imu (from Kalibr) and cam-vicon (from handeye) calibrations] to transform (temporally and spatially) the vicon poses from the markers to the imu frame.
 
 
-### IMU Simulator
-
+### IMU Simulator - Dataset from Real Flight IMU
+ 
 We are now ready to generate simulated IMU measurements starting from the real flown trajectory.
 We use the code [here](https://github.com/uzh-rpg/gvi-fusion/tree/sim_imu).
 
@@ -126,7 +116,7 @@ An example of config file is [here](https://github.com/uzh-rpg/gvi-fusion/blob/s
 Note that the current implementation requires that the spline order is given at compilation time. Check [here](https://github.com/uzh-rpg/gvi-fusion/blob/sim_imu/src/imu_simulator/fit_trajectory.cpp#L64) and [here](https://github.com/uzh-rpg/gvi-fusion/blob/sim_imu/src/imu_simulator/simulate_imu.cpp#L89).
 
 
-### Create Dataset
+## Dataset
 
 We low-pass filter real and sim IMU to remove noise coming from the platform (e.g.motors).
 
@@ -173,7 +163,17 @@ For example
 The first script will take about 10 min for 1000 sequences. The second will take about 30 min for 1000 sequences.
 
 
-## Training
+
+### IMU Simulator - Dataset from Reference Trajectories .csv
+We could also launch the IMU Simulator fitting the splines to the reference pose in the trajectories .csv directly, instead of using the Vicon data. 
+However, after having generated the simulated IMU measurements with the Simulator, we should run:
+
+https://github.com/gcioffi/TLIO/blob/sim_to_real/src/scripts/sim_rotors_drag/add_rotor_drag.ipynb
+
+in order to add the contribution of the aerodynamic effects, as rotor drags, on the IMU values. 
+
+
+### Training
 
 **Command to launch:**
 
@@ -313,7 +313,7 @@ In *src/sim_to_real/scripts*
 ### Generate hdf5
 
 Launching "gen_racing_data.py", it is possible to get the hdf5 file needed for the training step and the train.txt, test.txt and val.txt files.
-When launching this script, a data directory --data_dir should be specified: TLIO/data/Dataset. 
+When launching this script, a data directory --data_dir should be specified.
 
 **Command to launch**
 
@@ -323,6 +323,8 @@ When launching this script, a data directory --data_dir should be specified: TLI
 ### Test through hdf5
 
 **Command to launch**
+
+
 ```python3 src/main_net.py --mode test --root_dir data/folder_data/ --test_list data/folder_data/test.txt --model_path results/folder_results/checkpoints/checkpoint_126.pt --out_dir results/folder_results/results/network/ --save_plot --window_time 0.5 --imu_freq 1000 --imu_base_freq 1000 --sample_freq 20```
 
 
@@ -368,16 +370,21 @@ For example
 ### Test through hdf5
 
 **Command to launch**
+
+
 ```python3 src/main_net.py --mode test --root_dir data/folder_data/ --test_list data/folder_data/test.txt --model_path results/folder_results/checkpoints/checkpoint_126.pt --out_dir results/folder_results/results/network/ --save_plot --window_time 0.5 --imu_freq 1000 --imu_base_freq 1000 --sample_freq 20```
 
 
 ## Run Filter and Plot
 
+This is used for running the EKF filter with a certain network inference frequency:
+
+
 **Command to launch**
 
 ```python3 src/main_filter.py --root_dir data/folder_data --data_list data/folder_data/test.txt --model_path results/folder_results/checkpoints/checkpoint_126.pt --model_param_path results/folder_results/parameters.json --out_dir results/folder_results/results/filter/ --update_freq 20 --initialize_with_offline_calib --erase_old_log```
 
-To plot, go to TLIO/src and launch:
+In order to generate some useful plots, go to TLIO/src and launch:
 
 **Command to launch:**
 
