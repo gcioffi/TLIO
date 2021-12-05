@@ -1,6 +1,5 @@
 """
-This file includes the main libraries in the network testing module.
-Different plotting options wrt test_original.py
+This file includes the main libraries in the network testing module
 """
 
 import json
@@ -48,11 +47,7 @@ def compute_rpe(rpe_ns, ps, ps_gt, yaw, yaw_gt):
     plt.figure("relative yaw error")
     plt.plot(relative_yaw_errors)
     plt.figure("rpes list")
-    plt.xticks(fontsize=20)
-    plt.yticks(fontsize=20)
     plt.plot(rpes)
-    plt.xticks(fontsize=20)
-    plt.yticks(fontsize=20)
     # compute statistics over z separately
     rpe_rmse = np.sqrt(np.mean(np.sum(rpes ** 2, axis=1)))
     rpe_rmse_z = np.sqrt(np.mean(rpes[:, 2] ** 2))
@@ -184,6 +179,7 @@ def compute_metrics_and_plotting(args, net_attr_dict, traj_attr_dict):
         "rpe_rmse": rpe_rmse,
         "rpes": rpes,
     }
+
     return metrics, plot_dict
 
 
@@ -193,14 +189,10 @@ def plot_3d_2var(x, y1, y2, xlb, ylbs, lgs, num=None, dpi=None, figsize=None):
         plt.subplot(3, 1, i + 1)
         plt.plot(x, y1[:, i], label=lgs[0])
         plt.plot(x, y2[:, i], label=lgs[1])
-        plt.xticks(fontsize=20)
-        plt.yticks(fontsize=20)
-        plt.ylabel(ylbs[i], fontsize=20)
-        if i ==0 : plt.legend(fontsize=20, loc = "upper right")
+        plt.ylabel(ylbs[i])
+        plt.legend()
         plt.grid(True)
-        if i == 0: plt.title("Position", fontsize = 23, pad = 23)
-
-    plt.xlabel(xlb, fontsize=20)
+    plt.xlabel(xlb)
     return fig
 
 
@@ -208,43 +200,36 @@ def plot_3d_1var(x, y, xlb, ylbs, num=None, dpi=None, figsize=None):
     fig = plt.figure(num=num, dpi=dpi, figsize=figsize)
     for i in range(3):
         plt.subplot(3, 1, i + 1)
-        if i == 0: plt.title("Relative Translation Error", fontsize = 23, pad = 23)
         if x is not None:
             plt.plot(x, y[:, i])
-            plt.xticks(fontsize=20)
-            plt.yticks(fontsize=20)
         else:
             plt.plot(y[:, i])
-            plt.xticks(fontsize=20)
-            plt.yticks(fontsize=20)
-        plt.ylabel(ylbs[i], fontsize=20)
+        plt.ylabel(ylbs[i])
         plt.grid(True)
     if xlb is not None:
-        plt.xlabel(xlb, fontsize=20)
+        plt.xlabel(xlb)
     return fig
 
 
 def plot_3d_2var_with_sigma(
-    x, y1, y2, sig, ylbs, lgs, num=None, dpi=None, figsize=None
+    x, y1, y2, sig, xlb, ylbs, lgs, num=None, dpi=None, figsize=None
 ):
     fig = plt.figure(num=num, dpi=dpi, figsize=figsize)
     y1_plus_sig = y1 + 3 * sig
     y1_minus_sig = y1 - 3 * sig
     for i in range(3):
-        idx = np.linspace(0, y1.shape[0], num=y1.shape[0])
         plt.subplot(3, 1, i + 1)
-        plt.plot(y1_plus_sig[:, i], "-g", linewidth=0.2)
-        plt.plot(y1_minus_sig[:, i], "-g", linewidth=0.2)
-        plt.fill_between(idx, y1_plus_sig[:, i], y1_minus_sig[:, i], facecolor="green", alpha=0.5)
-        plt.plot(y1[:, i], "-b", linewidth=0.5, label=lgs[0])
-        plt.plot(y2[:, i], "-r", linewidth=0.5, label=lgs[1])
-        plt.xticks(fontsize=20)
-        plt.yticks(fontsize=20)
-        plt.ylabel(ylbs[i], fontsize=20)
-        if i==2: plt.xlabel("Predicted network displacement", fontsize=20)
-        if i==0: plt.legend(fontsize=20, loc = "upper right")
+        plt.plot(x, y1_plus_sig[:, i], "-g", linewidth=0.2)
+        plt.plot(x, y1_minus_sig[:, i], "-g", linewidth=0.2)
+        plt.fill_between(
+            x, y1_plus_sig[:, i], y1_minus_sig[:, i], facecolor="green", alpha=0.5
+        )
+        plt.plot(x, y1[:, i], "-b", linewidth=0.5, label=lgs[0])
+        plt.plot(x, y2[:, i], "-r", linewidth=0.5, label=lgs[1])
+        plt.ylabel(ylbs[i])
+        plt.legend()
         plt.grid(True)
-        if i == 0: plt.title("Network Predictions", fontsize = 23, pad = 23)
+    plt.xlabel(xlb)
     return fig
 
 
@@ -252,23 +237,17 @@ def plot_3d_1var_with_sigma(x, y, sig, xlb, ylbs, num=None, dpi=None, figsize=No
     fig = plt.figure(num=num, dpi=dpi, figsize=figsize)
     plus_sig = 3 * sig
     minus_sig = -3 * sig
-    x = np.linspace(0, x.shape[0], num=x.shape[0])
     for i in range(3):
         plt.subplot(3, 1, i + 1)
         plt.plot(x, plus_sig[:, i], "-g", linewidth=0.2)
         plt.plot(x, minus_sig[:, i], "-g", linewidth=0.2)
-        
-        plt.fill_between(x, plus_sig[:, i], minus_sig[:, i], facecolor="green", alpha=0.5
+        plt.fill_between(
+            x, plus_sig[:, i], minus_sig[:, i], facecolor="green", alpha=0.5
         )
         plt.plot(x, y[:, i], "-b", linewidth=0.5)
-        plt.xticks(fontsize=20)
-        plt.yticks(fontsize=20)
-        plt.ylabel(ylbs[i], fontsize=20)
-        if i==2: plt.xlabel("Predicted network displacement", fontsize=20)
-        
+        plt.ylabel(ylbs[i])
         plt.grid(True)
-        if i == 0: plt.title("Prediction Error", fontsize = 23, pad = 23)
-    #plt.xlabel(xlb, fontsize=12)
+    plt.xlabel(xlb)
     return fig
 
 
@@ -288,45 +267,32 @@ def make_plots(args, plot_dict, outdir):
     figsize = (16, 9)
 
     fig1 = plt.figure(num="prediction vs gt", dpi=dpi, figsize=figsize)
-    targ_names = ["Network Predictions"]
-
+    targ_names = ["dx", "dy", "dz"]
+    plt.subplot2grid((3, 2), (0, 0), rowspan=2)
     plt.plot(pos_pred[:, 0], pos_pred[:, 1])
     plt.plot(pos_gt[:, 0], pos_gt[:, 1])
-    plt.xticks(fontsize=20)
-    plt.yticks(fontsize=20)
-    plt.xlabel("x [m]", fontsize=20)
-    plt.ylabel("y [m]", fontsize=20)
     plt.axis("equal")
-    plt.legend(["Predicted", "Ground-truth"], fontsize=20, loc = "lower right")
-    plt.title("2D Trajectory",  fontsize = 23, pad = 23)
-    plt.tight_layout()
-    plt.grid(True)
-       
-
-    fig7 =  plt.figure(num="prediction vs gt 2", dpi=dpi, figsize=figsize)
-    targ_names_label = ["dx [m]", "dy [m]", "dz [m]"]
+    plt.legend(["Predicted", "Ground truth"])
+    plt.title("2D trajectory and ATE error against time")
+    plt.subplot2grid((3, 2), (2, 0))
+    plt.plot(np.linalg.norm(pos_pred - pos_gt, axis=1))
+    plt.legend(["RMSE:{:.3f}, RPE:{:.3f}".format(rmse, rpe_rmse)])
     for i in range(3):
-        plt.subplot2grid((3, 1), (i, 0))
+        plt.subplot2grid((3, 2), (i, 1))
         plt.plot(preds[:, i])
         plt.plot(targets[:, i])
-        if i ==0: plt.legend(["Predicted", "Ground truth"], fontsize=20, loc = "lower right")
-        if i ==0: plt.title("{}".format(targ_names[i]), fontsize = 23, pad = 23)
-        plt.xticks(fontsize=20)
-        plt.yticks(fontsize=20)
-        plt.grid(True)
-        if i==2: plt.xlabel("Predicted network displacement", fontsize=20)
-        plt.ylabel(targ_names_label[i], fontsize=20)
+        plt.legend(["Predicted", "Ground truth"])
+        plt.title("{}".format(targ_names[i]))
     plt.tight_layout()
     plt.grid(True)
-    
 
     fig2 = plot_3d_2var(
-        ts, # - ts[0],
+        ts,
         pos_pred,
         pos_gt,
-        xlb="t [s]",
-        ylbs=["x [m]", "y [m]", "z [m]"],
-        lgs=["RESNET", "Ground-Truth"],
+        xlb="t(s)",
+        ylbs=["x(m)", "y(m)", "z(m)"],
+        lgs=["RONIN", "Ground Truth"],
         num="Position",
         dpi=dpi,
         figsize=figsize,
@@ -337,8 +303,9 @@ def make_plots(args, plot_dict, outdir):
         preds,
         targets,
         pred_sigmas,
-        ylbs=["x [m]", "y [m]", "z [m]"],
-        lgs=["Prediction", "Ground-Truth"],
+        xlb="t(s)",
+        ylbs=["x(m)", "y(m)", "z(m)"],
+        lgs=["imu", "vio"],
         num="Displacement",
         dpi=dpi,
         figsize=figsize,
@@ -347,8 +314,8 @@ def make_plots(args, plot_dict, outdir):
         pred_ts,
         preds - targets,
         pred_sigmas,
-        xlb="t [s]",
-        ylbs=["x [m]", "y [m]", "z [m]"],
+        xlb="t(s)",
+        ylbs=["x(m)", "y(m)", "z(m)"],
         num="Displacement errors",
         dpi=dpi,
         figsize=figsize,
@@ -357,7 +324,7 @@ def make_plots(args, plot_dict, outdir):
         None,
         rpes,
         xlb=None,
-        ylbs=["x [m]", "y [m]", "z [m]"],
+        ylbs=["x(m)", "y(m)", "z(m)"],
         num=f"RTE error over {args.rpe_window}s",
         dpi=dpi,
         figsize=figsize,
@@ -372,43 +339,34 @@ def make_plots(args, plot_dict, outdir):
     ang_diff = ang_diff - 2 * np.pi * (ang_diff > np.pi)
 
     fig6 = plt.figure(num="2D Displacement norm and heading", dpi=dpi, figsize=(16, 9))
+    plt.title("2D Displacement norm and heading")
     plt.subplot(411)
-    plt.plot(pred_norm, "-b", linewidth=0.5, label="Prediction")
-    plt.plot(targ_norm, "-r", linewidth=0.5, label="Ground-Truth")
-    plt.ylabel("d norm [m]", fontsize=20)
-    plt.legend(fontsize=20, loc = "upper right")
+    plt.plot(pred_ts, pred_norm, "-b", linewidth=0.5, label="imu")
+    plt.plot(pred_ts, targ_norm, "-r", linewidth=0.5, label="vio")
+    plt.ylabel("distance (m)")
+    plt.legend()
     plt.grid(True)
-    plt.xticks(fontsize=20)
-    plt.yticks(fontsize=20)
-    plt.title("2D Displacement Norm and Heading", fontsize = 23, pad = 23)
     plt.subplot(412)
-    plt.plot(pred_norm - targ_norm, "-b", linewidth=0.5)
-    plt.ylabel("d norm err. [m]", fontsize=20)
+    plt.plot(pred_ts, pred_norm - targ_norm, "-b", linewidth=0.5)
+    plt.ylabel("distance (m)")
     plt.grid(True)
-    plt.xticks(fontsize=20)
-    plt.yticks(fontsize=20)
     plt.subplot(413)
-    plt.plot(pred_ang, "-b", linewidth=0.5)
-    plt.plot(targ_ang, "-r", linewidth=0.5)
-    plt.xticks(fontsize=20)
-    plt.yticks(fontsize=20)
-    plt.ylabel("angle [rad]", fontsize=20)
+    plt.plot(pred_ts, pred_ang, "-b", linewidth=0.5)
+    plt.plot(pred_ts, targ_ang, "-r", linewidth=0.5)
+    plt.ylabel("angle (rad)")
     plt.grid(True)
     plt.subplot(414)
-    plt.plot(ang_diff, "-b", linewidth=0.5)
-    plt.xticks(fontsize=20)
-    plt.yticks(fontsize=20)
-    plt.ylabel("angle err. [rad]", fontsize=20)
+    plt.plot(pred_ts, ang_diff, "-b", linewidth=0.5)
+    plt.ylabel("angle (rad)")
+    plt.xlabel("t")
     plt.grid(True)
-    
 
     fig1.savefig(osp.join(outdir, "view.png"))
-    fig7.savefig(osp.join(outdir, "view2.png"))
     fig2.savefig(osp.join(outdir, "pos.png"))
-    fig3.savefig(osp.join(outdir, "pred.png"))
-    fig4.savefig(osp.join(outdir, "pred-err.png"))
-    fig5.savefig(osp.join(outdir, "rpe.png"))
-    fig6.savefig(osp.join(outdir, "norm_angle.png"))
+    fig3.savefig(osp.join(outdir, "pred.svg"))
+    fig4.savefig(osp.join(outdir, "pred-err.svg"))
+    fig5.savefig(osp.join(outdir, "rpe.svg"))
+    fig6.savefig(osp.join(outdir, "norm_angle.svg"))
 
     plt.close("all")
 
@@ -440,7 +398,6 @@ def get_inference(network, data_loader, device, epoch):
     targets_all = np.concatenate(targets_all, axis=0) #402 x 3
     preds_all = np.concatenate(preds_all, axis=0)
     preds_cov_all = np.concatenate(preds_cov_all, axis=0)
-    
     losses_all = np.concatenate(losses_all, axis=0)
     attr_dict = {
         "targets": targets_all,
@@ -591,7 +548,7 @@ def net_test(args):
         )
         logging.info(metrics)
         all_metrics[data] = metrics
-        
+
         outfile_net = osp.join(outdir, "net_outputs.txt")
         net_outputs_data = np.concatenate(
             [
