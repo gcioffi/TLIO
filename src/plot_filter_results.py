@@ -112,19 +112,22 @@ def run_evaluation(args):
         fig1 = plt.figure(num="Compared Filter vs Groundtruth")
         custom_plots.plotFilterVsGtPosXY(filter_p, gt_p)
 
+        # debug
+        #ts = ts - 1.636376e9
+        #matched_ts = np.array(matched_ts) - 1.636376e9
         fig2 = plt.figure(num="Predicted acc. bias")
-        custom_plots.plotImuBiases(ts, ba)
+        custom_plots.plotImuBiases(ts, ba, "ba")
 
         fig3 = plt.figure(num="Predicted gyro. bias")
-        custom_plots.plotImuBiases(ts, bg)
+        custom_plots.plotImuBiases(ts, bg, "bg")
 
         # err rot angle norm
-        fig4 = plt.figure(num="Error norm of rot. angle")
-        custom_plots.plotArray(matched_ts, err_ang, 'Error norm of rot. angle', \
-            ['ts', 'ang. norm'])
+        fig4 = plt.figure(num="Rotation Angle Error Norm")
+        custom_plots.plotArray(matched_ts, err_ang, 'Rotation Angle Error Norm', \
+            ['ts [s]', 'angle norm [°]'])
 
         # err rot euler angles
-        fig5 = plt.figure(num="Error euler angles")
+        fig5 = plt.figure(num="Error on Euler Angles")
         custom_plots.plotRotErrEulerXYZ(matched_ts, err_R_xyz)
 
         outdir = os.path.join(args.filter_dir, data_fn)
